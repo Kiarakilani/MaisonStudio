@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>The Desk</title>
+
+<!-- Make this feel like a real app when added to the iPhone Home Screen -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="The Desk">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#23262B">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' fill='%2323262B'/%3E%3Ctext x='90' y='118' font-family='Georgia,serif' font-size='90' font-weight='700' fill='%23EAE4D8' text-anchor='middle'%3ED%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' fill='%2323262B'/%3E%3Ctext x='90' y='118' font-family='Georgia,serif' font-size='90' font-weight='700' fill='%23EAE4D8' text-anchor='middle'%3ED%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #EAE4D8;
+    --paper-dark: #DDD5C3;
+    --paper-darker: #CFC5AE;
+    --ink: #23262B;
+    --ink-soft: #4A4E55;
+    --muted: #7A7566;
+    --red: #A6363B;
+    --gold: #A9822C;
+    --line: #C9BFA8;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+  }
+  .masthead{
+    padding:28px 20px 18px;
+    border-bottom:3px solid var(--ink);
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+  }
+  .masthead h1{
+    font-family:'Fraunces',serif;
+    font-optical-sizing:auto;
+    font-weight:700;
+    font-size:38px;
+    letter-spacing:-0.5px;
+    margin:0;
+    line-height:0.95;
+  }
+  .masthead .sub{
+    font-size:13px;
+    color:var(--muted);
+    margin-top:4px;
+    font-style:italic;
+    font-family:'Fraunces',serif;
+  }
+  .masthead-right{
+    text-align:right;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:var(--muted);
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+  }
+  .new-btn{
+    margin-top:8px;
+    background:var(--ink);
+    color:var(--paper);
+    border:none;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    padding:9px 16px;
+    cursor:pointer;
+    border-radius:2px;
+  }
+  .new-btn:hover{background:var(--red);}
+
+  .board{
+    display:flex;
+    gap:0;
+    overflow-x:auto;
+    padding:0 0 40px;
+  }
+  .column{
+    flex:0 0 250px;
+    border-right:1px solid var(--line);
+    min-height:60vh;
+    padding:16px 14px 20px;
+  }
+  .column:last-child{border-right:none;}
+  .col-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    margin-bottom:14px;
+    padding-bottom:8px;
+    border-bottom:2px solid var(--ink);
+  }
+  .col-title{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    font-weight:500;
+  }
+  .col-count{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:var(--muted);
+  }
+
+  .card{
+    background:var(--paper-dark);
+    border:1px solid var(--line);
+    border-radius:2px;
+    padding:12px 12px 10px;
+    margin-bottom:10px;
+    position:relative;
+  }
+  .stamp{
+    display:inline-block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:9px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    padding:2px 6px;
+    border:1px solid var(--red);
+    color:var(--red);
+    transform:rotate(-2deg);
+    margin-bottom:8px;
+  }
+  .card-title{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:16px;
+    line-height:1.25;
+    margin:0 0 6px;
+  }
+  .card-notes{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    line-height:1.4;
+    margin:0 0 10px;
+    white-space:pre-wrap;
+  }
+  .due-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px;
+    letter-spacing:0.04em;
+    color:var(--gold);
+    border:1px solid var(--gold);
+    padding:2px 6px;
+    border-radius:2px;
+    margin:0 0 8px;
+  }
+  .due-badge.past{color:var(--red);border-color:var(--red);}
+  .ref-chip{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:12px;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:2px;
+    padding:5px 8px;
+    margin:0 0 8px;
+    text-decoration:none;
+    color:var(--ink);
+  }
+  .ref-chip:hover{border-color:var(--ink);}
+  .ref-chip .ref-icon{color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:10px;}
+  .trail{
+    display:flex;
+    gap:4px;
+    margin-bottom:10px;
+  }
+  .dot{
+    width:14px;
+    height:4px;
+    background:var(--line);
+    border-radius:2px;
+  }
+  .dot.filled{background:var(--ink);}
+  .dot.current{background:var(--red);}
+
+  .card-actions{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+  }
+  .move-btns button{
+    background:none;
+    border:1px solid var(--ink);
+    color:var(--ink);
+    width:22px;
+    height:22px;
+    cursor:pointer;
+    font-size:12px;
+    line-height:1;
+    border-radius:2px;
+  }
+  .move-btns button:disabled{opacity:0.25;cursor:default;}
+  .move-btns button:hover:not(:disabled){background:var(--ink);color:var(--paper);}
+  .del-btn{
+    background:none;border:none;color:var(--muted);cursor:pointer;
+    text-decoration:underline;font-family:'IBM Plex Mono',monospace;font-size:10px;
+  }
+  .del-btn:hover{color:var(--red);}
+
+  .empty{
+    font-family:'Fraunces',serif;
+    font-style:italic;
+    color:var(--muted);
+    font-size:13px;
+    padding:20px 0;
+  }
+
+  /* modal */
+  .overlay{
+    position:fixed;inset:0;background:rgba(35,38,43,0.55);
+    display:flex;align-items:center;justify-content:center;
+    z-index:50;padding:16px;
+  }
+  .modal{
+    background:var(--paper);
+    border:2px solid var(--ink);
+    padding:24px;
+    width:100%;max-width:400px;
+  }
+  .modal h2{
+    font-family:'Fraunces',serif;
+    font-size:22px;margin:0 0 16px;
+  }
+  .field{margin-bottom:14px;}
+  .field label{
+    display:block;font-family:'IBM Plex Mono',monospace;
+    font-size:10px;text-transform:uppercase;letter-spacing:0.08em;
+    color:var(--muted);margin-bottom:5px;
+  }
+  .field input, .field select, .field textarea{
+    width:100%;padding:8px 10px;border:1px solid var(--ink);
+    background:var(--paper-dark);font-family:'Inter',sans-serif;
+    font-size:14px;border-radius:2px;
+  }
+  .field textarea{resize:vertical;min-height:60px;}
+  .modal-actions{display:flex;gap:10px;margin-top:18px;justify-content:flex-end;}
+  .btn-secondary{
+    background:none;border:1px solid var(--ink);color:var(--ink);
+    padding:9px 16px;cursor:pointer;font-family:'IBM Plex Mono',monospace;
+    font-size:12px;border-radius:2px;
+  }
+  .btn-primary{
+    background:var(--ink);color:var(--paper);border:none;
+    padding:9px 16px;cursor:pointer;font-family:'IBM Plex Mono',monospace;
+    font-size:12px;border-radius:2px;
+  }
+  .btn-primary:hover{background:var(--red);}
+
+  .loading, .status{
+    padding:40px;text-align:center;color:var(--muted);
+    font-family:'IBM Plex Mono',monospace;font-size:12px;
+  }
+  .reset-link{
+    font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);
+    text-decoration:underline;cursor:pointer;background:none;border:none;
+    padding:0 20px 20px;
+  }
+  .save-status{
+    font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);
+    margin:4px 0;min-height:14px;
+  }
+  .save-status.failed{color:var(--red);}
+  .retry-link{
+    background:none;border:none;color:var(--red);text-decoration:underline;
+    cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:10px;padding:0;
+  }
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div>
+    <h1>The Desk</h1>
+    <div class="sub">every idea, from scrap to press</div>
+  </div>
+  <div class="masthead-right">
+    <div id="today-date"></div>
+    <div id="save-status" class="save-status"></div>
+    <button class="new-btn" onclick="openModal()">+ New idea</button>
+  </div>
+</div>
+
+<div id="board" class="board">
+  <div class="loading">loading the desk…</div>
+</div>
+
+<button class="reset-link" onclick="resetAll()">clear all items</button>
+
+<div id="modal-root"></div>
+
+<script>
+const STAGES = ['Idea','Outline','Draft','Review','Scheduled','Published'];
+const TYPES = ['Video','Blog post','Newsletter','Social','Podcast','Other'];
+const STORAGE_KEY = 'content-desk-items';
+let items = [];
+let loaded = false;
+
+window.addEventListener('error', function(e){
+  const board = document.getElementById('board');
+  if(board) board.innerHTML = '<div class="loading">Something went wrong: ' + escapeHtml(e.message || 'unknown error') + '</div>';
+});
+
+document.getElementById('today-date').textContent = new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+
+function loadItems(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    items = raw ? JSON.parse(raw) : [];
+  }catch(e){
+    console.error('Load failed', e);
+    items = [];
+  }
+  loaded = true;
+  render();
+}
+
+function saveItems(){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    setSaveStatus('saved');
+  }catch(e){
+    console.error('Save failed', e);
+    setSaveStatus('failed');
+  }
+}
+
+function setSaveStatus(status){
+  const el = document.getElementById('save-status');
+  if(!el) return;
+  if(status === 'saved'){
+    el.textContent = '';
+  } else if(status === 'failed'){
+    el.textContent = "couldn't save — storage may be full or disabled";
+    el.className = 'save-status failed';
+  }
+}
+
+function uid(){
+  return 'item_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
+}
+
+function openModal(){
+  const root = document.getElementById('modal-root');
+  root.innerHTML = `
+    <div class="overlay" onclick="if(event.target===this) closeModal()">
+      <div class="modal">
+        <h2>New idea</h2>
+        <div class="field">
+          <label>Title</label>
+          <input id="f-title" type="text" placeholder="What's the piece about?" autofocus>
+        </div>
+        <div class="field">
+          <label>Type</label>
+          <select id="f-type">
+            ${TYPES.map(t=>`<option value="${t}">${t}</option>`).join('')}
+          </select>
+        </div>
+        <div class="field">
+          <label>Notes (optional)</label>
+          <textarea id="f-notes" placeholder="Angle, hook, key points..."></textarea>
+        </div>
+        <div class="field">
+          <label>Reference link (optional)</label>
+          <input id="f-ref-url" type="text" placeholder="Paste a link (CapCut edit, inspo post...)">
+        </div>
+        <div class="field">
+          <label>Reference label</label>
+          <input id="f-ref-label" type="text" placeholder="e.g. CapCut edit to reuse">
+        </div>
+        <div class="field">
+          <label>Film / due date (optional)</label>
+          <input id="f-due" type="date">
+        </div>
+        <div class="modal-actions">
+          <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+          <button class="btn-primary" onclick="addItem()">Add to board</button>
+        </div>
+      </div>
+    </div>
+  `;
+  setTimeout(()=>document.getElementById('f-title')?.focus(),50);
+}
+
+function closeModal(){
+  document.getElementById('modal-root').innerHTML = '';
+}
+
+function addItem(){
+  const title = document.getElementById('f-title').value.trim();
+  if(!title) return;
+  const type = document.getElementById('f-type').value;
+  const notes = document.getElementById('f-notes').value.trim();
+  const refUrl = document.getElementById('f-ref-url').value.trim();
+  const refLabel = document.getElementById('f-ref-label').value.trim();
+  const dueDate = document.getElementById('f-due').value;
+  items.push({
+    id: uid(),
+    title,
+    type,
+    notes,
+    stage: 0,
+    dueDate: dueDate || null,
+    reference: refUrl ? { url: refUrl, label: refLabel || refUrl } : null,
+    createdAt: new Date().toISOString()
+  });
+  closeModal();
+  render();
+  saveItems();
+}
+
+function moveItem(id, delta){
+  const item = items.find(i=>i.id===id);
+  if(!item) return;
+  const next = item.stage + delta;
+  if(next < 0 || next >= STAGES.length) return;
+  item.stage = next;
+  render();
+  saveItems();
+}
+
+function deleteItem(id){
+  items = items.filter(i=>i.id!==id);
+  render();
+  saveItems();
+}
+
+function resetAll(){
+  if(!confirm("Clear every item from the desk? This can't be undone.")) return;
+  items = [];
+  render();
+  saveItems();
+}
+
+function fmtDate(dateStr){
+  // dateStr is YYYY-MM-DD from <input type=date>; parse as local, not UTC
+  const [y,m,d] = dateStr.split('-').map(Number);
+  return new Date(y, m-1, d).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+}
+
+function isPast(dateStr){
+  const [y,m,d] = dateStr.split('-').map(Number);
+  const due = new Date(y, m-1, d);
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  return due < today;
+}
+
+function render(){
+  const board = document.getElementById('board');
+  if(!loaded){
+    board.innerHTML = '<div class="loading">loading the desk…</div>';
+    return;
+  }
+  board.innerHTML = STAGES.map((stageName, sIdx)=>{
+    const stageItems = items.filter(i=>i.stage===sIdx);
+    return `
+      <div class="column">
+        <div class="col-head">
+          <span class="col-title">${stageName}</span>
+          <span class="col-count">${stageItems.length}</span>
+        </div>
+        ${stageItems.length===0 ? '<div class="empty">nothing here yet</div>' : ''}
+        ${stageItems.map(item=>`
+          <div class="card">
+            <span class="stamp">${item.type}</span>
+            <p class="card-title">${escapeHtml(item.title)}</p>
+            ${item.dueDate ? `<div class="due-badge ${isPast(item.dueDate)?'past':''}">🎬 ${fmtDate(item.dueDate)}</div>` : ''}
+            ${item.reference ? `<a class="ref-chip" href="${escapeHtml(item.reference.url)}" target="_blank" rel="noopener"><span class="ref-icon">↗</span>${escapeHtml(item.reference.label)}</a>` : ''}
+            ${item.notes ? `<p class="card-notes">${escapeHtml(item.notes)}</p>` : ''}
+            <div class="trail">
+              ${STAGES.map((_,i)=>`<div class="dot ${i<item.stage?'filled':''} ${i===item.stage?'current':''}"></div>`).join('')}
+            </div>
+            <div class="card-actions">
+              <div class="move-btns">
+                <button onclick="moveItem('${item.id}',-1)" ${item.stage===0?'disabled':''} title="Move back">←</button>
+                <button onclick="moveItem('${item.id}',1)" ${item.stage===STAGES.length-1?'disabled':''} title="Move forward">→</button>
+              </div>
+              <button class="del-btn" onclick="deleteItem('${item.id}')">remove</button>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }).join('');
+}
+
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+loadItems();
+</script>
+</body>
+</html>
