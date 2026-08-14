@@ -327,6 +327,12 @@ async function fetchEmails(){
       return;
     }
     const listData = await listRes.json();
+    if(!listRes.ok){
+      const msg = (listData && listData.error && listData.error.message) || `Google returned an error (status ${listRes.status}).`;
+      showError('Gmail error: ' + msg);
+      document.getElementById('email-list').innerHTML = '';
+      return;
+    }
     const ids = (listData.messages || []).map(m => m.id);
     if(ids.length === 0){
       emails = [];
@@ -338,6 +344,10 @@ async function fetchEmails(){
         headers: { Authorization: 'Bearer ' + accessToken }
       }).then(r => r.json())
     ));
+    const failed = details.find(d => d && d.error);
+    if(failed){
+      showError('Gmail error: ' + (failed.error.message || 'Could not load message details.'));
+    }
     emails = details.map(parseMessage).filter(Boolean);
     renderEmails();
   }catch(e){
