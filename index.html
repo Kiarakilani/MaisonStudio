@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
-<title>The Desk</title>
+<title>Maison Studio</title>
 
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="The Desk">
+<meta name="apple-mobile-web-app-title" content="Maison">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#23262B">
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' fill='%2323262B'/%3E%3Ctext x='90' y='118' font-family='Georgia,serif' font-size='90' font-weight='700' fill='%23EAE4D8' text-anchor='middle'%3ED%3C/text%3E%3C/svg%3E">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' fill='%2323262B'/%3E%3Ctext x='90' y='118' font-family='Georgia,serif' font-size='90' font-weight='700' fill='%23EAE4D8' text-anchor='middle'%3ED%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' fill='%2323262B'/%3E%3Ctext x='90' y='118' font-family='Georgia,serif' font-size='90' font-weight='500' fill='%23EAE4D8' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' fill='%2323262B'/%3E%3Ctext x='90' y='118' font-family='Georgia,serif' font-size='90' font-weight='500' fill='%23EAE4D8' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Cormorant+Garamond:ital,wght@0,400;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
   :root{
@@ -32,7 +32,7 @@
     margin:0;
     background:var(--paper);
     color:var(--ink);
-    font-family:'Inter',sans-serif;
+    font-family:'Cormorant Garamond',serif;
     display:flex;
     flex-direction:column;
     min-height:100vh;
@@ -51,55 +51,56 @@
     padding:40px 24px;
   }
 
-  .kicker{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:11px;
-    letter-spacing:0.16em;
-    text-transform:uppercase;
-    color:var(--red);
-    margin-bottom:18px;
+  h1{
+    font-family:'Marcellus',serif;
+    font-weight:400;
+    font-size:clamp(48px, 12vw, 88px);
+    line-height:0.95;
+    letter-spacing:0.5px;
+    margin:0;
   }
 
-  h1{
-    font-family:'Fraunces',serif;
-    font-optical-sizing:auto;
-    font-weight:700;
-    font-size:clamp(48px, 12vw, 92px);
-    line-height:0.92;
-    letter-spacing:-1px;
-    margin:0 0 18px;
+  .studio-label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    letter-spacing:0.5em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin:8px 0 26px;
   }
 
   .tagline{
-    font-family:'Fraunces',serif;
+    font-family:'Cormorant Garamond',serif;
     font-style:italic;
+    font-weight:500;
+    font-size:22px;
+    color:var(--ink);
+    margin:0 0 12px;
+  }
+
+  .description{
+    font-family:'Cormorant Garamond',serif;
     font-size:17px;
     color:var(--ink-soft);
     max-width:420px;
-    margin:0 0 36px;
-    line-height:1.5;
+    line-height:1.6;
+    margin:0 0 42px;
   }
 
-  .stages{
+  .world{
     display:flex;
     align-items:center;
-    gap:6px;
+    gap:12px;
     flex-wrap:wrap;
     justify-content:center;
-    margin-bottom:44px;
+    margin-bottom:50px;
     font-family:'IBM Plex Mono',monospace;
-    font-size:10.5px;
-    letter-spacing:0.04em;
+    font-size:11px;
+    letter-spacing:0.1em;
     text-transform:uppercase;
-    color:var(--muted);
+    color:var(--ink-soft);
   }
-  .stages span.stage{
-    padding:4px 9px;
-    border:1px solid var(--line);
-    border-radius:2px;
-    background:var(--paper-dark);
-  }
-  .stages .arrow{color:var(--line);}
+  .world span.dot{color:var(--gold);}
 
   .enter-btn{
     display:inline-flex;
@@ -110,9 +111,9 @@
     border:none;
     font-family:'IBM Plex Mono',monospace;
     font-size:13px;
-    letter-spacing:0.08em;
+    letter-spacing:0.1em;
     text-transform:uppercase;
-    padding:15px 28px;
+    padding:16px 30px;
     cursor:pointer;
     border-radius:2px;
     text-decoration:none;
@@ -137,26 +138,27 @@
 <div class="top-rule"></div>
 
 <main>
-  <div class="kicker">— a running log of everything in the works —</div>
-  <h1>The Desk</h1>
-  <p class="tagline">Every idea, from scrap to press. Capture it, move it, ship it &mdash; without losing track of what's next.</p>
+  <h1>Maison</h1>
+  <div class="studio-label">Studio</div>
 
-  <div class="stages">
-    <span class="stage">Idea</span><span class="arrow">→</span>
-    <span class="stage">Outline</span><span class="arrow">→</span>
-    <span class="stage">Draft</span><span class="arrow">→</span>
-    <span class="stage">Review</span><span class="arrow">→</span>
-    <span class="stage">Scheduled</span><span class="arrow">→</span>
-    <span class="stage">Published</span>
+  <p class="tagline">Your creative world.</p>
+  <p class="description">A home for your ideas, content, plans, goals, inspiration, and everything you're building.</p>
+
+  <div class="world">
+    <span>Ideas</span><span class="dot">·</span>
+    <span>Content</span><span class="dot">·</span>
+    <span>Planner</span><span class="dot">·</span>
+    <span>Goals</span><span class="dot">·</span>
+    <span>Inbox</span>
   </div>
 
   <a class="enter-btn" href="board.html">
-    Enter the Desk <span class="arrow-icon">→</span>
+    Enter Maison <span class="arrow-icon">→</span>
   </a>
 </main>
 
 <div class="bottom-rule"></div>
-<footer>THE DESK · PERSONAL EDITION</footer>
+<footer>MAISON STUDIO · PERSONAL EDITION</footer>
 
 </body>
 </html>
