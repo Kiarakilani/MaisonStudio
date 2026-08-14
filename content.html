@@ -254,6 +254,63 @@
   }
   .idea-plan-btn:hover{color:#8A4F60;}
 
+  /* ---------- Vault ---------- */
+  .vault-header-row{
+    display:flex;justify-content:space-between;align-items:flex-start;
+    flex-wrap:wrap;gap:14px;margin-bottom:16px;
+  }
+  .vault-controls{margin-bottom:20px;}
+  .vault-filter-row{
+    display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;
+    overflow-x:auto;padding-bottom:2px;
+  }
+  .vault-chip{
+    background:var(--card);border:1px solid var(--taupe-line);border-radius:16px;
+    padding:6px 14px;font-family:'Inter',sans-serif;font-size:12px;color:var(--espresso-soft);
+    cursor:pointer;white-space:nowrap;flex-shrink:0;
+  }
+  .vault-chip:hover{border-color:var(--rose);}
+  .vault-chip.active{background:var(--rose-bg);border-color:var(--rose);color:#8A4F60;font-weight:500;}
+
+  .vault-grid{
+    columns:3 220px;column-gap:14px;
+  }
+  @media (max-width: 900px){ .vault-grid{columns:2 200px;} }
+  @media (max-width: 600px){ .vault-grid{columns:1;} }
+
+  .vault-card{
+    background:var(--card);border:1px solid var(--taupe-line);border-radius:14px;
+    padding:16px;margin-bottom:14px;break-inside:avoid;cursor:pointer;
+  }
+  .vault-card:hover{border-color:var(--rose);}
+  .vault-text{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;
+    font-size:17px;line-height:1.4;color:var(--espresso);margin:0 0 10px;
+  }
+  .vault-type{
+    display:inline-block;font-family:'Inter',sans-serif;font-size:10px;font-weight:600;
+    letter-spacing:0.06em;text-transform:uppercase;color:var(--espresso-soft);
+    background:var(--taupe);border-radius:20px;padding:3px 9px;margin-bottom:8px;
+  }
+  .vault-meta-line{font-family:'Inter',sans-serif;font-size:11.5px;color:var(--muted);margin:0;}
+  .vault-notes{font-size:12.5px;color:var(--espresso-soft);margin:6px 0 0;line-height:1.4;}
+  .vault-empty{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--muted);font-size:14px;grid-column:1/-1;}
+
+  .vault-add-from-list{max-height:260px;overflow-y:auto;border:1px solid var(--taupe-line);border-radius:10px;padding:6px;}
+  .vault-pick-row{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:9px 10px;border-radius:8px;cursor:pointer;
+  }
+  .vault-pick-row:hover{background:var(--taupe);}
+  .vault-pick-row .vpr-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;}
+  .vault-pick-row .vpr-add{font-family:'Inter',sans-serif;font-size:11px;color:var(--rose);font-weight:600;}
+  .vault-ref-chip{
+    display:inline-flex;align-items:center;gap:5px;background:var(--rose-bg);color:#8A4F60;
+    border-radius:14px;padding:4px 10px 4px 12px;font-family:'Cormorant Garamond',serif;
+    font-style:italic;font-size:13px;margin:0 6px 6px 0;
+  }
+  .vault-ref-chip button{background:none;border:none;color:#8A4F60;cursor:pointer;font-size:13px;padding:0;}
+
   /* ---------- Inspiration placeholder ---------- */
   .inspiration-placeholder{
     background:var(--card);border:1px dashed var(--taupe-line);border-radius:16px;
@@ -400,6 +457,7 @@
       <button class="content-tab active" data-tab="overview" onclick="switchTab('overview')">Overview</button>
       <button class="content-tab" data-tab="ideas" onclick="switchTab('ideas')">Ideas</button>
       <button class="content-tab" data-tab="pipeline" onclick="switchTab('pipeline')">Pipeline</button>
+      <button class="content-tab" data-tab="vault" onclick="switchTab('vault')">Vault</button>
       <button class="content-tab" data-tab="inspiration" onclick="switchTab('inspiration')">Inspiration</button>
     </div>
 
@@ -484,6 +542,24 @@
       <div id="pipeline-list-view" style="display:none;"></div>
     </div>
 
+    <!-- ---------- Vault ---------- -->
+    <div class="tab-panel" id="panel-vault">
+      <div class="vault-header-row">
+        <div>
+          <h2 class="pipeline-title">Vault</h2>
+          <p class="pipeline-sub">Save the little things you want to use later.</p>
+        </div>
+        <button class="add-btn" onclick="openAddToVaultModal()">+ Add to Vault</button>
+      </div>
+
+      <div class="vault-controls">
+        <input type="text" class="filter-search" id="vault-search" placeholder="Search your Vault..." oninput="renderVault()" style="min-width:220px;">
+        <div class="vault-filter-row" id="vault-filter-row"></div>
+      </div>
+
+      <div class="vault-grid" id="vault-grid"></div>
+    </div>
+
     <!-- ---------- Inspiration ---------- -->
     <div class="tab-panel" id="panel-inspiration">
       <div class="inspiration-placeholder">
@@ -509,16 +585,20 @@
 <script>
 const CONTENT_STORAGE_KEY = 'content-desk-items';
 const PILLARS_STORAGE_KEY = 'maison-content-pillars';
+const VAULT_STORAGE_KEY = 'maison-vault-items';
 
 const STAGES = ['Ideas','Planning','Ready to Film','Filmed','Editing','Ready to Post','Scheduled','Posted'];
 const PLATFORMS = ['TikTok','Instagram','YouTube','Other'];
 const DEFAULT_PILLARS = ['Beauty','Lifestyle','Fashion','Travel'];
+const VAULT_TYPES = ['On-Screen Text','Hook','Caption','CTA','Audio','Other'];
 
 // Old 6-stage board mapped onto the new 8-stage pipeline
 const OLD_TO_NEW_STAGE = [0, 1, 4, 5, 6, 7]; // Idea, Outline, Draft, Review, Scheduled, Published
 
 let items = [];
 let pillars = [];
+let vaultItems = [];
+let vaultFilter = 'All';
 let currentTab = 'overview';
 let currentView = 'board';
 let draggedId = null;
@@ -609,6 +689,7 @@ function loadItems(){
       websiteLink: '',
       media: [],
       checklist: [],
+      vaultRefs: [],
       createdAt: it.createdAt || new Date().toISOString(),
       updatedAt: it.createdAt || new Date().toISOString()
     };
@@ -641,6 +722,7 @@ function switchTab(tab){
   if(tab === 'overview') renderOverview();
   if(tab === 'ideas') renderIdeas();
   if(tab === 'pipeline') renderPipeline();
+  if(tab === 'vault') renderVault();
 }
 
 function setView(view){
@@ -899,6 +981,7 @@ function createItem(fields){
     websiteLink: '',
     media: [],
     checklist: [],
+    vaultRefs: [],
     createdAt: now,
     updatedAt: now
   }, fields);
@@ -1077,6 +1160,11 @@ function openDetailModal(id){
           <div class="field"><label>Quick thought</label><textarea id="dt-thought">${escapeHtml(it.thought||'')}</textarea></div>
           <div class="field"><label>Hook</label><input type="text" id="dt-hook" value="${escapeHtml(it.hook||'')}"></div>
           <div class="field"><label>Script</label><textarea id="dt-script">${escapeHtml(it.script||'')}</textarea></div>
+          <div class="field">
+            <label>From Vault</label>
+            <div id="dt-vault-refs">${vaultRefChipsHtml(it)}</div>
+            <button type="button" class="details-toggle" style="padding:4px 0;" onclick="openVaultPickerForContent('${it.id}')">+ Add from Vault</button>
+          </div>
 
           <div class="detail-group-heading">Publishing</div>
           <div class="field"><label>Caption</label><textarea id="dt-caption">${escapeHtml(it.caption||'')}</textarea></div>
@@ -1129,6 +1217,266 @@ function saveDetail(id){
   if(currentTab === 'overview') renderOverview();
 }
 
+/* ============================================================
+   VAULT — reusable creative assets (on-screen text, hooks, etc.)
+   Fully separate from Content. Never duplicated into a Content
+   record — Content only stores a reference (id) via vaultRefs.
+   ============================================================ */
+function loadVault(){
+  try{
+    const raw = localStorage.getItem(VAULT_STORAGE_KEY);
+    vaultItems = raw ? JSON.parse(raw) : [];
+  }catch(e){
+    console.error('Vault load failed', e);
+    vaultItems = [];
+  }
+}
+function saveVault(){
+  try{
+    localStorage.setItem(VAULT_STORAGE_KEY, JSON.stringify(vaultItems));
+    setSavePill('');
+  }catch(e){
+    console.error('Vault save failed', e);
+    setSavePill("couldn't save — storage may be full or disabled", true);
+  }
+}
+function findVaultItem(id){ return vaultItems.find(v => v.id === id); }
+
+function renderVaultFilters(){
+  const all = ['All', ...VAULT_TYPES];
+  document.getElementById('vault-filter-row').innerHTML = all.map(t => `
+    <button class="vault-chip ${vaultFilter === t ? 'active' : ''}" onclick="setVaultFilter('${t}')">${escapeHtml(t)}</button>
+  `).join('');
+}
+function setVaultFilter(t){
+  vaultFilter = t;
+  renderVault();
+}
+
+function renderVault(){
+  renderVaultFilters();
+  const search = (document.getElementById('vault-search')?.value || '').trim().toLowerCase();
+  const filtered = vaultItems.filter(v => {
+    if(vaultFilter !== 'All' && v.type !== vaultFilter) return false;
+    if(search && !v.text.toLowerCase().includes(search)) return false;
+    return true;
+  }).sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||''));
+
+  const grid = document.getElementById('vault-grid');
+  if(filtered.length === 0){
+    grid.innerHTML = `<p class="vault-empty">${vaultItems.length === 0 ? 'Nothing saved yet — start collecting phrases, hooks, and lines you want to use later.' : 'Nothing matches your search or filter.'}</p>`;
+    return;
+  }
+  grid.innerHTML = filtered.map(v => `
+    <div class="vault-card" onclick="openVaultDetailModal('${v.id}')">
+      <span class="vault-type">${escapeHtml(v.type)}</span>
+      <p class="vault-text">"${escapeHtml(v.text)}"</p>
+      ${v.pillar || v.platform ? `<p class="vault-meta-line">${escapeHtml(v.pillar || '')}${v.pillar && v.platform ? ' · ' : ''}${escapeHtml(v.platform || '')}</p>` : ''}
+      ${v.notes ? `<p class="vault-notes">${escapeHtml(v.notes)}</p>` : ''}
+    </div>
+  `).join('');
+}
+
+/* ---------- Add to Vault (fast capture) ---------- */
+function openAddToVaultModal(){
+  const root = document.getElementById('modal-root');
+  root.innerHTML = `
+    <div class="overlay" onclick="if(event.target===this) closeModal()">
+      <div class="modal">
+        <div class="modal-head">
+          <h2>Add to Vault</h2>
+          <p class="modal-sub">What do you want to save?</p>
+        </div>
+        <div class="modal-body">
+          <div class="field">
+            <textarea id="vt-text" placeholder="e.g. Girl therapy" autofocus style="min-height:46px;"></textarea>
+          </div>
+          <div class="field">
+            <label>Type</label>
+            <select id="vt-type">${VAULT_TYPES.map(t => `<option>${t}</option>`).join('')}</select>
+          </div>
+
+          <button type="button" class="details-toggle" onclick="toggleVaultDetails()">Add more details ↓</button>
+          <div class="details-block" id="vt-details">
+            <div class="field"><label>Notes</label><textarea id="vt-notes" placeholder="Where you'd use this, why you liked it..."></textarea></div>
+            <div class="field-row">
+              <div class="field">
+                <label>Content pillar</label>
+                ${pillarSelectHtml('vt', '')}
+              </div>
+              <div class="field">
+                <label>Platform</label>
+                <select id="vt-platform"><option value="">Any</option>${PLATFORMS.map(p => `<option>${p}</option>`).join('')}</select>
+              </div>
+            </div>
+            <div class="field"><label>Source link</label><input type="text" id="vt-source" placeholder="Optional"></div>
+            <div class="field"><label>Tags (comma separated)</label><input type="text" id="vt-tags" placeholder="Optional"></div>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <span></span>
+          <div class="modal-actions-right">
+            <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+            <button class="btn-primary" onclick="submitAddToVault()">Save to Vault</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  setTimeout(() => document.getElementById('vt-text')?.focus(), 50);
+}
+function toggleVaultDetails(){
+  document.getElementById('vt-details').classList.toggle('open');
+}
+function submitAddToVault(){
+  const text = document.getElementById('vt-text').value.trim();
+  if(!text){ document.getElementById('vt-text').focus(); return; }
+  const now = new Date().toISOString();
+  vaultItems.push({
+    id: uid(),
+    text,
+    type: document.getElementById('vt-type').value,
+    notes: document.getElementById('vt-notes').value.trim(),
+    pillar: document.getElementById('vt-pillar').value.trim(),
+    platform: document.getElementById('vt-platform').value,
+    sourceUrl: document.getElementById('vt-source').value.trim(),
+    tags: document.getElementById('vt-tags').value.trim() ? document.getElementById('vt-tags').value.split(',').map(s=>s.trim()).filter(Boolean) : [],
+    linkedContentIds: [],
+    createdAt: now,
+    updatedAt: now
+  });
+  saveVault();
+  closeModal();
+  if(currentTab === 'vault') renderVault();
+}
+
+/* ---------- Vault item detail (edit/delete) ---------- */
+function openVaultDetailModal(id){
+  const v = findVaultItem(id);
+  if(!v) return;
+  const root = document.getElementById('modal-root');
+  root.innerHTML = `
+    <div class="overlay" onclick="if(event.target===this) closeModal()">
+      <div class="modal">
+        <div class="modal-head"><h2>Vault item</h2></div>
+        <div class="modal-body">
+          <div class="field"><label>Text</label><textarea id="vd-text" style="min-height:46px;">${escapeHtml(v.text)}</textarea></div>
+          <div class="field"><label>Type</label><select id="vd-type">${VAULT_TYPES.map(t => `<option ${t===v.type?'selected':''}>${t}</option>`).join('')}</select></div>
+          <div class="field"><label>Notes</label><textarea id="vd-notes">${escapeHtml(v.notes||'')}</textarea></div>
+          <div class="field-row">
+            <div class="field"><label>Content pillar</label>${pillarSelectHtml('vd', v.pillar || '')}</div>
+            <div class="field"><label>Platform</label><select id="vd-platform"><option value="">Any</option>${PLATFORMS.map(p => `<option ${p===v.platform?'selected':''}>${p}</option>`).join('')}</select></div>
+          </div>
+          <div class="field"><label>Source link</label><input type="text" id="vd-source" value="${escapeHtml(v.sourceUrl||'')}"></div>
+          <div class="field"><label>Tags (comma separated)</label><input type="text" id="vd-tags" value="${escapeHtml((v.tags||[]).join(', '))}"></div>
+          ${v.linkedContentIds && v.linkedContentIds.length ? `
+            <div class="field">
+              <label>Used in</label>
+              <div>${v.linkedContentIds.map(cid => {
+                const c = items.find(i => i.id === cid);
+                return c ? `<span class="vault-ref-chip">${escapeHtml(c.title)}</span>` : '';
+              }).join('')}</div>
+            </div>
+          ` : ''}
+        </div>
+        <div class="modal-actions">
+          <button class="btn-danger-text" onclick="removeVaultItem('${v.id}');closeModal();">Delete</button>
+          <div class="modal-actions-right">
+            <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+            <button class="btn-primary" onclick="saveVaultDetail('${v.id}')">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+function saveVaultDetail(id){
+  const v = findVaultItem(id);
+  if(!v) return;
+  const text = document.getElementById('vd-text').value.trim();
+  if(text) v.text = text;
+  v.type = document.getElementById('vd-type').value;
+  v.notes = document.getElementById('vd-notes').value.trim();
+  v.pillar = document.getElementById('vd-pillar').value.trim();
+  v.platform = document.getElementById('vd-platform').value;
+  v.sourceUrl = document.getElementById('vd-source').value.trim();
+  const tagsRaw = document.getElementById('vd-tags').value.trim();
+  v.tags = tagsRaw ? tagsRaw.split(',').map(s=>s.trim()).filter(Boolean) : [];
+  v.updatedAt = new Date().toISOString();
+  saveVault();
+  closeModal();
+  if(currentTab === 'vault') renderVault();
+}
+function removeVaultItem(id){
+  vaultItems = vaultItems.filter(v => v.id !== id);
+  // also clean up any content records that referenced it
+  items.forEach(it => {
+    if(it.vaultRefs && it.vaultRefs.includes(id)){
+      it.vaultRefs = it.vaultRefs.filter(x => x !== id);
+    }
+  });
+  saveVault();
+  saveItems();
+  if(currentTab === 'vault') renderVault();
+}
+
+/* ---------- Vault <-> Content linking (from Content Detail modal) ---------- */
+function vaultRefChipsHtml(it){
+  const refs = it.vaultRefs || [];
+  if(refs.length === 0) return '<p class="ov-empty" style="margin:0 0 8px;">Nothing saved from Vault yet.</p>';
+  return refs.map(vid => {
+    const v = findVaultItem(vid);
+    if(!v) return '';
+    return `<span class="vault-ref-chip">"${escapeHtml(v.text)}"<button onclick="event.stopPropagation();removeVaultRefFromContent('${it.id}','${vid}')" title="Remove">&times;</button></span>`;
+  }).join('');
+}
+function removeVaultRefFromContent(contentId, vaultId){
+  const it = items.find(x => x.id === contentId);
+  if(!it) return;
+  it.vaultRefs = (it.vaultRefs || []).filter(x => x !== vaultId);
+  saveItems();
+  const holder = document.getElementById('dt-vault-refs');
+  if(holder) holder.innerHTML = vaultRefChipsHtml(it);
+}
+function openVaultPickerForContent(contentId){
+  const root = document.getElementById('modal-root');
+  const it = items.find(x => x.id === contentId);
+  const linked = new Set(it ? (it.vaultRefs || []) : []);
+  const available = vaultItems.filter(v => !linked.has(v.id));
+  root.innerHTML = `
+    <div class="overlay" onclick="if(event.target===this) closeModal()">
+      <div class="modal" style="max-width:400px;">
+        <div class="modal-head"><h2>Add from Vault</h2></div>
+        <div class="modal-body">
+          ${available.length === 0
+            ? '<p class="ov-empty">Nothing left to add — either your Vault is empty or everything\u2019s already attached.</p>'
+            : `<div class="vault-add-from-list">${available.map(v => `
+                <div class="vault-pick-row" onclick="attachVaultToContent('${contentId}','${v.id}')">
+                  <span class="vpr-text">"${escapeHtml(v.text)}"</span>
+                  <span class="vpr-add">+ Add</span>
+                </div>
+              `).join('')}</div>`
+          }
+        </div>
+        <div class="modal-actions"><span></span><button class="btn-secondary" onclick="openDetailModal('${contentId}')">Done</button></div>
+      </div>
+    </div>
+  `;
+}
+function attachVaultToContent(contentId, vaultId){
+  const it = items.find(x => x.id === contentId);
+  const v = findVaultItem(vaultId);
+  if(!it || !v) return;
+  it.vaultRefs = it.vaultRefs || [];
+  if(!it.vaultRefs.includes(vaultId)) it.vaultRefs.push(vaultId);
+  v.linkedContentIds = v.linkedContentIds || [];
+  if(!v.linkedContentIds.includes(contentId)) v.linkedContentIds.push(contentId);
+  saveItems();
+  saveVault();
+  openVaultPickerForContent(contentId); // stay on picker so multiple can be added quickly
+}
+/* ========================= END VAULT ========================= */
+
 function closeModal(){
   document.getElementById('modal-root').innerHTML = '';
 }
@@ -1177,13 +1525,35 @@ function seedIfEmpty(){
     return Object.assign({
       id: uid(), platform: 'Other', pillar: '', thought: '', stage: 0, dueDate: null,
       campaign: '', hook: '', script: '', caption: '', notes: '',
-      inspirationLink: '', websiteLink: '', media: [], checklist: [],
+      inspirationLink: '', websiteLink: '', media: [], checklist: [], vaultRefs: [],
       createdAt: now, updatedAt: now
     }, s, { createdAt: s.updatedAt || now });
   });
   saveItems();
 }
 /* ========================= END DEV SEED DATA ========================= */
+
+/* ---------- DEV SEED DATA: Vault (remove alongside the block above) ---------- */
+function seedVaultIfEmpty(){
+  if(vaultItems.length > 0) return;
+  const now = new Date().toISOString();
+  const seeds = [
+    { text: 'Girl therapy', type: 'On-Screen Text', pillar: 'Lifestyle', notes: 'Random clips / little moments / lifestyle montage' },
+    { text: 'POV: life started feeling like mine again', type: 'On-Screen Text', pillar: 'Lifestyle' },
+    { text: 'Things I would buy again if I lost my entire makeup collection', type: 'Hook', pillar: 'Beauty' },
+    { text: 'A very serious case of needing a little treat', type: 'On-Screen Text', pillar: 'Lifestyle' },
+    { text: 'Save this for your next Sephora trip', type: 'CTA', pillar: 'Beauty' },
+    { text: "Products I didn't expect to love this much", type: 'Hook', pillar: 'Beauty' },
+    { text: 'Lately ♡', type: 'On-Screen Text', pillar: 'Lifestyle' },
+    { text: 'Come get ready with me while I tell you...', type: 'Hook', pillar: 'Lifestyle' }
+  ];
+  vaultItems = seeds.map((s, i) => Object.assign({
+    id: uid(), notes: '', platform: '', sourceUrl: '', tags: [], linkedContentIds: [],
+    createdAt: now, updatedAt: now
+  }, s));
+  saveVault();
+}
+/* ========================= END VAULT SEED DATA ========================= */
 
 window.addEventListener('error', function(e){
   setSavePill('Something went wrong: ' + (e.message || 'unknown error'), true);
@@ -1192,6 +1562,8 @@ window.addEventListener('error', function(e){
 loadPillars();
 loadItems();
 seedIfEmpty();
+loadVault();
+seedVaultIfEmpty();
 const urlTab = new URLSearchParams(window.location.search).get('tab');
 if(urlTab && document.getElementById('panel-' + urlTab)){
   switchTab(urlTab);
