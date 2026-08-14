@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -564,6 +563,83 @@
   }
   .edit-save{background:var(--espresso);color:var(--ivory);}
   .edit-cancel{background:var(--taupe);color:var(--espresso-soft);}
+
+  /* ---------- Bottom nav (mobile only) ---------- */
+  .bottom-nav{
+    display:none;
+    position:fixed;
+    left:0;right:0;bottom:0;
+    background:var(--card);
+    border-top:1px solid var(--taupe-line);
+    padding:8px 6px calc(8px + env(safe-area-inset-bottom));
+    z-index:50;
+  }
+  .bottom-nav-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-around;
+  }
+  .bn-item{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:3px;
+    text-decoration:none;
+    color:var(--muted);
+    font-size:10.5px;
+    font-family:'Inter',sans-serif;
+    padding:4px 6px;
+    flex:1;
+  }
+  .bn-item.active{color:var(--espresso);font-weight:500;}
+  .bn-dot{width:5px;height:5px;border-radius:50%;background:var(--rose);opacity:0;}
+  .bn-item.active .bn-dot{opacity:1;}
+  .bn-add{
+    width:44px;height:44px;
+    border-radius:50%;
+    background:var(--espresso);
+    color:var(--ivory);
+    display:flex;align-items:center;justify-content:center;
+    font-size:22px;
+    border:none;
+    cursor:pointer;
+    flex-shrink:0;
+    margin:0 4px;
+    position:relative;
+    top:-4px;
+  }
+
+  /* ---------- Mobile layout ---------- */
+  @media (max-width: 760px){
+    .sidebar{display:none;}
+    .bottom-nav{display:block;}
+    body{padding-bottom:70px;}
+    .topbar{padding:14px 16px;}
+    .brand-tagline{display:none;}
+    .topbar-date{display:none;}
+    .topbar-right{gap:10px;}
+    main{padding:22px 16px 40px;max-width:100%;}
+    .greeting{font-size:24px;}
+    .greeting-sub{font-size:15px;margin-bottom:20px;}
+    .idea-capture{padding:4px 6px 4px 16px;}
+    .intel-banner{padding:16px 18px;}
+    .today-row{gap:14px;}
+    .today-card, .schedule-card{padding:16px;}
+    .week-grid, .ready-grid{grid-template-columns:repeat(2, 1fr);gap:10px;}
+    .week-card, .ready-card{padding:14px;}
+    .coming-list{padding:4px 16px;}
+    .add-menu{
+      position:fixed;
+      top:auto;
+      bottom:76px;
+      left:16px;
+      right:16px;
+      width:auto;
+    }
+  }
+  @media (max-width: 420px){
+    .week-grid, .ready-grid{grid-template-columns:1fr;}
+  }
 </style>
 </head>
 <body>
@@ -650,6 +726,16 @@
       </div>
     </div>
   </main>
+</div>
+
+<div class="bottom-nav">
+  <div class="bottom-nav-row">
+    <a class="bn-item active" href="home.html"><span class="bn-dot"></span>Home</a>
+    <a class="bn-item" href="board.html"><span class="bn-dot"></span>Content</a>
+    <button class="bn-add" onclick="toggleAddMenu()" aria-label="Add">+</button>
+    <a class="bn-item" href="#"><span class="bn-dot"></span>Planner</a>
+    <a class="bn-item" href="#"><span class="bn-dot"></span>Inbox</a>
+  </div>
 </div>
 
 <script>
