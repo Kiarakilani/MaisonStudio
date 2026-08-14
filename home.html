@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -182,33 +183,91 @@
     margin:0 0 28px;
   }
 
+  /* ---------- Idea capture ---------- */
+  .idea-capture{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:var(--card);
+    border:1px solid var(--taupe-line);
+    border-radius:26px;
+    padding:5px 8px 5px 20px;
+    margin-bottom:24px;
+  }
+  .idea-capture input{
+    flex:1;
+    border:none;
+    background:none;
+    font-family:'Inter',sans-serif;
+    font-size:14px;
+    color:var(--espresso);
+    outline:none;
+    padding:9px 0;
+    min-width:0;
+  }
+  .idea-capture input::placeholder{color:var(--muted);}
+  .idea-confirm{
+    font-size:12px;
+    font-weight:500;
+    color:var(--sage);
+    opacity:0;
+    transition:opacity .3s ease;
+    white-space:nowrap;
+    flex-shrink:0;
+  }
+  .idea-confirm.show{opacity:1;}
+  .idea-btn{
+    background:var(--espresso);
+    color:var(--ivory);
+    border:none;
+    font-family:'Inter',sans-serif;
+    font-size:13px;
+    font-weight:500;
+    padding:10px 18px;
+    border-radius:20px;
+    cursor:pointer;
+    flex-shrink:0;
+  }
+  .idea-btn:hover{background:#413a33;}
+
   /* ---------- Intelligence banner ---------- */
   .intel-banner{
     background:var(--rose-bg);
-    border-radius:14px;
-    padding:16px 20px;
+    border:1px solid #E7CBD3;
+    border-radius:16px;
+    padding:20px 24px;
     margin-bottom:32px;
-    display:flex;
-    align-items:flex-start;
-    gap:12px;
   }
-  .intel-icon{
-    font-family:'Marcellus',serif;
-    font-size:17px;
+  .intel-label{
+    font-family:'Inter',sans-serif;
+    font-size:11px;
+    font-weight:600;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
     color:var(--rose);
-    line-height:1;
   }
-  .intel-text .intel-title{
-    font-size:14px;
-    font-weight:500;
-    color:#5A3B45;
-    margin:0 0 2px;
+  .intel-title{
+    font-family:'Marcellus',serif;
+    font-size:19px;
+    color:#4A2E37;
+    margin:9px 0 4px;
   }
-  .intel-text .intel-body{
-    font-size:13px;
+  .intel-body{
+    font-size:13.5px;
     color:#7A5560;
-    margin:0;
+    margin:0 0 14px;
   }
+  .intel-cta{
+    display:inline-block;
+    font-family:'Inter',sans-serif;
+    font-size:13px;
+    font-weight:600;
+    color:#8A4F60;
+    text-decoration:none;
+    border-bottom:1px solid #C48A9B;
+    padding-bottom:1px;
+  }
+  .intel-cta:hover{color:#5A3B45;border-color:#5A3B45;}
 
   /* ---------- Section heading ---------- */
   .section-heading{
@@ -297,6 +356,21 @@
   .task-time{
     font-size:12px;
     color:var(--muted);
+  }
+  .task-reason{
+    font-size:12px;
+    color:var(--espresso-soft);
+  }
+  .task-reason.urgent{
+    color:var(--rose);
+    font-weight:600;
+  }
+  .task-note{
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;
+    font-size:12.5px;
+    color:var(--muted);
+    margin:5px 0 0;
   }
 
   .schedule-card{
@@ -424,6 +498,72 @@
     font-size:14px;
     flex:1;
   }
+
+  /* ---------- Editable UI ---------- */
+  .save-pill{
+    font-family:'Inter',sans-serif;
+    font-size:11px;
+    color:var(--muted);
+    min-height:14px;
+    margin-bottom:16px;
+  }
+  .save-pill.failed{color:var(--rose);}
+
+  .task-row{position:relative;}
+  .sched-item{position:relative;}
+  .row-controls{
+    display:flex;align-items:center;gap:5px;
+    opacity:0;transition:opacity .12s;flex-shrink:0;
+  }
+  .task-row:hover .row-controls, .sched-item:hover .row-controls{opacity:1;}
+  .reorder-btn{
+    background:none;border:1px solid var(--taupe-line);color:var(--espresso-soft);
+    width:20px;height:20px;border-radius:50%;font-size:10px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;line-height:1;padding:0;
+  }
+  .reorder-btn:disabled{opacity:0.3;cursor:default;}
+  .reorder-btn:hover:not(:disabled){background:var(--taupe);}
+  .row-edit-btn{
+    background:none;border:none;color:var(--muted);font-size:11px;
+    cursor:pointer;padding:2px 4px;
+  }
+  .row-edit-btn:hover{color:var(--espresso);}
+  .row-remove{
+    background:none;border:none;color:var(--muted);
+    font-size:15px;line-height:1;cursor:pointer;padding:2px 4px;
+  }
+  .row-remove:hover{color:var(--rose);}
+
+  .card-edit-toggle{
+    background:none;border:none;color:var(--muted);
+    font-size:12px;cursor:pointer;opacity:0;transition:opacity .12s;
+    padding:2px 4px;
+  }
+  .week-card:hover .card-edit-toggle,
+  .ready-card:hover .card-edit-toggle{opacity:1;}
+  .week-card, .ready-card{position:relative;}
+  .card-top-row{display:flex;justify-content:space-between;align-items:flex-start;}
+
+  .edit-form{display:flex;flex-direction:column;gap:8px;}
+  .edit-form input, .edit-form select{
+    font-family:'Inter',sans-serif;
+    font-size:13px;
+    border:1px solid var(--taupe-line);
+    border-radius:8px;
+    padding:7px 9px;
+    background:var(--ivory);
+    color:var(--espresso);
+    width:100%;
+  }
+  .edit-form-row{display:flex;gap:8px;}
+  .edit-form-row > *{flex:1;}
+  .edit-form-actions{display:flex;gap:8px;margin-top:2px;}
+  .edit-save, .edit-cancel{
+    font-size:12px;font-weight:500;border:none;cursor:pointer;
+    padding:6px 12px;border-radius:14px;
+  }
+  .edit-save{background:var(--espresso);color:var(--ivory);}
+  .edit-cancel{background:var(--taupe);color:var(--espresso-soft);}
 </style>
 </head>
 <body>
@@ -460,14 +600,20 @@
 
   <main>
     <h1 class="greeting">Good morning, Kiara.</h1>
-    <p class="greeting-sub">Here's what's happening in your creative world.</p>
+    <p class="greeting-sub">Here's what's happening in your world today.</p>
+    <div class="save-pill" id="save-pill"></div>
+
+    <div class="idea-capture">
+      <input type="text" id="idea-input" placeholder="What's on your mind?" onkeydown="if(event.key==='Enter') saveIdea()">
+      <span class="idea-confirm" id="idea-confirm"></span>
+      <button class="idea-btn" onclick="saveIdea()">+ Idea</button>
+    </div>
 
     <div class="intel-banner">
-      <div class="intel-icon">✦</div>
-      <div class="intel-text">
-        <p class="intel-title">You have a filming day tomorrow.</p>
-        <p class="intel-body">5 ideas are ready to film.</p>
-      </div>
+      <span class="intel-label">&#10022; From Maison</span>
+      <p class="intel-title">Filming tomorrow</p>
+      <p class="intel-body">You have 5 ideas ready to film.</p>
+      <a class="intel-cta" href="board.html">Prep my batch &rarr;</a>
     </div>
 
     <div class="today-row">
@@ -478,64 +624,15 @@
 
       <div class="schedule-card">
         <h2 class="section-heading">Today's schedule</h2>
-        <div class="sched-item">
-          <div class="sched-time">2:00 PM</div>
-          <div class="sched-what">Editing block</div>
-        </div>
-        <div class="sched-item">
-          <div class="sched-time">6:00 PM</div>
-          <div class="sched-what">Post Instagram Reel</div>
-        </div>
+        <div id="schedule-list"></div>
       </div>
     </div>
 
     <h2 class="section-heading">This week</h2>
-    <div class="week-grid">
-      <div class="week-card">
-        <p class="week-label">Posts</p>
-        <p class="week-value">2 of 4</p>
-        <div class="progress-track"><div class="progress-fill" style="width:50%"></div></div>
-      </div>
-      <div class="week-card">
-        <p class="week-label">Batch filming</p>
-        <p class="week-value">Complete</p>
-        <div class="progress-track"><div class="progress-fill complete" style="width:100%"></div></div>
-      </div>
-      <div class="week-card">
-        <p class="week-label">Brand pitches</p>
-        <p class="week-value">3 of 5</p>
-        <div class="progress-track"><div class="progress-fill" style="width:60%"></div></div>
-      </div>
-      <div class="week-card">
-        <p class="week-label">Follow-ups</p>
-        <p class="week-value">2 remaining</p>
-        <div class="progress-track"><div class="progress-fill" style="width:35%"></div></div>
-      </div>
-    </div>
+    <div class="week-grid" id="week-grid"></div>
 
     <h2 class="section-heading">Ready for you</h2>
-    <div class="ready-grid">
-      <div class="ready-card">
-        <p class="ready-count">5</p>
-        <p class="ready-label">Ready to film</p>
-        <span class="ready-link">Start a batch →</span>
-      </div>
-      <div class="ready-card">
-        <p class="ready-count">3</p>
-        <p class="ready-label">Waiting to edit</p>
-        <span class="ready-link">View content →</span>
-      </div>
-      <div class="ready-card">
-        <p class="ready-count">2</p>
-        <p class="ready-label">Emails need attention</p>
-        <span class="ready-link">Review →</span>
-      </div>
-      <div class="ready-card">
-        <p class="ready-count">4</p>
-        <p class="ready-label">Saved ideas</p>
-        <span class="ready-link">Explore ideas →</span>
-      </div>
-    </div>
+    <div class="ready-grid" id="ready-grid"></div>
 
     <h2 class="section-heading">Coming up</h2>
     <div class="coming-list">
@@ -558,34 +655,420 @@
 <script>
 document.getElementById('topbar-date').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
 
-const MOCK_TASKS = [
-  { title:'Finish Cider outfit Reel', tag:'content', tagLabel:'Content', time:null, done:false },
-  { title:'Film Kylie lip liner comparison', tag:'filming', tagLabel:'Filming', time:'2:00 PM', done:false },
-  { title:'Reply to partnership email', tag:'business', tagLabel:'Business', time:null, done:false },
-  { title:"Prep tomorrow's post", tag:'admin', tagLabel:'Admin', time:null, done:true }
-];
+const STORAGE_KEY = 'maison-home-v2';
+const CONTENT_STORAGE_KEY = 'content-desk-items';
+
+const DEFAULT_STATE = {
+  tasks: [
+    { id: uid(), title: 'Finish Cider outfit Reel', tag: 'content', tagLabel: 'Content', time: '', done: false, reason: 'Due tomorrow', urgent: true, note: 'Currently editing' },
+    { id: uid(), title: 'Film Kylie lip liner comparison', tag: 'filming', tagLabel: 'Filming', time: '14:00', done: false, reason: 'Ready to film', urgent: false, note: '' },
+    { id: uid(), title: 'Reply to partnership email', tag: 'business', tagLabel: 'Business', time: '', done: false, reason: 'Waiting 2 days', urgent: true, note: '' },
+    { id: uid(), title: "Prep tomorrow's post", tag: 'admin', tagLabel: 'Admin', time: '', done: true, reason: '', urgent: false, note: '' }
+  ],
+  schedule: [
+    { id: uid(), time: '14:00', what: 'Editing block' },
+    { id: uid(), time: '18:00', what: 'Post Instagram Reel' }
+  ],
+  week: [
+    { id: uid(), name: 'TikTok', current: 3, target: 5 },
+    { id: uid(), name: 'Instagram Reels', current: 2, target: 3 },
+    { id: uid(), name: 'YouTube', current: 0, target: 1 },
+    { id: uid(), name: 'Brand pitches', current: 4, target: 5 }
+  ],
+  ready: [
+    { id: uid(), count: 5, label: 'Ready to film', linkLabel: 'Start a batch' },
+    { id: uid(), count: 3, label: 'Waiting to edit', linkLabel: 'View content' },
+    { id: uid(), count: 2, label: 'Emails need attention', linkLabel: 'Review' },
+    { id: uid(), count: 4, label: 'Saved ideas', linkLabel: 'Explore ideas' }
+  ]
+};
+
+let state = null;
+let editingWeekId = null;
+let editingReadyId = null;
+let editingTaskId = null;
+let editingSchedId = null;
+
+function uid(){
+  return 'id_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
+}
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    state = raw ? JSON.parse(raw) : JSON.parse(JSON.stringify(DEFAULT_STATE));
+  }catch(e){
+    console.error('Load failed', e);
+    state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+  }
+  renderAll();
+}
+
+function saveState(){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    setSavePill('');
+  }catch(e){
+    console.error('Save failed', e);
+    setSavePill("couldn't save — storage may be full or disabled", true);
+  }
+}
+
+function setSavePill(msg, failed){
+  const el = document.getElementById('save-pill');
+  if(!el) return;
+  el.textContent = msg || '';
+  el.className = 'save-pill' + (failed ? ' failed' : '');
+}
+
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str == null ? '' : str;
+  return div.innerHTML;
+}
+
+function fmtTime(hhmm){
+  if(!hhmm) return '';
+  const [h,m] = hhmm.split(':').map(Number);
+  const period = h >= 12 ? 'PM' : 'AM';
+  const h12 = h % 12 === 0 ? 12 : h % 12;
+  return `${h12}:${String(m).padStart(2,'0')} ${period}`;
+}
+
+function renderAll(){
+  renderTasks();
+  renderSchedule();
+  renderWeek();
+  renderReady();
+}
+
+/* ---------- Quick idea capture (writes into the real Content pipeline) ---------- */
+function saveIdea(){
+  const input = document.getElementById('idea-input');
+  const title = input.value.trim();
+  if(!title) { input.focus(); return; }
+  try{
+    const raw = localStorage.getItem(CONTENT_STORAGE_KEY);
+    const items = raw ? JSON.parse(raw) : [];
+    items.push({
+      id: uid(),
+      title,
+      type: 'Other',
+      notes: '',
+      stage: 0,
+      dueDate: null,
+      reference: null,
+      createdAt: new Date().toISOString()
+    });
+    localStorage.setItem(CONTENT_STORAGE_KEY, JSON.stringify(items));
+    input.value = '';
+    showIdeaConfirm(false);
+  }catch(e){
+    console.error('Idea save failed', e);
+    showIdeaConfirm(true);
+  }
+}
+
+function showIdeaConfirm(failed){
+  const el = document.getElementById('idea-confirm');
+  el.textContent = failed ? "couldn't save" : 'Saved to Ideas ✓';
+  el.classList.add('show');
+  clearTimeout(showIdeaConfirm._t);
+  showIdeaConfirm._t = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+/* ---------- Tasks ---------- */
+const TAG_LABELS = { content:'Content', business:'Business', filming:'Filming', editing:'Editing', admin:'Admin' };
 
 function renderTasks(){
   const list = document.getElementById('task-list');
-  list.innerHTML = MOCK_TASKS.map((t, i) => `
-    <div class="task-row">
-      <div class="task-check ${t.done ? 'done' : ''}" onclick="toggleTask(${i})"></div>
-      <div class="task-body">
-        <p class="task-title ${t.done ? 'done' : ''}">${t.title}</p>
-        <div class="task-meta">
-          <span class="task-tag tag-${t.tag}">${t.tagLabel}</span>
-          ${t.time ? `<span class="task-time">${t.time}</span>` : ''}
+  if(state.tasks.length === 0){
+    list.innerHTML = '<p style="font-family:\'Cormorant Garamond\',serif;font-style:italic;color:var(--muted);font-size:14px;padding:8px 0;">Nothing on your list yet.</p>';
+    return;
+  }
+  list.innerHTML = state.tasks.map((t, i) => {
+    if(editingTaskId === t.id){
+      return `
+        <div class="task-row">
+          <div class="edit-form" style="flex:1;">
+            <input type="text" id="task-title-${t.id}" value="${escapeHtml(t.title)}" placeholder="Task title">
+            <div class="edit-form-row">
+              <select id="task-tag-${t.id}">
+                ${Object.keys(TAG_LABELS).map(k => `<option value="${k}" ${t.tag===k?'selected':''}>${TAG_LABELS[k]}</option>`).join('')}
+              </select>
+              <input type="time" id="task-time-${t.id}" value="${t.time || ''}">
+            </div>
+            <input type="text" id="task-reason-${t.id}" value="${escapeHtml(t.reason || '')}" placeholder="Why today? e.g. Due tomorrow">
+            <input type="text" id="task-note-${t.id}" value="${escapeHtml(t.note || '')}" placeholder="Optional note, e.g. Currently editing">
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--espresso-soft);">
+              <input type="checkbox" id="task-urgent-${t.id}" ${t.urgent ? 'checked' : ''} style="width:auto;">
+              Mark as urgent
+            </label>
+            <div class="edit-form-actions">
+              <button class="edit-save" onclick="saveTask('${t.id}')">Save</button>
+              <button class="edit-cancel" onclick="cancelTaskEdit()">Cancel</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    return `
+      <div class="task-row">
+        <div class="task-check ${t.done ? 'done' : ''}" onclick="toggleTask('${t.id}')"></div>
+        <div class="task-body">
+          <p class="task-title ${t.done ? 'done' : ''}">${escapeHtml(t.title)}</p>
+          <div class="task-meta">
+            <span class="task-tag tag-${t.tag}">${escapeHtml(t.tagLabel)}</span>
+            ${t.reason ? `<span class="task-reason ${t.urgent ? 'urgent' : ''}">${escapeHtml(t.reason)}</span>` : ''}
+            ${t.time ? `<span class="task-time">${fmtTime(t.time)}</span>` : ''}
+          </div>
+          ${t.note ? `<p class="task-note">${escapeHtml(t.note)}</p>` : ''}
+        </div>
+        <div class="row-controls">
+          <button class="reorder-btn" onclick="moveTask('${t.id}',-1)" ${i===0?'disabled':''} title="Move up">&uarr;</button>
+          <button class="reorder-btn" onclick="moveTask('${t.id}',1)" ${i===state.tasks.length-1?'disabled':''} title="Move down">&darr;</button>
+          <button class="row-edit-btn" onclick="editTask('${t.id}')" title="Reschedule / edit">edit</button>
+          <button class="row-remove" onclick="removeTask('${t.id}')" title="Remove">&times;</button>
         </div>
       </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
-function toggleTask(i){
-  MOCK_TASKS[i].done = !MOCK_TASKS[i].done;
+function toggleTask(id){
+  const t = state.tasks.find(x => x.id === id);
+  if(!t) return;
+  t.done = !t.done;
+  renderTasks();
+  saveState();
+}
+
+function moveTask(id, delta){
+  const idx = state.tasks.findIndex(x => x.id === id);
+  if(idx === -1) return;
+  const newIdx = idx + delta;
+  if(newIdx < 0 || newIdx >= state.tasks.length) return;
+  const [item] = state.tasks.splice(idx, 1);
+  state.tasks.splice(newIdx, 0, item);
+  renderTasks();
+  saveState();
+}
+
+function editTask(id){
+  editingTaskId = id;
   renderTasks();
 }
+function cancelTaskEdit(){
+  editingTaskId = null;
+  renderTasks();
+}
+function saveTask(id){
+  const t = state.tasks.find(x => x.id === id);
+  if(!t) return;
+  const title = document.getElementById(`task-title-${id}`).value.trim();
+  if(title) t.title = title;
+  t.tag = document.getElementById(`task-tag-${id}`).value;
+  t.tagLabel = TAG_LABELS[t.tag];
+  t.time = document.getElementById(`task-time-${id}`).value;
+  t.reason = document.getElementById(`task-reason-${id}`).value.trim();
+  t.note = document.getElementById(`task-note-${id}`).value.trim();
+  t.urgent = document.getElementById(`task-urgent-${id}`).checked;
+  editingTaskId = null;
+  renderTasks();
+  saveState();
+}
 
+function removeTask(id){
+  state.tasks = state.tasks.filter(x => x.id !== id);
+  renderTasks();
+  saveState();
+}
+
+/* ---------- Schedule ---------- */
+function renderSchedule(){
+  const list = document.getElementById('schedule-list');
+  if(state.schedule.length === 0){
+    list.innerHTML = '<p style="font-family:\'Cormorant Garamond\',serif;font-style:italic;color:var(--muted);font-size:14px;padding:8px 0;">Nothing scheduled yet.</p>';
+    return;
+  }
+  const sorted = [...state.schedule].sort((a,b) => a.time.localeCompare(b.time));
+  list.innerHTML = sorted.map(s => {
+    if(editingSchedId === s.id){
+      return `
+        <div class="sched-item">
+          <div class="edit-form" style="flex:1;">
+            <div class="edit-form-row">
+              <input type="time" id="sched-time-${s.id}" value="${s.time}">
+              <input type="text" id="sched-what-${s.id}" value="${escapeHtml(s.what)}" placeholder="What's happening">
+            </div>
+            <div class="edit-form-actions">
+              <button class="edit-save" onclick="saveSchedule('${s.id}')">Save</button>
+              <button class="edit-cancel" onclick="cancelSchedEdit()">Cancel</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    return `
+      <div class="sched-item">
+        <div class="sched-time">${fmtTime(s.time)}</div>
+        <div class="sched-what">${escapeHtml(s.what)}</div>
+        <div class="row-controls">
+          <button class="row-edit-btn" onclick="editSchedule('${s.id}')" title="Reschedule / edit">edit</button>
+          <button class="row-remove" onclick="removeSchedule('${s.id}')" title="Remove">&times;</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function editSchedule(id){
+  editingSchedId = id;
+  renderSchedule();
+}
+function cancelSchedEdit(){
+  editingSchedId = null;
+  renderSchedule();
+}
+function saveSchedule(id){
+  const s = state.schedule.find(x => x.id === id);
+  if(!s) return;
+  const time = document.getElementById(`sched-time-${id}`).value;
+  const what = document.getElementById(`sched-what-${id}`).value.trim();
+  if(time) s.time = time;
+  if(what) s.what = what;
+  editingSchedId = null;
+  renderSchedule();
+  saveState();
+}
+
+function removeSchedule(id){
+  state.schedule = state.schedule.filter(x => x.id !== id);
+  renderSchedule();
+  saveState();
+}
+
+/* ---------- This week (goal-driven: name / current / target) ---------- */
+function weekDisplay(w){
+  if(!w.target || w.target <= 0) return String(w.current);
+  if(w.current >= w.target) return 'Complete';
+  return `${w.current} of ${w.target}`;
+}
+function weekPercent(w){
+  if(!w.target || w.target <= 0) return 0;
+  return Math.max(0, Math.min(100, Math.round((w.current / w.target) * 100)));
+}
+
+function renderWeek(){
+  const grid = document.getElementById('week-grid');
+  grid.innerHTML = state.week.map(w => {
+    if(editingWeekId === w.id){
+      return `
+        <div class="week-card">
+          <div class="edit-form">
+            <input type="text" id="week-name-${w.id}" value="${escapeHtml(w.name)}" placeholder="Goal name, e.g. TikTok">
+            <div class="edit-form-row">
+              <input type="number" id="week-current-${w.id}" value="${w.current}" min="0" placeholder="Current">
+              <input type="number" id="week-target-${w.id}" value="${w.target}" min="0" placeholder="Target">
+            </div>
+            <div class="edit-form-actions">
+              <button class="edit-save" onclick="saveWeek('${w.id}')">Save</button>
+              <button class="edit-cancel" onclick="cancelWeekEdit()">Cancel</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    const pct = weekPercent(w);
+    return `
+      <div class="week-card">
+        <div class="card-top-row">
+          <p class="week-label">${escapeHtml(w.name)}</p>
+          <button class="card-edit-toggle" onclick="editWeek('${w.id}')" title="Edit">edit</button>
+        </div>
+        <p class="week-value">${weekDisplay(w)}</p>
+        <div class="progress-track"><div class="progress-fill ${pct >= 100 ? 'complete' : ''}" style="width:${pct}%"></div></div>
+      </div>
+    `;
+  }).join('');
+}
+
+function editWeek(id){
+  editingWeekId = id;
+  renderWeek();
+}
+function cancelWeekEdit(){
+  editingWeekId = null;
+  renderWeek();
+}
+function saveWeek(id){
+  const w = state.week.find(x => x.id === id);
+  if(!w) return;
+  const name = document.getElementById(`week-name-${id}`).value.trim();
+  if(name) w.name = name;
+  const current = parseInt(document.getElementById(`week-current-${id}`).value, 10);
+  const target = parseInt(document.getElementById(`week-target-${id}`).value, 10);
+  w.current = isNaN(current) ? w.current : Math.max(0, current);
+  w.target = isNaN(target) ? w.target : Math.max(0, target);
+  editingWeekId = null;
+  renderWeek();
+  saveState();
+}
+
+/* ---------- Ready for you ---------- */
+function renderReady(){
+  const grid = document.getElementById('ready-grid');
+  grid.innerHTML = state.ready.map(r => {
+    if(editingReadyId === r.id){
+      return `
+        <div class="ready-card">
+          <div class="edit-form">
+            <input type="number" id="ready-count-${r.id}" value="${r.count}" min="0" placeholder="Count">
+            <input type="text" id="ready-label-${r.id}" value="${escapeHtml(r.label)}" placeholder="Label">
+            <input type="text" id="ready-link-${r.id}" value="${escapeHtml(r.linkLabel)}" placeholder="Link text">
+            <div class="edit-form-actions">
+              <button class="edit-save" onclick="saveReady('${r.id}')">Save</button>
+              <button class="edit-cancel" onclick="cancelReadyEdit()">Cancel</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    return `
+      <div class="ready-card">
+        <div class="card-top-row">
+          <span></span>
+          <button class="card-edit-toggle" onclick="editReady('${r.id}')" title="Edit">edit</button>
+        </div>
+        <p class="ready-count">${r.count}</p>
+        <p class="ready-label">${escapeHtml(r.label)}</p>
+        <span class="ready-link">${escapeHtml(r.linkLabel)} →</span>
+      </div>
+    `;
+  }).join('');
+}
+
+function editReady(id){
+  editingReadyId = id;
+  renderReady();
+}
+function cancelReadyEdit(){
+  editingReadyId = null;
+  renderReady();
+}
+function saveReady(id){
+  const r = state.ready.find(x => x.id === id);
+  if(!r) return;
+  const count = parseInt(document.getElementById(`ready-count-${id}`).value, 10);
+  r.count = isNaN(count) ? r.count : Math.max(0, count);
+  r.label = document.getElementById(`ready-label-${id}`).value.trim() || r.label;
+  r.linkLabel = document.getElementById(`ready-link-${id}`).value.trim() || r.linkLabel;
+  editingReadyId = null;
+  renderReady();
+  saveState();
+}
+
+/* ---------- Add menu ---------- */
 function toggleAddMenu(){
   document.getElementById('add-menu').classList.toggle('open');
 }
@@ -599,8 +1082,11 @@ document.addEventListener('click', function(e){
     menu.classList.remove('open');
   }
 });
+window.addEventListener('error', function(e){
+  setSavePill('Something went wrong: ' + (e.message || 'unknown error'), true);
+});
 
-renderTasks();
+loadState();
 </script>
 </body>
 </html>
