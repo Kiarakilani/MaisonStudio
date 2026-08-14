@@ -381,7 +381,7 @@
   <div class="sidebar">
     <a class="nav-item" href="home.html"><span class="nav-dot"></span>Home</a>
     <a class="nav-item active" href="content.html"><span class="nav-dot"></span>Content</a>
-    <a class="nav-item" href="#"><span class="nav-dot"></span>Planner</a>
+    <a class="nav-item" href="planner.html"><span class="nav-dot"></span>Planner</a>
     <a class="nav-item" href="#"><span class="nav-dot"></span>Inbox</a>
     <a class="nav-item" href="#"><span class="nav-dot"></span>Goals</a>
   </div>
@@ -499,7 +499,7 @@
     <a class="bn-item" href="home.html"><span class="bn-dot"></span>Home</a>
     <a class="bn-item active" href="content.html"><span class="bn-dot"></span>Content</a>
     <button class="bn-add" onclick="openNewContentModal()" aria-label="Add content">+</button>
-    <a class="bn-item" href="#"><span class="bn-dot"></span>Planner</a>
+    <a class="bn-item" href="planner.html"><span class="bn-dot"></span>Planner</a>
     <a class="bn-item" href="#"><span class="bn-dot"></span>Inbox</a>
   </div>
 </div>
@@ -1192,7 +1192,12 @@ window.addEventListener('error', function(e){
 loadPillars();
 loadItems();
 seedIfEmpty();
-renderOverview();
+const urlTab = new URLSearchParams(window.location.search).get('tab');
+if(urlTab && document.getElementById('panel-' + urlTab)){
+  switchTab(urlTab);
+} else {
+  renderOverview();
+}
 </script>
 
 </body>
