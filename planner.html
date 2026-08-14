@@ -379,9 +379,29 @@ const ACTIVITIES_KEY = 'maison-planner-activities';
 const ROUTINES_KEY = 'maison-planner-routines';
 const GOALS_KEY = 'maison-planner-goals';
 
-const STAGES = ['Ideas','Planning','Ready to Film','Filmed','Editing','Ready to Post','Scheduled','Posted'];
-const PLATFORMS = ['TikTok','Instagram','YouTube','Other'];
+const STAGES = ['Ideas','Planning','Ready to Create','Created','Editing','Ready to Post','Scheduled','Posted'];
+const PLATFORMS = ['TikTok','Instagram','YouTube','Pinterest','Other'];
 const OLD_TO_NEW_STAGE = [0, 1, 4, 5, 6, 7];
+
+const FORMAT_OPTIONS = {
+  'Instagram': ['Reel','Carousel','Photo Post','Story'],
+  'TikTok': ['Video','Photo Carousel'],
+  'YouTube': ['Long-form Video','Short','Community Post'],
+  'Pinterest': ['Pin','Video Pin'],
+  'Other': ['Other']
+};
+const VIDEO_FORMATS = ['Reel','Video','Long-form Video','Short','Video Pin'];
+const STORY_FORMATS = ['Story'];
+function formatCategory(format){
+  if(!format) return 'video';
+  if(VIDEO_FORMATS.includes(format)) return 'video';
+  if(STORY_FORMATS.includes(format)) return 'story';
+  if(format === 'Photo Post') return 'photo';
+  return 'carousel';
+}
+function createVerb(format){
+  return formatCategory(format) === 'video' ? 'Film' : 'Create';
+}
 
 const DOW_LABELS = ['MON','TUE','WED','THU','FRI','SAT','SUN'];
 const HOURS = []; // 7am - 10pm, 30-min rows
@@ -457,10 +477,10 @@ function loadContentItems(){
     migrated = true;
     const oldStage = typeof it.stage === 'number' ? it.stage : 0;
     return {
-      id: it.id || uid(), title: it.title || 'Untitled', platform: 'Other', pillar: '',
+      id: it.id || uid(), title: it.title || 'Untitled', platform: 'Other', format: '', pillar: '',
       thought: it.notes || '', stage: OLD_TO_NEW_STAGE[oldStage] !== undefined ? OLD_TO_NEW_STAGE[oldStage] : 0,
       dueDate: it.dueDate || null, campaign: '', hook: '', script: '', caption: '', notes: it.notes || '',
-      inspirationLink: it.reference ? it.reference.url : '', websiteLink: '', media: [], checklist: [],
+      inspirationLink: it.reference ? it.reference.url : '', websiteLink: '', media: [], checklist: [], vaultRefs: [],
       createdAt: it.createdAt || new Date().toISOString(), updatedAt: it.createdAt || new Date().toISOString()
     };
   });
@@ -528,31 +548,41 @@ function dateInDays(days){
 function seedContentIfEmpty(){
   if(contentItems.length > 0) return;
   const seeds = [
-    { title: 'Kylie Lip Liner Comparison', platform: 'TikTok', pillar: 'Beauty', stage: STAGES.indexOf('Ready to Film'),
+    { title: 'Kylie Lip Liner Comparison', platform: 'TikTok', format: 'Video', pillar: 'Beauty', stage: STAGES.indexOf('Ready to Create'),
       thought: 'Compare my favorite Kylie liners side-by-side on my lips.', updatedAt: daysAgoISO(0, 3) },
-    { title: 'Beach Day GRWM', platform: 'Instagram', pillar: 'Lifestyle', stage: STAGES.indexOf('Ideas'),
+    { title: 'Beach Day GRWM', platform: 'Instagram', format: 'Reel', pillar: 'Lifestyle', stage: STAGES.indexOf('Ideas'),
       thought: 'Get ready with me for a beach day — breezy summer look.', updatedAt: daysAgoISO(1) },
-    { title: 'Cider Summer Outfits', platform: 'Instagram', pillar: 'Fashion', stage: STAGES.indexOf('Editing'),
+    { title: 'Cider Summer Outfits', platform: 'Instagram', format: 'Reel', pillar: 'Fashion', stage: STAGES.indexOf('Editing'),
       thought: 'Styling three summer outfits from the new Cider drop.', campaign: 'Cider', dueDate: dateInDays(2), updatedAt: daysAgoISO(0, 6) },
-    { title: 'Morning Routine', platform: 'TikTok', pillar: 'Lifestyle', stage: STAGES.indexOf('Scheduled'),
+    { title: 'Morning Routine', platform: 'TikTok', format: 'Video', pillar: 'Lifestyle', stage: STAGES.indexOf('Scheduled'),
       thought: 'A calm, realistic morning routine.', dueDate: dateInDays(7), updatedAt: daysAgoISO(2) },
-    { title: 'Products I Regret Buying', platform: 'TikTok', pillar: 'Beauty', stage: STAGES.indexOf('Planning'),
+    { title: 'Products I Regret Buying', platform: 'TikTok', format: 'Video', pillar: 'Beauty', stage: STAGES.indexOf('Planning'),
       thought: 'Honest talk on hyped products that didn\u2019t work for me.', updatedAt: daysAgoISO(3) },
-    { title: 'Sephora Favorites', platform: 'Instagram', pillar: 'Beauty', stage: STAGES.indexOf('Filmed'),
+    { title: 'Sephora Favorites', platform: 'Instagram', format: 'Reel', pillar: 'Beauty', stage: STAGES.indexOf('Created'),
       thought: 'Monthly Sephora haul and what I\u2019m repurchasing.', updatedAt: daysAgoISO(1, 4) },
-    { title: 'GRWM Storytime', platform: 'TikTok', pillar: 'Lifestyle', stage: STAGES.indexOf('Ready to Film'),
+    { title: 'GRWM Storytime', platform: 'TikTok', format: 'Video', pillar: 'Lifestyle', stage: STAGES.indexOf('Ready to Create'),
       thought: 'GRWM while telling the story of how I started this account.', updatedAt: daysAgoISO(0, 1) },
-    { title: 'Summer Skincare Routine', platform: 'Instagram', pillar: 'Beauty', stage: STAGES.indexOf('Ready to Post'),
+    { title: 'Summer Skincare Routine', platform: 'Instagram', format: 'Reel', pillar: 'Beauty', stage: STAGES.indexOf('Ready to Post'),
       thought: 'My simplified 4-step summer skincare routine.', updatedAt: daysAgoISO(4) },
-    { title: 'Spring Try-On Haul', platform: 'Instagram', pillar: 'Fashion', stage: STAGES.indexOf('Posted'),
-      thought: 'Try-on haul from my last spring shopping trip.', updatedAt: daysAgoISO(6) }
+    { title: 'Spring Try-On Haul', platform: 'Instagram', format: 'Reel', pillar: 'Fashion', stage: STAGES.indexOf('Posted'),
+      thought: 'Try-on haul from my last spring shopping trip.', updatedAt: daysAgoISO(6) },
+    { title: 'Summer Beauty Favorites', platform: 'Instagram', format: 'Carousel', pillar: 'Beauty', stage: STAGES.indexOf('Planning'),
+      thought: 'A round-up carousel of what I\u2019m loving in beauty this summer.', updatedAt: daysAgoISO(2, 2) },
+    { title: 'August Photo Dump', platform: 'Instagram', format: 'Photo Post', pillar: 'Lifestyle', stage: STAGES.indexOf('Ready to Post'),
+      thought: 'Casual photo dump from the last few weeks.', updatedAt: daysAgoISO(0, 8) },
+    { title: '5 Products Always in My Makeup Bag', platform: 'Instagram', format: 'Carousel', pillar: 'Beauty', stage: STAGES.indexOf('Created'),
+      thought: 'The five products I reach for every single day.', updatedAt: daysAgoISO(1, 1) },
+    { title: 'Vacation Favorites', platform: 'TikTok', format: 'Photo Carousel', pillar: 'Travel', stage: STAGES.indexOf('Planning'),
+      thought: 'Favorite shots and finds from my last trip.', updatedAt: daysAgoISO(5) },
+    { title: 'Current Skincare Rotation', platform: 'Instagram', format: 'Carousel', pillar: 'Beauty', stage: STAGES.indexOf('Ready to Post'),
+      thought: 'Walking through my current AM/PM skincare rotation.', updatedAt: daysAgoISO(3, 3) }
   ];
   contentItems = seeds.map(s => {
     const now = new Date().toISOString();
     return Object.assign({
-      id: uid(), platform: 'Other', pillar: '', thought: '', stage: 0, dueDate: null,
+      id: uid(), platform: 'Other', format: '', pillar: '', thought: '', stage: 0, dueDate: null,
       campaign: '', hook: '', script: '', caption: '', notes: '',
-      inspirationLink: '', websiteLink: '', media: [], checklist: [],
+      inspirationLink: '', websiteLink: '', media: [], checklist: [], vaultRefs: [],
       createdAt: now, updatedAt: now
     }, s, { createdAt: s.updatedAt || now });
   });
@@ -614,20 +644,27 @@ function readyItems(stageName){
   return contentItems.filter(c => STAGES[c.stage] === stageName);
 }
 function needsHomeCardHtml(it, draggable){
+  const pf = it.format ? `${it.platform || 'Other'} · ${it.format}` : (it.platform || 'Other');
   return `
     <div class="needs-home-card" ${draggable ? `draggable="true" ondragstart="onNHDragStart(event, '${it.id}')" ondragend="onNHDragEnd(event)"` : ''} onclick="startScheduleForContent('${it.id}')">
       <p class="nh-title">${escapeHtml(it.title)}</p>
-      <p class="nh-meta">${escapeHtml(it.platform || 'Other')}${it.pillar ? ' · ' + escapeHtml(it.pillar) : ''}</p>
+      <p class="nh-meta">${escapeHtml(pf)}${it.pillar ? ' · ' + escapeHtml(it.pillar) : ''}</p>
     </div>
   `;
 }
 function renderNeedsHome(){
-  const readyToFilm = readyItems('Ready to Film');
+  const readyToCreate = readyItems('Ready to Create');
+  const readyToFilm = readyToCreate.filter(it => formatCategory(it.format) === 'video');
+  const readyOther = readyToCreate.filter(it => formatCategory(it.format) !== 'video');
   const readyToPost = readyItems('Ready to Post');
   const html = `
     <div class="needs-home-group">
       <p class="needs-home-group-label">${readyToFilm.length} Ready to Film</p>
       ${readyToFilm.length ? readyToFilm.map(it => needsHomeCardHtml(it, true)).join('') : '<p class="needs-home-empty">Nothing ready to film.</p>'}
+    </div>
+    <div class="needs-home-group">
+      <p class="needs-home-group-label">${readyOther.length} Ready to Create</p>
+      ${readyOther.length ? readyOther.map(it => needsHomeCardHtml(it, true)).join('') : '<p class="needs-home-empty">Nothing else ready to create.</p>'}
     </div>
     <div class="needs-home-group">
       <p class="needs-home-group-label">${readyToPost.length} Ready to Post</p>
@@ -955,6 +992,7 @@ function proceedFromContentChoice(){
 
 function renderScheduleStepContentAction(){
   const c = findContent(scheduleState.contentId);
+  const verb = c ? createVerb(c.format) : 'Create';
   const root = document.getElementById('modal-root');
   root.innerHTML = `
     <div class="overlay" onclick="if(event.target===this) closeModal()">
@@ -963,7 +1001,7 @@ function renderScheduleStepContentAction(){
         <div class="modal-body">
           <div class="field">
             <select id="sc-action">
-              <option>Film</option><option>Edit</option><option>Post</option>
+              <option>${verb}</option><option>Edit</option><option>Post</option>
             </select>
           </div>
           <div class="field-row">
@@ -1185,10 +1223,13 @@ function openContentDetail(id){
         <div class="modal-body">
           <div class="field"><label>Title</label><input type="text" id="ct-title" value="${escapeHtml(it.title)}"></div>
           <div class="field-row">
-            <div class="field"><label>Platform</label><select id="ct-platform">${PLATFORMS.map(p => `<option ${p===it.platform?'selected':''}>${p}</option>`).join('')}</select></div>
-            <div class="field"><label>Content pillar</label><input type="text" id="ct-pillar" value="${escapeHtml(it.pillar||'')}"></div>
+            <div class="field"><label>Platform</label><select id="ct-platform" onchange="onCtPlatformChange()">${PLATFORMS.map(p => `<option ${p===it.platform?'selected':''}>${p}</option>`).join('')}</select></div>
+            <div class="field"><label>Format</label><select id="ct-format">${(FORMAT_OPTIONS[it.platform] || FORMAT_OPTIONS['Other']).map(f => `<option ${f===it.format?'selected':''}>${escapeHtml(f)}</option>`).join('')}</select></div>
           </div>
-          <div class="field"><label>Status</label><select id="ct-stage">${STAGES.map((s,i) => `<option value="${i}" ${i===it.stage?'selected':''}>${s}</option>`).join('')}</select></div>
+          <div class="field-row">
+            <div class="field"><label>Content pillar</label><input type="text" id="ct-pillar" value="${escapeHtml(it.pillar||'')}"></div>
+            <div class="field"><label>Status</label><select id="ct-stage">${STAGES.map((s,i) => `<option value="${i}" ${i===it.stage?'selected':''}>${s}</option>`).join('')}</select></div>
+          </div>
           <div class="field"><label>Quick thought</label><textarea id="ct-thought">${escapeHtml(it.thought||'')}</textarea></div>
           <div class="field-row">
             <div class="field"><label>Due date</label><input type="date" id="ct-due" value="${it.dueDate||''}"></div>
@@ -1207,12 +1248,17 @@ function openContentDetail(id){
     </div>
   `;
 }
+function onCtPlatformChange(){
+  const platform = document.getElementById('ct-platform').value;
+  document.getElementById('ct-format').innerHTML = (FORMAT_OPTIONS[platform] || FORMAT_OPTIONS['Other']).map(f => `<option>${escapeHtml(f)}</option>`).join('');
+}
 function saveContentDetail(id){
   const it = findContent(id);
   if(!it) return;
   const title = document.getElementById('ct-title').value.trim();
   if(title) it.title = title;
   it.platform = document.getElementById('ct-platform').value;
+  it.format = document.getElementById('ct-format').value;
   it.pillar = document.getElementById('ct-pillar').value.trim();
   it.stage = parseInt(document.getElementById('ct-stage').value, 10);
   it.thought = document.getElementById('ct-thought').value.trim();
