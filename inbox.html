@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>Maison — Inbox</title>
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Maison">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#F7F3EC">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<style>
+  :root{
+    --ivory: #F7F3EC;
+    --card: #FFFFFF;
+    --taupe: #EFE8DC;
+    --taupe-line: #E2D9C8;
+    --espresso: #2B2420;
+    --espresso-soft: #5B4F45;
+    --muted: #948A7C;
+    --rose: #B98498;
+    --rose-bg: #F3E7EA;
+    --sage: #8FA084;
+    --sage-bg: #EBEFE4;
+    --gold: #B99456;
+    --gold-bg: #F4EBDA;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{margin:0;background:var(--ivory);color:var(--espresso);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;}
+  a{color:inherit;}
+  button{font-family:inherit;}
+
+  /* ---------- Shared shell ---------- */
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:18px 28px;border-bottom:1px solid var(--taupe-line);background:var(--ivory);}
+  .brand{display:flex;align-items:baseline;gap:10px;}
+  .brand-name{font-family:'Marcellus',serif;font-size:22px;letter-spacing:0.3px;}
+  .brand-tagline{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--muted);}
+  .topbar-right{display:flex;align-items:center;gap:16px;}
+  .topbar-date{font-size:13px;color:var(--espresso-soft);}
+  .avatar{width:34px;height:34px;border-radius:50%;background:var(--taupe);display:flex;align-items:center;justify-content:center;font-family:'Marcellus',serif;font-size:14px;color:var(--espresso-soft);cursor:pointer;}
+
+  .app{display:flex;align-items:flex-start;}
+  .sidebar{width:220px;flex-shrink:0;padding:24px 14px;border-right:1px solid var(--taupe-line);min-height:calc(100vh - 71px);}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:10px;font-size:14px;color:var(--espresso-soft);text-decoration:none;margin-bottom:2px;}
+  .nav-item:hover{background:var(--taupe);}
+  .nav-item.active{background:var(--taupe);color:var(--espresso);font-weight:500;}
+  .nav-dot{width:6px;height:6px;border-radius:50%;background:var(--rose);opacity:0;}
+  .nav-item.active .nav-dot{opacity:1;}
+
+  main{flex:1;padding:32px 36px 60px;max-width:900px;}
+
+  .inbox-title{font-family:'Marcellus',serif;font-size:28px;margin:0 0 4px;}
+  .inbox-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--muted);margin:0 0 24px;}
+
+  /* ---------- Connect state ---------- */
+  .connect-card{
+    background:var(--card);border:1px solid var(--taupe-line);border-radius:16px;
+    padding:36px 28px;text-align:center;max-width:440px;margin:20px auto;
+  }
+  .connect-card h2{font-family:'Marcellus',serif;font-size:19px;margin:0 0 8px;}
+  .connect-card p{font-size:13.5px;color:var(--espresso-soft);line-height:1.6;margin:0 0 20px;}
+  .connect-btn{
+    background:var(--espresso);color:var(--ivory);border:none;
+    font-family:'Inter',sans-serif;font-size:13.5px;font-weight:500;
+    padding:11px 22px;border-radius:20px;cursor:pointer;
+  }
+  .connect-btn:hover{background:#413a33;}
+  .connect-note{font-size:11.5px;color:var(--muted);margin-top:16px;}
+
+  /* ---------- Toolbar ---------- */
+  .inbox-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px;}
+  .inbox-search{
+    font-family:'Inter',sans-serif;font-size:13px;border:1px solid var(--taupe-line);
+    border-radius:16px;padding:8px 14px;min-width:220px;background:var(--card);color:var(--espresso);
+  }
+  .inbox-actions{display:flex;align-items:center;gap:10px;}
+  .refresh-btn{
+    background:none;border:1px solid var(--taupe-line);border-radius:16px;
+    padding:8px 14px;font-family:'Inter',sans-serif;font-size:12.5px;color:var(--espresso-soft);cursor:pointer;
+  }
+  .refresh-btn:hover{background:var(--taupe);}
+  .disconnect-link{font-family:'Inter',sans-serif;font-size:12px;color:var(--muted);text-decoration:underline;background:none;border:none;cursor:pointer;}
+
+  /* ---------- Email list ---------- */
+  .email-list{display:flex;flex-direction:column;gap:10px;}
+  .email-card{
+    background:var(--card);border:1px solid var(--taupe-line);border-radius:14px;
+    padding:16px 18px;display:flex;flex-direction:column;gap:6px;
+  }
+  .email-top-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;}
+  .email-from{font-family:'Marcellus',serif;font-size:15px;}
+  .email-date{font-family:'Inter',sans-serif;font-size:11.5px;color:var(--muted);white-space:nowrap;flex-shrink:0;}
+  .email-subject{font-size:14px;font-weight:500;color:var(--espresso);}
+  .email-snippet{font-size:13px;color:var(--espresso-soft);line-height:1.4;}
+  .email-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:4px;flex-wrap:wrap;}
+  .status-select{
+    font-family:'Inter',sans-serif;font-size:11.5px;font-weight:500;border:none;border-radius:14px;
+    padding:5px 10px;cursor:pointer;
+  }
+  .status-needs-reply{background:var(--rose-bg);color:#8A4F60;}
+  .status-waiting{background:var(--gold-bg);color:#8A6A2E;}
+  .status-done{background:var(--sage-bg);color:#4A5D3D;}
+  .reply-link{
+    font-family:'Inter',sans-serif;font-size:12px;font-weight:600;color:var(--rose);
+    text-decoration:none;border-bottom:1px solid var(--rose);
+  }
+  .reply-link:hover{color:#8A4F60;border-color:#8A4F60;}
+
+  .inbox-empty{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--muted);font-size:14px;text-align:center;padding:40px 0;}
+  .inbox-loading{font-family:'Inter',sans-serif;font-size:13px;color:var(--muted);text-align:center;padding:40px 0;}
+  .inbox-error{
+    background:var(--rose-bg);color:#8A4F60;border-radius:12px;padding:14px 18px;
+    font-size:13px;margin-bottom:16px;
+  }
+
+  .save-pill{font-family:'Inter',sans-serif;font-size:11px;color:var(--muted);min-height:14px;margin-bottom:4px;}
+  .save-pill.failed{color:var(--rose);}
+
+  /* ---------- Bottom nav (mobile) ---------- */
+  .bottom-nav{display:none;position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--taupe-line);padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:50;}
+  .bottom-nav-row{display:flex;align-items:center;justify-content:space-around;}
+  .bn-item{display:flex;flex-direction:column;align-items:center;gap:3px;text-decoration:none;color:var(--muted);font-size:10.5px;font-family:'Inter',sans-serif;padding:4px 6px;flex:1;}
+  .bn-item.active{color:var(--espresso);font-weight:500;}
+  .bn-dot{width:5px;height:5px;border-radius:50%;background:var(--rose);opacity:0;}
+  .bn-item.active .bn-dot{opacity:1;}
+  .bn-add{width:44px;height:44px;border-radius:50%;background:var(--espresso);color:var(--ivory);display:flex;align-items:center;justify-content:center;font-size:22px;border:none;cursor:pointer;flex-shrink:0;margin:0 4px;position:relative;top:-4px;}
+
+  @media (max-width: 760px){
+    .sidebar{display:none;}
+    .bottom-nav{display:block;}
+    body{padding-bottom:70px;}
+    .topbar{padding:14px 16px;}
+    .brand-tagline{display:none;}
+    .topbar-date{display:none;}
+    main{padding:20px 16px 40px;}
+    .email-top-row{flex-direction:column;gap:2px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <span class="brand-name">Maison</span>
+    <span class="brand-tagline">Your creative world.</span>
+  </div>
+  <div class="topbar-right">
+    <div class="topbar-date" id="topbar-date"></div>
+    <div class="avatar">K</div>
+  </div>
+</div>
+
+<div class="app">
+  <div class="sidebar">
+    <a class="nav-item" href="home.html"><span class="nav-dot"></span>Home</a>
+    <a class="nav-item" href="content.html"><span class="nav-dot"></span>Content</a>
+    <a class="nav-item" href="planner.html"><span class="nav-dot"></span>Planner</a>
+    <a class="nav-item active" href="inbox.html"><span class="nav-dot"></span>Inbox</a>
+    <a class="nav-item" href="#"><span class="nav-dot"></span>Goals</a>
+  </div>
+
+  <main>
+    <h1 class="inbox-title">Inbox</h1>
+    <p class="inbox-sub">Keep track of the emails that matter.</p>
+    <div class="save-pill" id="save-pill"></div>
+
+    <div id="connect-view">
+      <div class="connect-card">
+        <h2>Connect your business Gmail</h2>
+        <p>Maison will show your recent emails here so nothing slips through the cracks. Replying still happens in Gmail — tap any email to jump straight to that thread.</p>
+        <button class="connect-btn" id="connect-btn">Connect Gmail</button>
+        <p class="connect-note">Read-only access. Maison never sends or deletes anything on your behalf.</p>
+      </div>
+    </div>
+
+    <div id="inbox-view" style="display:none;">
+      <div class="inbox-toolbar">
+        <input type="text" class="inbox-search" id="inbox-search" placeholder="Search your inbox..." oninput="renderEmails()">
+        <div class="inbox-actions">
+          <button class="refresh-btn" onclick="fetchEmails()">Refresh</button>
+          <button class="disconnect-link" onclick="disconnectGmail()">Disconnect</button>
+        </div>
+      </div>
+      <div id="inbox-error-holder"></div>
+      <div class="email-list" id="email-list"></div>
+    </div>
+  </main>
+</div>
+
+<div class="bottom-nav">
+  <div class="bottom-nav-row">
+    <a class="bn-item" href="home.html"><span class="bn-dot"></span>Home</a>
+    <a class="bn-item" href="content.html"><span class="bn-dot"></span>Content</a>
+    <a class="bn-item" href="planner.html"><span class="bn-dot"></span>Planner</a>
+    <a class="bn-item active" href="inbox.html"><span class="bn-dot"></span>Inbox</a>
+    <a class="bn-item" href="#"><span class="bn-dot"></span>Goals</a>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   PASTE YOUR GOOGLE OAUTH CLIENT ID BELOW.
+   From Google Cloud Console → APIs & Services → Credentials.
+   Looks like: 123456789-abc123.apps.googleusercontent.com
+   This value is public/safe to have in client-side code — it's
+   not a secret (unlike a Client Secret, which is never used here).
+   ============================================================ */
+const GOOGLE_CLIENT_ID = '714863653587-bc1ub17mcli1jqa3qsnpkfdsr136l9o5.apps.googleusercontent.com';
+const GMAIL_SCOPE = 'https://www.googleapis.com/auth/gmail.readonly';
+
+const STATUS_STORAGE_KEY = 'maison-inbox-status';
+const TOKEN_STORAGE_KEY = 'maison-gmail-token';
+
+let accessToken = null;
+let tokenClient = null;
+let emails = [];
+let statusMap = {};
+
+document.getElementById('topbar-date').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+
+function setSavePill(msg, failed){
+  const el = document.getElementById('save-pill');
+  if(!el) return;
+  el.textContent = msg || '';
+  el.className = 'save-pill' + (failed ? ' failed' : '');
+}
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str == null ? '' : str;
+  return div.innerHTML;
+}
+
+/* ---------- Local status tracking (Needs reply / Waiting / Done) ---------- */
+function loadStatusMap(){
+  try{
+    const raw = localStorage.getItem(STATUS_STORAGE_KEY);
+    statusMap = raw ? JSON.parse(raw) : {};
+  }catch(e){ statusMap = {}; }
+}
+function saveStatusMap(){
+  try{ localStorage.setItem(STATUS_STORAGE_KEY, JSON.stringify(statusMap)); setSavePill(''); }
+  catch(e){ setSavePill("couldn't save — storage may be full or disabled", true); }
+}
+function setEmailStatus(id, status){
+  statusMap[id] = status;
+  saveStatusMap();
+}
+
+/* ---------- Auth ---------- */
+function initGoogleAuth(){
+  if(GOOGLE_CLIENT_ID === 'PASTE_YOUR_CLIENT_ID_HERE'){
+    document.getElementById('connect-view').innerHTML = `
+      <div class="connect-card">
+        <h2>Almost ready</h2>
+        <p>This page needs your Google OAuth Client ID pasted into the code before it can connect. Once that's in place, this button will let you sign in.</p>
+      </div>
+    `;
+    return;
+  }
+  tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: GOOGLE_CLIENT_ID,
+    scope: GMAIL_SCOPE,
+    callback: (resp) => {
+      if(resp.error){
+        showError('Sign-in failed: ' + resp.error);
+        return;
+      }
+      accessToken = resp.access_token;
+      try{ sessionStorage.setItem(TOKEN_STORAGE_KEY, accessToken); }catch(e){}
+      showInboxView();
+      fetchEmails();
+    }
+  });
+  document.getElementById('connect-btn').addEventListener('click', () => {
+    tokenClient.requestAccessToken();
+  });
+
+  // Restore an existing session-only token, if the tab wasn't closed
+  try{
+    const saved = sessionStorage.getItem(TOKEN_STORAGE_KEY);
+    if(saved){
+      accessToken = saved;
+      showInboxView();
+      fetchEmails();
+    }
+  }catch(e){}
+}
+
+function disconnectGmail(){
+  accessToken = null;
+  try{ sessionStorage.removeItem(TOKEN_STORAGE_KEY); }catch(e){}
+  emails = [];
+  document.getElementById('connect-view').style.display = 'block';
+  document.getElementById('inbox-view').style.display = 'none';
+}
+
+function showInboxView(){
+  document.getElementById('connect-view').style.display = 'none';
+  document.getElementById('inbox-view').style.display = 'block';
+}
+
+function showError(msg){
+  document.getElementById('inbox-error-holder').innerHTML = `<div class="inbox-error">${escapeHtml(msg)}</div>`;
+}
+function clearError(){
+  document.getElementById('inbox-error-holder').innerHTML = '';
+}
+
+/* ---------- Gmail fetch ---------- */
+async function fetchEmails(){
+  if(!accessToken) return;
+  clearError();
+  document.getElementById('email-list').innerHTML = '<p class="inbox-loading">Loading your inbox…</p>';
+  try{
+    const listRes = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages?maxResults=20&q=in:inbox', {
+      headers: { Authorization: 'Bearer ' + accessToken }
+    });
+    if(listRes.status === 401){
+      showError('Your Gmail session expired — please reconnect.');
+      disconnectGmail();
+      return;
+    }
+    const listData = await listRes.json();
+    const ids = (listData.messages || []).map(m => m.id);
+    if(ids.length === 0){
+      emails = [];
+      renderEmails();
+      return;
+    }
+    const details = await Promise.all(ids.map(id =>
+      fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${id}?format=metadata&metadataHeaders=From&metadataHeaders=Subject&metadataHeaders=Date`, {
+        headers: { Authorization: 'Bearer ' + accessToken }
+      }).then(r => r.json())
+    ));
+    emails = details.map(parseMessage).filter(Boolean);
+    renderEmails();
+  }catch(e){
+    console.error('Gmail fetch failed', e);
+    showError("Couldn't load your inbox. Try Refresh, or reconnect if this keeps happening.");
+    document.getElementById('email-list').innerHTML = '';
+  }
+}
+
+function parseMessage(msg){
+  if(!msg || !msg.payload) return null;
+  const headers = msg.payload.headers || [];
+  const get = (name) => (headers.find(h => h.name === name) || {}).value || '';
+  return {
+    id: msg.id,
+    threadId: msg.threadId,
+    from: get('From'),
+    subject: get('Subject') || '(no subject)',
+    date: get('Date'),
+    snippet: msg.snippet || ''
+  };
+}
+
+function fmtEmailDate(dateStr){
+  if(!dateStr) return '';
+  const d = new Date(dateStr);
+  if(isNaN(d)) return '';
+  const today = new Date();
+  const sameDay = d.toDateString() === today.toDateString();
+  return sameDay
+    ? d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
+    : d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+function shortFrom(from){
+  // "Jane Doe <jane@brand.com>" -> "Jane Doe"
+  const match = from.match(/^"?([^"<]+)"?\s*</);
+  return match ? match[1].trim() : from;
+}
+
+/* ---------- Render ---------- */
+function renderEmails(){
+  const search = (document.getElementById('inbox-search').value || '').trim().toLowerCase();
+  const filtered = emails.filter(e => {
+    if(!search) return true;
+    return (e.subject + ' ' + e.from + ' ' + e.snippet).toLowerCase().includes(search);
+  });
+
+  const list = document.getElementById('email-list');
+  if(filtered.length === 0){
+    list.innerHTML = `<p class="inbox-empty">${emails.length === 0 ? 'Nothing in your inbox right now.' : 'Nothing matches your search.'}</p>`;
+    return;
+  }
+  list.innerHTML = filtered.map(e => {
+    const status = statusMap[e.id] || 'needs-reply';
+    return `
+      <div class="email-card">
+        <div class="email-top-row">
+          <span class="email-from">${escapeHtml(shortFrom(e.from))}</span>
+          <span class="email-date">${escapeHtml(fmtEmailDate(e.date))}</span>
+        </div>
+        <p class="email-subject">${escapeHtml(e.subject)}</p>
+        <p class="email-snippet">${escapeHtml(e.snippet)}</p>
+        <div class="email-footer">
+          <select class="status-select status-${status}" onchange="setEmailStatus('${e.id}', this.value); this.className='status-select status-' + this.value;">
+            <option value="needs-reply" ${status==='needs-reply'?'selected':''}>Needs reply</option>
+            <option value="waiting" ${status==='waiting'?'selected':''}>Waiting</option>
+            <option value="done" ${status==='done'?'selected':''}>Done</option>
+          </select>
+          <a class="reply-link" href="https://mail.google.com/mail/u/0/#all/${e.threadId}" target="_blank" rel="noopener">Reply in Gmail ↗</a>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+window.addEventListener('error', function(e){
+  setSavePill('Something went wrong: ' + (e.message || 'unknown error'), true);
+});
+
+window.addEventListener('load', () => {
+  loadStatusMap();
+  // google.accounts is loaded async via the GSI script tag; wait briefly if needed
+  if(window.google && google.accounts){
+    initGoogleAuth();
+  } else {
+    let tries = 0;
+    const wait = setInterval(() => {
+      tries++;
+      if(window.google && google.accounts){
+        clearInterval(wait);
+        initGoogleAuth();
+      } else if(tries > 40){
+        clearInterval(wait);
+        showError("Couldn't load Google's sign-in library. Check your connection and reload.");
+      }
+    }, 100);
+  }
+});
+</script>
+
+</body>
+</html>
