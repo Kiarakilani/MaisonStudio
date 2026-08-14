@@ -311,6 +311,65 @@
     background:none;border:none;color:var(--red);text-decoration:underline;
     cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:10px;padding:0;
   }
+
+  /* ---------- Bottom nav (mobile only) ---------- */
+  .bottom-nav{
+    display:none;
+    position:fixed;
+    left:0;right:0;bottom:0;
+    background:#FFFFFF;
+    border-top:1px solid var(--taupe-line);
+    padding:8px 6px calc(8px + env(safe-area-inset-bottom));
+    z-index:50;
+  }
+  .bottom-nav-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-around;
+  }
+  .bn-item{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:3px;
+    text-decoration:none;
+    color:var(--muted);
+    font-size:10.5px;
+    font-family:'Inter',sans-serif;
+    padding:4px 6px;
+    flex:1;
+  }
+  .bn-item.active{color:var(--espresso);font-weight:500;}
+  .bn-dot{width:5px;height:5px;border-radius:50%;background:var(--red);opacity:0;}
+  .bn-item.active .bn-dot{opacity:1;}
+  .bn-add{
+    width:44px;height:44px;
+    border-radius:50%;
+    background:var(--espresso);
+    color:var(--paper);
+    display:flex;align-items:center;justify-content:center;
+    font-size:22px;
+    border:none;
+    cursor:pointer;
+    flex-shrink:0;
+    margin:0 4px;
+    position:relative;
+    top:-4px;
+  }
+
+  /* ---------- Mobile layout ---------- */
+  @media (max-width: 760px){
+    .sidebar{display:none;}
+    .bottom-nav{display:block;}
+    body{padding-bottom:70px;}
+    .topbar{padding:14px 16px;}
+    .brand-tagline{display:none;}
+    .breadcrumb{display:none;}
+    main.content-main{padding:18px 16px 40px;}
+    .masthead h1{font-size:23px;}
+    .masthead-right{text-align:left;}
+    .column{flex:0 0 82vw;}
+  }
 </style>
 </head>
 <body>
@@ -353,6 +412,16 @@
 
 <div id="modal-root"></div>
   </main>
+</div>
+
+<div class="bottom-nav">
+  <div class="bottom-nav-row">
+    <a class="bn-item" href="home.html"><span class="bn-dot"></span>Home</a>
+    <a class="bn-item active" href="board.html"><span class="bn-dot"></span>Content</a>
+    <button class="bn-add" onclick="openModal()" aria-label="Add idea">+</button>
+    <a class="bn-item" href="#"><span class="bn-dot"></span>Planner</a>
+    <a class="bn-item" href="#"><span class="bn-dot"></span>Inbox</a>
+  </div>
 </div>
 
 <script>
