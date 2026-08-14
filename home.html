@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>Maison — Home</title>
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Maison">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#F7F3EC">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --ivory: #F7F3EC;
+    --card: #FFFFFF;
+    --taupe: #EFE8DC;
+    --taupe-line: #E2D9C8;
+    --espresso: #2B2420;
+    --espresso-soft: #5B4F45;
+    --muted: #948A7C;
+    --rose: #B98498;
+    --rose-bg: #F3E7EA;
+    --sage: #8FA084;
+    --sage-bg: #EBEFE4;
+    --gold: #B99456;
+    --gold-bg: #F4EBDA;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background:var(--ivory);
+    color:var(--espresso);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+
+  /* ---------- Top header ---------- */
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:18px 28px;
+    border-bottom:1px solid var(--taupe-line);
+    background:var(--ivory);
+  }
+  .brand{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+  }
+  .brand-name{
+    font-family:'Marcellus',serif;
+    font-size:22px;
+    letter-spacing:0.3px;
+  }
+  .brand-tagline{
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;
+    font-size:14px;
+    color:var(--muted);
+  }
+  .topbar-right{
+    display:flex;
+    align-items:center;
+    gap:16px;
+  }
+  .topbar-date{
+    font-size:13px;
+    color:var(--espresso-soft);
+  }
+  .avatar{
+    width:34px;height:34px;border-radius:50%;
+    background:var(--taupe);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Marcellus',serif;
+    font-size:14px;
+    color:var(--espresso-soft);
+    cursor:pointer;
+  }
+  .add-btn{
+    background:var(--espresso);
+    color:var(--ivory);
+    border:none;
+    font-family:'Inter',sans-serif;
+    font-size:13px;
+    font-weight:500;
+    padding:10px 18px;
+    border-radius:20px;
+    cursor:pointer;
+    position:relative;
+  }
+  .add-btn:hover{background:#413a33;}
+  .add-menu{
+    position:absolute;
+    top:calc(100% + 8px);
+    right:0;
+    background:var(--card);
+    border:1px solid var(--taupe-line);
+    border-radius:12px;
+    box-shadow:0 8px 24px rgba(43,36,32,0.12);
+    min-width:200px;
+    padding:6px;
+    display:none;
+    z-index:40;
+  }
+  .add-menu.open{display:block;}
+  .add-menu button{
+    display:block;
+    width:100%;
+    text-align:left;
+    background:none;
+    border:none;
+    padding:10px 12px;
+    font-family:'Inter',sans-serif;
+    font-size:13.5px;
+    color:var(--espresso);
+    cursor:pointer;
+    border-radius:8px;
+  }
+  .add-menu button:hover{background:var(--taupe);}
+
+  /* ---------- Layout ---------- */
+  .app{
+    display:flex;
+    align-items:flex-start;
+  }
+
+  /* ---------- Sidebar ---------- */
+  .sidebar{
+    width:220px;
+    flex-shrink:0;
+    padding:24px 14px;
+    border-right:1px solid var(--taupe-line);
+    min-height:calc(100vh - 71px);
+  }
+  .nav-item{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:11px 14px;
+    border-radius:10px;
+    font-size:14px;
+    color:var(--espresso-soft);
+    text-decoration:none;
+    margin-bottom:2px;
+  }
+  .nav-item:hover{background:var(--taupe);}
+  .nav-item.active{
+    background:var(--taupe);
+    color:var(--espresso);
+    font-weight:500;
+  }
+  .nav-dot{
+    width:6px;height:6px;border-radius:50%;
+    background:var(--rose);
+    opacity:0;
+  }
+  .nav-item.active .nav-dot{opacity:1;}
+
+  /* ---------- Main ---------- */
+  main{
+    flex:1;
+    padding:36px 40px 60px;
+    max-width:1000px;
+  }
+  .greeting{
+    font-family:'Marcellus',serif;
+    font-size:30px;
+    margin:0 0 6px;
+  }
+  .greeting-sub{
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;
+    font-size:17px;
+    color:var(--muted);
+    margin:0 0 28px;
+  }
+
+  /* ---------- Intelligence banner ---------- */
+  .intel-banner{
+    background:var(--rose-bg);
+    border-radius:14px;
+    padding:16px 20px;
+    margin-bottom:32px;
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+  }
+  .intel-icon{
+    font-family:'Marcellus',serif;
+    font-size:17px;
+    color:var(--rose);
+    line-height:1;
+  }
+  .intel-text .intel-title{
+    font-size:14px;
+    font-weight:500;
+    color:#5A3B45;
+    margin:0 0 2px;
+  }
+  .intel-text .intel-body{
+    font-size:13px;
+    color:#7A5560;
+    margin:0;
+  }
+
+  /* ---------- Section heading ---------- */
+  .section-heading{
+    font-family:'Marcellus',serif;
+    font-size:18px;
+    margin:0 0 16px;
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+  }
+  .section-heading .see-all{
+    font-family:'Inter',sans-serif;
+    font-size:12px;
+    color:var(--muted);
+    font-weight:500;
+    cursor:pointer;
+  }
+
+  /* ---------- Today + Schedule row ---------- */
+  .today-row{
+    display:grid;
+    grid-template-columns:1.6fr 1fr;
+    gap:20px;
+    margin-bottom:40px;
+    align-items:start;
+  }
+  @media (max-width: 800px){
+    .today-row{grid-template-columns:1fr;}
+  }
+
+  .today-card{
+    background:var(--card);
+    border-radius:16px;
+    border:1px solid var(--taupe-line);
+    padding:22px;
+  }
+  .task-row{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    padding:12px 0;
+    border-bottom:1px solid var(--taupe-line);
+  }
+  .task-row:last-child{border-bottom:none;padding-bottom:2px;}
+  .task-check{
+    width:19px;height:19px;
+    border-radius:50%;
+    border:1.5px solid var(--muted);
+    flex-shrink:0;
+    margin-top:2px;
+    cursor:pointer;
+    transition:background .15s, border-color .15s;
+  }
+  .task-check.done{
+    background:var(--sage);
+    border-color:var(--sage);
+  }
+  .task-body{flex:1;}
+  .task-title{
+    font-size:14.5px;
+    margin:0 0 5px;
+  }
+  .task-title.done{
+    text-decoration:line-through;
+    color:var(--muted);
+  }
+  .task-meta{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .task-tag{
+    font-size:10px;
+    letter-spacing:0.05em;
+    text-transform:uppercase;
+    padding:2px 8px;
+    border-radius:20px;
+    font-weight:500;
+  }
+  .tag-content{background:var(--rose-bg);color:#8A4F60;}
+  .tag-business{background:var(--gold-bg);color:#8A6A2E;}
+  .tag-filming{background:var(--sage-bg);color:#556B47;}
+  .tag-editing{background:#E7ECF2;color:#4A5D75;}
+  .tag-admin{background:var(--taupe);color:var(--espresso-soft);}
+  .task-time{
+    font-size:12px;
+    color:var(--muted);
+  }
+
+  .schedule-card{
+    background:var(--card);
+    border-radius:16px;
+    border:1px solid var(--taupe-line);
+    padding:22px;
+  }
+  .sched-item{
+    display:flex;
+    gap:14px;
+    padding:10px 0;
+  }
+  .sched-time{
+    font-family:'Marcellus',serif;
+    font-size:13px;
+    color:var(--espresso-soft);
+    width:62px;
+    flex-shrink:0;
+  }
+  .sched-what{
+    font-size:13.5px;
+    color:var(--espresso);
+    padding-top:1px;
+  }
+
+  /* ---------- This week ---------- */
+  .week-grid{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:16px;
+    margin-bottom:40px;
+  }
+  @media (max-width: 800px){
+    .week-grid{grid-template-columns:repeat(2, 1fr);}
+  }
+  .week-card{
+    background:var(--card);
+    border-radius:14px;
+    border:1px solid var(--taupe-line);
+    padding:16px;
+  }
+  .week-label{
+    font-size:12px;
+    color:var(--muted);
+    margin:0 0 8px;
+  }
+  .week-value{
+    font-family:'Marcellus',serif;
+    font-size:19px;
+    margin:0 0 10px;
+  }
+  .progress-track{
+    height:5px;
+    background:var(--taupe);
+    border-radius:4px;
+    overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;
+    background:var(--rose);
+    border-radius:4px;
+  }
+  .progress-fill.complete{background:var(--sage);}
+
+  /* ---------- Ready for you ---------- */
+  .ready-grid{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:16px;
+    margin-bottom:40px;
+  }
+  @media (max-width: 800px){
+    .ready-grid{grid-template-columns:repeat(2, 1fr);}
+  }
+  .ready-card{
+    background:var(--card);
+    border-radius:14px;
+    border:1px solid var(--taupe-line);
+    padding:18px;
+    cursor:pointer;
+    transition:border-color .15s;
+  }
+  .ready-card:hover{border-color:var(--rose);}
+  .ready-count{
+    font-family:'Marcellus',serif;
+    font-size:24px;
+    margin:0 0 4px;
+  }
+  .ready-label{
+    font-size:12.5px;
+    color:var(--espresso-soft);
+    margin:0 0 12px;
+  }
+  .ready-link{
+    font-size:12px;
+    color:var(--rose);
+    font-weight:500;
+  }
+
+  /* ---------- Coming up ---------- */
+  .coming-list{
+    background:var(--card);
+    border-radius:16px;
+    border:1px solid var(--taupe-line);
+    padding:6px 22px;
+  }
+  .coming-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:14px 0;
+    border-bottom:1px solid var(--taupe-line);
+  }
+  .coming-item:last-child{border-bottom:none;}
+  .coming-day{
+    font-size:12px;
+    color:var(--muted);
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    width:90px;
+    flex-shrink:0;
+  }
+  .coming-what{
+    font-size:14px;
+    flex:1;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <span class="brand-name">Maison</span>
+    <span class="brand-tagline">Your creative world.</span>
+  </div>
+  <div class="topbar-right">
+    <div class="topbar-date" id="topbar-date"></div>
+    <div class="avatar">K</div>
+    <div style="position:relative;">
+      <button class="add-btn" onclick="toggleAddMenu()">+ Add</button>
+      <div class="add-menu" id="add-menu">
+        <button onclick="closeAddMenu()">Content idea</button>
+        <button onclick="closeAddMenu()">Task</button>
+        <button onclick="closeAddMenu()">Reminder</button>
+        <button onclick="closeAddMenu()">Event</button>
+        <button onclick="closeAddMenu()">Email follow-up</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="app">
+  <div class="sidebar">
+    <a class="nav-item active" href="home.html"><span class="nav-dot"></span>Home</a>
+    <a class="nav-item" href="board.html"><span class="nav-dot"></span>Content</a>
+    <a class="nav-item" href="#"><span class="nav-dot"></span>Planner</a>
+    <a class="nav-item" href="#"><span class="nav-dot"></span>Inbox</a>
+    <a class="nav-item" href="#"><span class="nav-dot"></span>Goals</a>
+  </div>
+
+  <main>
+    <h1 class="greeting">Good morning, Kiara.</h1>
+    <p class="greeting-sub">Here's what's happening in your creative world.</p>
+
+    <div class="intel-banner">
+      <div class="intel-icon">✦</div>
+      <div class="intel-text">
+        <p class="intel-title">You have a filming day tomorrow.</p>
+        <p class="intel-body">5 ideas are ready to film.</p>
+      </div>
+    </div>
+
+    <div class="today-row">
+      <div class="today-card">
+        <h2 class="section-heading">Today</h2>
+        <div id="task-list"></div>
+      </div>
+
+      <div class="schedule-card">
+        <h2 class="section-heading">Today's schedule</h2>
+        <div class="sched-item">
+          <div class="sched-time">2:00 PM</div>
+          <div class="sched-what">Editing block</div>
+        </div>
+        <div class="sched-item">
+          <div class="sched-time">6:00 PM</div>
+          <div class="sched-what">Post Instagram Reel</div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-heading">This week</h2>
+    <div class="week-grid">
+      <div class="week-card">
+        <p class="week-label">Posts</p>
+        <p class="week-value">2 of 4</p>
+        <div class="progress-track"><div class="progress-fill" style="width:50%"></div></div>
+      </div>
+      <div class="week-card">
+        <p class="week-label">Batch filming</p>
+        <p class="week-value">Complete</p>
+        <div class="progress-track"><div class="progress-fill complete" style="width:100%"></div></div>
+      </div>
+      <div class="week-card">
+        <p class="week-label">Brand pitches</p>
+        <p class="week-value">3 of 5</p>
+        <div class="progress-track"><div class="progress-fill" style="width:60%"></div></div>
+      </div>
+      <div class="week-card">
+        <p class="week-label">Follow-ups</p>
+        <p class="week-value">2 remaining</p>
+        <div class="progress-track"><div class="progress-fill" style="width:35%"></div></div>
+      </div>
+    </div>
+
+    <h2 class="section-heading">Ready for you</h2>
+    <div class="ready-grid">
+      <div class="ready-card">
+        <p class="ready-count">5</p>
+        <p class="ready-label">Ready to film</p>
+        <span class="ready-link">Start a batch →</span>
+      </div>
+      <div class="ready-card">
+        <p class="ready-count">3</p>
+        <p class="ready-label">Waiting to edit</p>
+        <span class="ready-link">View content →</span>
+      </div>
+      <div class="ready-card">
+        <p class="ready-count">2</p>
+        <p class="ready-label">Emails need attention</p>
+        <span class="ready-link">Review →</span>
+      </div>
+      <div class="ready-card">
+        <p class="ready-count">4</p>
+        <p class="ready-label">Saved ideas</p>
+        <span class="ready-link">Explore ideas →</span>
+      </div>
+    </div>
+
+    <h2 class="section-heading">Coming up</h2>
+    <div class="coming-list">
+      <div class="coming-item">
+        <div class="coming-day">Tomorrow</div>
+        <div class="coming-what">Cider Reel</div>
+      </div>
+      <div class="coming-item">
+        <div class="coming-day">Sunday</div>
+        <div class="coming-what">Batch filming</div>
+      </div>
+      <div class="coming-item">
+        <div class="coming-day">Monday</div>
+        <div class="coming-what">Brand pitch goal resets</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+document.getElementById('topbar-date').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+
+const MOCK_TASKS = [
+  { title:'Finish Cider outfit Reel', tag:'content', tagLabel:'Content', time:null, done:false },
+  { title:'Film Kylie lip liner comparison', tag:'filming', tagLabel:'Filming', time:'2:00 PM', done:false },
+  { title:'Reply to partnership email', tag:'business', tagLabel:'Business', time:null, done:false },
+  { title:"Prep tomorrow's post", tag:'admin', tagLabel:'Admin', time:null, done:true }
+];
+
+function renderTasks(){
+  const list = document.getElementById('task-list');
+  list.innerHTML = MOCK_TASKS.map((t, i) => `
+    <div class="task-row">
+      <div class="task-check ${t.done ? 'done' : ''}" onclick="toggleTask(${i})"></div>
+      <div class="task-body">
+        <p class="task-title ${t.done ? 'done' : ''}">${t.title}</p>
+        <div class="task-meta">
+          <span class="task-tag tag-${t.tag}">${t.tagLabel}</span>
+          ${t.time ? `<span class="task-time">${t.time}</span>` : ''}
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleTask(i){
+  MOCK_TASKS[i].done = !MOCK_TASKS[i].done;
+  renderTasks();
+}
+
+function toggleAddMenu(){
+  document.getElementById('add-menu').classList.toggle('open');
+}
+function closeAddMenu(){
+  document.getElementById('add-menu').classList.remove('open');
+}
+document.addEventListener('click', function(e){
+  const menu = document.getElementById('add-menu');
+  const btn = document.querySelector('.add-btn');
+  if(!menu.contains(e.target) && e.target !== btn){
+    menu.classList.remove('open');
+  }
+});
+
+renderTasks();
+</script>
+</body>
+</html>
