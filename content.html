@@ -465,8 +465,8 @@
     <div class="tab-panel active" id="panel-overview">
       <div class="ov-section">
         <div class="ov-section-head">
-          <h2 class="ov-heading">Ready to film</h2>
-          <button class="ov-viewall" id="ov-viewall-readytofilm" style="display:none;" onclick="viewAllInPipeline('Ready to Film')">View all →</button>
+          <h2 class="ov-heading">Ready to create</h2>
+          <button class="ov-viewall" id="ov-viewall-readytofilm" style="display:none;" onclick="viewAllInPipeline('Ready to Create')">View all →</button>
         </div>
         <div id="ov-ready-to-film"></div>
       </div>
@@ -587,9 +587,34 @@ const CONTENT_STORAGE_KEY = 'content-desk-items';
 const PILLARS_STORAGE_KEY = 'maison-content-pillars';
 const VAULT_STORAGE_KEY = 'maison-vault-items';
 
-const STAGES = ['Ideas','Planning','Ready to Film','Filmed','Editing','Ready to Post','Scheduled','Posted'];
-const PLATFORMS = ['TikTok','Instagram','YouTube','Other'];
+const STAGES = ['Ideas','Planning','Ready to Create','Created','Editing','Ready to Post','Scheduled','Posted'];
+const PLATFORMS = ['TikTok','Instagram','YouTube','Pinterest','Other'];
 const DEFAULT_PILLARS = ['Beauty','Lifestyle','Fashion','Travel'];
+
+const FORMAT_OPTIONS = {
+  'Instagram': ['Reel','Carousel','Photo Post','Story'],
+  'TikTok': ['Video','Photo Carousel'],
+  'YouTube': ['Long-form Video','Short','Community Post'],
+  'Pinterest': ['Pin','Video Pin'],
+  'Other': ['Other']
+};
+
+// Which formats behave like "video" for filming language / Batch Filming eligibility.
+// Legacy items with no format set fall back to 'video' so old seeded/saved content keeps working.
+const VIDEO_FORMATS = ['Reel','Video','Long-form Video','Short','Video Pin'];
+const STORY_FORMATS = ['Story'];
+
+function formatCategory(format){
+  if(!format) return 'video'; // legacy fallback
+  if(VIDEO_FORMATS.includes(format)) return 'video';
+  if(STORY_FORMATS.includes(format)) return 'story';
+  if(format === 'Photo Post') return 'photo';
+  return 'carousel'; // Carousel, Photo Carousel, Pin, Community Post, Other
+}
+// The verb Home/Planner/Batch Filming should use for "ready to make this" language.
+function createVerb(format){
+  return formatCategory(format) === 'video' ? 'Film' : 'Create';
+}
 const VAULT_TYPES = ['On-Screen Text','Hook','Caption','CTA','Audio','Other'];
 
 // Old 6-stage board mapped onto the new 8-stage pipeline
@@ -658,6 +683,16 @@ function handlePillarSelectChange(selectEl){
   }
 }
 
+/* ---------- Format select (cascades from whichever Platform is chosen) ---------- */
+function formatOptionsHtml(platform, selectedFormat){
+  const opts = FORMAT_OPTIONS[platform] || FORMAT_OPTIONS['Other'];
+  return opts.map(f => `<option ${f===selectedFormat?'selected':''}>${escapeHtml(f)}</option>`).join('');
+}
+function onPlatformChangeUpdateFormat(idPrefix){
+  const platform = document.getElementById(idPrefix + '-platform').value;
+  document.getElementById(idPrefix + '-format').innerHTML = formatOptionsHtml(platform, '');
+}
+
 /* ---------- Load, migrate, save ---------- */
 function loadItems(){
   try{
@@ -676,6 +711,7 @@ function loadItems(){
       id: it.id || uid(),
       title: it.title || 'Untitled',
       platform: 'Other',
+      format: '',
       pillar: '',
       thought: it.notes || '',
       stage: OLD_TO_NEW_STAGE[oldStage] !== undefined ? OLD_TO_NEW_STAGE[oldStage] : 0,
@@ -744,11 +780,15 @@ function isWithinDays(dateStr, days){
   return diff >= 0 && diff <= days;
 }
 
+function platformFormatLine(it){
+  const pf = it.format ? `${it.platform || 'Other'} · ${it.format}` : (it.platform || 'Other');
+  return `<span class="platform">${escapeHtml(pf)}</span>${it.pillar ? ' · ' + escapeHtml(it.pillar) : ''}`;
+}
 function miniCard(it){
   return `
     <div class="content-card" style="cursor:pointer;" onclick="openDetailModal('${it.id}')">
       <p class="cc-title">${escapeHtml(it.title)}</p>
-      <p class="cc-meta"><span class="platform">${escapeHtml(it.platform || 'Other')}</span>${it.pillar ? ' · ' + escapeHtml(it.pillar) : ''}</p>
+      <p class="cc-meta">${platformFormatLine(it)}</p>
       ${it.thought ? `<p class="cc-thought">${escapeHtml(it.thought)}</p>` : ''}
       <div class="cc-footer">
         <span class="cc-badge" style="background:var(--taupe);color:var(--espresso-soft);">${escapeHtml(STAGES[it.stage])}</span>
@@ -760,13 +800,13 @@ function miniCard(it){
 
 /* ---------- Overview ---------- */
 function renderOverview(){
-  const readyToFilm = items.filter(i => STAGES[i.stage] === 'Ready to Film');
+  const readyToCreate = items.filter(i => STAGES[i.stage] === 'Ready to Create');
   const editing = items.filter(i => STAGES[i.stage] === 'Editing');
   const scheduled = items.filter(i => STAGES[i.stage] === 'Scheduled');
   const dueSoon = items.filter(i => isWithinDays(i.dueDate, 7)).sort((a,b) => (a.dueDate||'').localeCompare(b.dueDate||''));
   const recent = [...items].sort((a,b) => (b.updatedAt||'').localeCompare(a.updatedAt||'')).slice(0, 6);
 
-  fillOverviewSection('ov-ready-to-film', 'ov-viewall-readytofilm', readyToFilm, 'Nothing ready to film yet.', 0);
+  fillOverviewSection('ov-ready-to-film', 'ov-viewall-readytofilm', readyToCreate, 'Nothing ready to create yet.', 0);
   fillOverviewSection('ov-editing', 'ov-viewall-editing', editing, 'Nothing waiting on edits.', STAGES.indexOf('Editing'));
   fillOverviewSection('ov-scheduled', 'ov-viewall-scheduled', scheduled, 'Nothing scheduled this week.', STAGES.indexOf('Scheduled'));
   fillOverviewSection('ov-due-soon', null, dueSoon, 'Nothing due soon.', null);
@@ -880,7 +920,7 @@ function renderPipeline(){
                ondragend="onCardDragEnd(event)">
             <div onclick="openDetailModal('${it.id}')" style="cursor:pointer;">
               <p class="cc-title">${escapeHtml(it.title)}</p>
-              <p class="cc-meta"><span class="platform">${escapeHtml(it.platform || 'Other')}</span>${it.pillar ? ' · ' + escapeHtml(it.pillar) : ''}</p>
+              <p class="cc-meta">${platformFormatLine(it)}</p>
               ${it.thought ? `<p class="cc-thought">${escapeHtml(it.thought)}</p>` : ''}
             </div>
             <div class="cc-footer">
@@ -906,7 +946,7 @@ function renderPipeline(){
 }
 
 function renderBatchPrompt(filtered){
-  const readyCount = filtered.filter(i => STAGES[i.stage] === 'Ready to Film').length;
+  const readyCount = filtered.filter(i => STAGES[i.stage] === 'Ready to Create' && formatCategory(i.format) === 'video').length;
   const el = document.getElementById('batch-prompt');
   if(readyCount > 0){
     el.style.display = 'inline-flex';
@@ -968,6 +1008,7 @@ function createItem(fields){
     id: uid(),
     title: 'Untitled',
     platform: 'Other',
+    format: '',
     pillar: '',
     thought: '',
     stage: 0,
@@ -1050,20 +1091,28 @@ function openNewContentModal(){
           <div class="field-row">
             <div class="field">
               <label>Platform</label>
-              <select id="nc-platform">
+              <select id="nc-platform" onchange="onPlatformChangeUpdateFormat('nc')">
                 ${PLATFORMS.map(p => `<option>${p}</option>`).join('')}
               </select>
             </div>
             <div class="field">
+              <label>Format</label>
+              <select id="nc-format">
+                ${formatOptionsHtml(PLATFORMS[0], '')}
+              </select>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
               <label>Content pillar</label>
               ${pillarSelectHtml('nc', '')}
             </div>
-          </div>
-          <div class="field">
-            <label>Status</label>
-            <select id="nc-stage">
-              ${STAGES.map((s,i) => `<option value="${i}" ${i===0?'selected':''}>${s}</option>`).join('')}
-            </select>
+            <div class="field">
+              <label>Status</label>
+              <select id="nc-stage">
+                ${STAGES.map((s,i) => `<option value="${i}" ${i===0?'selected':''}>${s}</option>`).join('')}
+              </select>
+            </div>
           </div>
 
           <button type="button" class="details-toggle" onclick="toggleDetails()">Add more details ↓</button>
@@ -1109,6 +1158,7 @@ function submitNewContent(){
   createItem({
     title,
     platform: document.getElementById('nc-platform').value,
+    format: document.getElementById('nc-format').value,
     pillar: document.getElementById('nc-pillar').value.trim(),
     stage: parseInt(document.getElementById('nc-stage').value, 10),
     thought: document.getElementById('nc-thought').value.trim(),
@@ -1144,16 +1194,22 @@ function openDetailModal(id){
           <div class="field-row">
             <div class="field">
               <label>Platform</label>
-              <select id="dt-platform">${PLATFORMS.map(p => `<option ${p===it.platform?'selected':''}>${p}</option>`).join('')}</select>
+              <select id="dt-platform" onchange="onPlatformChangeUpdateFormat('dt')">${PLATFORMS.map(p => `<option ${p===it.platform?'selected':''}>${p}</option>`).join('')}</select>
             </div>
+            <div class="field">
+              <label>Format</label>
+              <select id="dt-format">${formatOptionsHtml(it.platform, it.format || '')}</select>
+            </div>
+          </div>
+          <div class="field-row">
             <div class="field">
               <label>Content pillar</label>
               ${pillarSelectHtml('dt', it.pillar || '')}
             </div>
-          </div>
-          <div class="field">
-            <label>Status</label>
-            <select id="dt-stage">${STAGES.map((s,i) => `<option value="${i}" ${i===it.stage?'selected':''}>${s}</option>`).join('')}</select>
+            <div class="field">
+              <label>Status</label>
+              <select id="dt-stage">${STAGES.map((s,i) => `<option value="${i}" ${i===it.stage?'selected':''}>${s}</option>`).join('')}</select>
+            </div>
           </div>
 
           <div class="detail-group-heading">The idea</div>
@@ -1196,6 +1252,7 @@ function saveDetail(id){
   const title = document.getElementById('dt-title').value.trim();
   if(title) it.title = title;
   it.platform = document.getElementById('dt-platform').value;
+  it.format = document.getElementById('dt-format').value;
   it.pillar = document.getElementById('dt-pillar').value.trim();
   it.stage = parseInt(document.getElementById('dt-stage').value, 10);
   it.thought = document.getElementById('dt-thought').value.trim();
@@ -1501,29 +1558,39 @@ function dateInDays(days){
 function seedIfEmpty(){
   if(items.length > 0) return;
   const seeds = [
-    { title: 'Kylie Lip Liner Comparison', platform: 'TikTok', pillar: 'Beauty', stage: STAGES.indexOf('Ready to Film'),
+    { title: 'Kylie Lip Liner Comparison', platform: 'TikTok', format: 'Video', pillar: 'Beauty', stage: STAGES.indexOf('Ready to Create'),
       thought: 'Compare my favorite Kylie liners side-by-side on my lips.', updatedAt: daysAgoISO(0, 3) },
-    { title: 'Beach Day GRWM', platform: 'Instagram', pillar: 'Lifestyle', stage: STAGES.indexOf('Ideas'),
+    { title: 'Beach Day GRWM', platform: 'Instagram', format: 'Reel', pillar: 'Lifestyle', stage: STAGES.indexOf('Ideas'),
       thought: 'Get ready with me for a beach day — breezy summer look.', updatedAt: daysAgoISO(1) },
-    { title: 'Cider Summer Outfits', platform: 'Instagram', pillar: 'Fashion', stage: STAGES.indexOf('Editing'),
+    { title: 'Cider Summer Outfits', platform: 'Instagram', format: 'Reel', pillar: 'Fashion', stage: STAGES.indexOf('Editing'),
       thought: 'Styling three summer outfits from the new Cider drop.', campaign: 'Cider', dueDate: dateInDays(2), updatedAt: daysAgoISO(0, 6) },
-    { title: 'Morning Routine', platform: 'TikTok', pillar: 'Lifestyle', stage: STAGES.indexOf('Scheduled'),
+    { title: 'Morning Routine', platform: 'TikTok', format: 'Video', pillar: 'Lifestyle', stage: STAGES.indexOf('Scheduled'),
       thought: 'A calm, realistic morning routine — no 5am wake-up nonsense.', dueDate: dateInDays(7), updatedAt: daysAgoISO(2) },
-    { title: 'Products I Regret Buying', platform: 'TikTok', pillar: 'Beauty', stage: STAGES.indexOf('Planning'),
+    { title: 'Products I Regret Buying', platform: 'TikTok', format: 'Video', pillar: 'Beauty', stage: STAGES.indexOf('Planning'),
       thought: 'Honest talk on the hyped products that didn\u2019t work for me.', updatedAt: daysAgoISO(3) },
-    { title: 'Sephora Favorites', platform: 'Instagram', pillar: 'Beauty', stage: STAGES.indexOf('Filmed'),
+    { title: 'Sephora Favorites', platform: 'Instagram', format: 'Reel', pillar: 'Beauty', stage: STAGES.indexOf('Created'),
       thought: 'Monthly Sephora haul and what I\u2019m actually repurchasing.', updatedAt: daysAgoISO(1, 4) },
-    { title: 'GRWM Storytime', platform: 'TikTok', pillar: 'Lifestyle', stage: STAGES.indexOf('Ready to Film'),
+    { title: 'GRWM Storytime', platform: 'TikTok', format: 'Video', pillar: 'Lifestyle', stage: STAGES.indexOf('Ready to Create'),
       thought: 'GRWM while telling the story of how I started this account.', updatedAt: daysAgoISO(0, 1) },
-    { title: 'Summer Skincare Routine', platform: 'Instagram', pillar: 'Beauty', stage: STAGES.indexOf('Ready to Post'),
+    { title: 'Summer Skincare Routine', platform: 'Instagram', format: 'Reel', pillar: 'Beauty', stage: STAGES.indexOf('Ready to Post'),
       thought: 'My simplified 4-step summer skincare routine.', updatedAt: daysAgoISO(4) },
-    { title: 'Spring Try-On Haul', platform: 'Instagram', pillar: 'Fashion', stage: STAGES.indexOf('Posted'),
-      thought: 'Try-on haul from my last spring shopping trip.', updatedAt: daysAgoISO(6) }
+    { title: 'Spring Try-On Haul', platform: 'Instagram', format: 'Reel', pillar: 'Fashion', stage: STAGES.indexOf('Posted'),
+      thought: 'Try-on haul from my last spring shopping trip.', updatedAt: daysAgoISO(6) },
+    { title: 'Summer Beauty Favorites', platform: 'Instagram', format: 'Carousel', pillar: 'Beauty', stage: STAGES.indexOf('Planning'),
+      thought: 'A round-up carousel of what I\u2019m loving in beauty this summer.', updatedAt: daysAgoISO(2, 2) },
+    { title: 'August Photo Dump', platform: 'Instagram', format: 'Photo Post', pillar: 'Lifestyle', stage: STAGES.indexOf('Ready to Post'),
+      thought: 'Casual photo dump from the last few weeks.', updatedAt: daysAgoISO(0, 8) },
+    { title: '5 Products Always in My Makeup Bag', platform: 'Instagram', format: 'Carousel', pillar: 'Beauty', stage: STAGES.indexOf('Created'),
+      thought: 'The five products I reach for every single day.', updatedAt: daysAgoISO(1, 1) },
+    { title: 'Vacation Favorites', platform: 'TikTok', format: 'Photo Carousel', pillar: 'Travel', stage: STAGES.indexOf('Planning'),
+      thought: 'Favorite shots and finds from my last trip.', updatedAt: daysAgoISO(5) },
+    { title: 'Current Skincare Rotation', platform: 'Instagram', format: 'Carousel', pillar: 'Beauty', stage: STAGES.indexOf('Ready to Post'),
+      thought: 'Walking through my current AM/PM skincare rotation.', updatedAt: daysAgoISO(3, 3) }
   ];
   items = seeds.map(s => {
     const now = new Date().toISOString();
     return Object.assign({
-      id: uid(), platform: 'Other', pillar: '', thought: '', stage: 0, dueDate: null,
+      id: uid(), platform: 'Other', format: '', pillar: '', thought: '', stage: 0, dueDate: null,
       campaign: '', hook: '', script: '', caption: '', notes: '',
       inspirationLink: '', websiteLink: '', media: [], checklist: [], vaultRefs: [],
       createdAt: now, updatedAt: now
