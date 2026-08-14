@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>Maison — Content</title>
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Maison">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#F7F3EC">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --ivory: #F7F3EC;
+    --card: #FFFFFF;
+    --taupe: #EFE8DC;
+    --taupe-line: #E2D9C8;
+    --espresso: #2B2420;
+    --espresso-soft: #5B4F45;
+    --muted: #948A7C;
+    --rose: #B98498;
+    --rose-bg: #F3E7EA;
+    --sage: #8FA084;
+    --sage-bg: #EBEFE4;
+    --gold: #B99456;
+    --gold-bg: #F4EBDA;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background:var(--ivory);
+    color:var(--espresso);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  button{font-family:inherit;}
+
+  /* ---------- Top header (same as home.html) ---------- */
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 28px;border-bottom:1px solid var(--taupe-line);background:var(--ivory);
+  }
+  .brand{display:flex;align-items:baseline;gap:10px;}
+  .brand-name{font-family:'Marcellus',serif;font-size:22px;letter-spacing:0.3px;}
+  .brand-tagline{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--muted);}
+  .topbar-right{display:flex;align-items:center;gap:16px;}
+  .topbar-date{font-size:13px;color:var(--espresso-soft);}
+  .avatar{
+    width:34px;height:34px;border-radius:50%;background:var(--taupe);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Marcellus',serif;font-size:14px;color:var(--espresso-soft);cursor:pointer;
+  }
+  .add-btn{
+    background:var(--espresso);color:var(--ivory);border:none;
+    font-family:'Inter',sans-serif;font-size:13px;font-weight:500;
+    padding:10px 18px;border-radius:20px;cursor:pointer;
+  }
+  .add-btn:hover{background:#413a33;}
+
+  /* ---------- Layout ---------- */
+  .app{display:flex;align-items:flex-start;}
+  .sidebar{
+    width:220px;flex-shrink:0;padding:24px 14px;
+    border-right:1px solid var(--taupe-line);min-height:calc(100vh - 71px);
+  }
+  .nav-item{
+    display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:10px;
+    font-size:14px;color:var(--espresso-soft);text-decoration:none;margin-bottom:2px;
+  }
+  .nav-item:hover{background:var(--taupe);}
+  .nav-item.active{background:var(--taupe);color:var(--espresso);font-weight:500;}
+  .nav-dot{width:6px;height:6px;border-radius:50%;background:var(--rose);opacity:0;}
+  .nav-item.active .nav-dot{opacity:1;}
+
+  main{flex:1;padding:32px 36px 60px;max-width:1200px;}
+
+  /* ---------- Content header + tabs ---------- */
+  .content-header-row{
+    display:flex;justify-content:space-between;align-items:flex-start;
+    flex-wrap:wrap;gap:12px;margin-bottom:4px;
+  }
+  .content-title{font-family:'Marcellus',serif;font-size:28px;margin:0 0 4px;}
+  .content-sub{
+    font-family:'Cormorant Garamond',serif;font-style:italic;
+    font-size:15px;color:var(--muted);margin:0 0 22px;
+  }
+  .content-tabs{
+    display:flex;gap:4px;border-bottom:1px solid var(--taupe-line);
+    margin-bottom:28px;flex-wrap:wrap;
+  }
+  .content-tab{
+    background:none;border:none;cursor:pointer;
+    font-family:'Inter',sans-serif;font-size:13.5px;color:var(--muted);
+    padding:10px 6px;margin-right:20px;position:relative;
+    border-bottom:2px solid transparent;
+  }
+  .content-tab.active{color:var(--espresso);font-weight:500;border-bottom-color:var(--rose);}
+  .content-tab:hover{color:var(--espresso);}
+
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+
+  /* ---------- Pipeline header row ---------- */
+  .pipeline-header-row{
+    display:flex;justify-content:space-between;align-items:flex-start;
+    flex-wrap:wrap;gap:14px;margin-bottom:6px;
+  }
+  .pipeline-title{font-family:'Marcellus',serif;font-size:20px;margin:0 0 2px;}
+  .pipeline-sub{
+    font-family:'Cormorant Garamond',serif;font-style:italic;
+    font-size:14px;color:var(--muted);margin:0;
+  }
+  .new-content-btn{
+    background:var(--espresso);color:var(--ivory);border:none;
+    font-family:'Inter',sans-serif;font-size:13px;font-weight:500;
+    padding:10px 18px;border-radius:20px;cursor:pointer;flex-shrink:0;
+  }
+  .new-content-btn:hover{background:#413a33;}
+
+  /* ---------- Filter controls ---------- */
+  .pipeline-controls{
+    display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    margin:18px 0 8px;
+  }
+  .filter-select, .filter-search{
+    font-family:'Inter',sans-serif;font-size:12.5px;color:var(--espresso-soft);
+    background:var(--card);border:1px solid var(--taupe-line);
+    border-radius:16px;padding:7px 14px;
+  }
+  .filter-search{min-width:160px;}
+  .view-toggle{display:flex;gap:2px;background:var(--taupe);border-radius:16px;padding:2px;}
+  .view-toggle button{
+    background:none;border:none;font-size:12px;font-family:'Inter',sans-serif;
+    color:var(--espresso-soft);padding:6px 14px;border-radius:14px;cursor:pointer;
+  }
+  .view-toggle button.active{background:var(--card);color:var(--espresso);font-weight:500;}
+
+  .batch-prompt{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:'Inter',sans-serif;font-size:12.5px;color:var(--espresso-soft);
+    background:var(--sage-bg);border-radius:16px;padding:8px 14px;margin:8px 0 20px;
+  }
+  .batch-prompt a{color:#4A5D3D;font-weight:600;text-decoration:none;border-bottom:1px solid #4A5D3D;}
+
+  /* ---------- Pipeline board ---------- */
+  .pipeline-scroll{overflow-x:auto;padding-bottom:16px;}
+  .pipeline-board{display:flex;gap:16px;min-width:min-content;}
+  .pipeline-col{
+    flex:0 0 270px;
+    background:var(--taupe);
+    border:1px solid var(--taupe-line);
+    border-radius:16px;
+    padding:16px 14px 18px;
+    min-height:200px;
+  }
+  .pipeline-col.drag-over{border-color:var(--rose);background:var(--rose-bg);}
+  .pcol-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;}
+  .pcol-name{font-family:'Marcellus',serif;font-size:14.5px;}
+  .pcol-count{font-family:'Inter',sans-serif;font-size:12px;color:var(--muted);}
+  .pcol-add{
+    background:none;border:none;color:var(--rose);font-family:'Inter',sans-serif;
+    font-size:12px;font-weight:500;cursor:pointer;padding:6px 0 12px;
+  }
+  .pcol-add:hover{color:#8A4F60;}
+  .pcol-quickadd{
+    display:flex;gap:6px;margin-bottom:10px;
+  }
+  .pcol-quickadd input{
+    flex:1;font-family:'Inter',sans-serif;font-size:13px;
+    border:1px solid var(--taupe-line);border-radius:8px;padding:7px 9px;
+    background:var(--card);color:var(--espresso);
+  }
+  .pcol-quickadd button{
+    background:var(--espresso);color:var(--ivory);border:none;
+    font-size:12px;font-weight:500;padding:0 12px;border-radius:8px;cursor:pointer;
+  }
+  .pcol-empty{
+    font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--muted);
+    font-size:13px;padding:8px 0;
+  }
+
+  /* ---------- Content card ---------- */
+  .content-card{
+    background:var(--card);border:1px solid var(--taupe-line);
+    border-radius:12px;padding:14px;margin-bottom:10px;cursor:grab;
+  }
+  .content-card:active{cursor:grabbing;}
+  .content-card.dragging{opacity:0.4;}
+  .cc-title{font-family:'Marcellus',serif;font-size:15px;margin:0 0 6px;line-height:1.3;}
+  .cc-meta{
+    font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.03em;
+    color:var(--muted);text-transform:uppercase;margin:0 0 8px;
+  }
+  .cc-meta .platform{color:var(--espresso-soft);font-weight:500;}
+  .cc-thought{
+    font-size:13px;color:var(--espresso-soft);line-height:1.45;
+    margin:0 0 10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  .cc-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;}
+  .cc-badge{
+    font-family:'Inter',sans-serif;font-size:10.5px;font-weight:500;
+    padding:3px 9px;border-radius:20px;
+  }
+  .cc-badge.due{background:var(--gold-bg);color:#8A6A2E;}
+  .cc-badge.campaign{background:var(--rose-bg);color:#8A4F60;}
+  .cc-move{
+    font-family:'Inter',sans-serif;font-size:11px;color:var(--espresso-soft);
+    background:var(--taupe);border:none;border-radius:8px;padding:4px 8px;cursor:pointer;
+  }
+  .cc-actions{display:flex;align-items:center;gap:6px;}
+  .cc-remove{background:none;border:none;color:var(--muted);font-size:14px;cursor:pointer;padding:2px 4px;}
+  .cc-remove:hover{color:var(--rose);}
+
+  /* ---------- Overview / Ideas grids ---------- */
+  .ov-section{margin-bottom:22px;}
+  .ov-section-head{
+    display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;
+  }
+  .ov-heading{font-family:'Marcellus',serif;font-size:16px;margin:0;}
+  .ov-viewall{
+    font-family:'Inter',sans-serif;font-size:12px;font-weight:500;color:var(--rose);
+    background:none;border:none;cursor:pointer;text-decoration:none;
+  }
+  .ov-viewall:hover{color:#8A4F60;}
+  .ov-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));gap:12px;}
+  .ov-empty-row{
+    display:flex;align-items:center;gap:10px;
+    font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--muted);font-size:14px;
+    padding:2px 0 4px;
+  }
+  .ov-empty-row .ov-empty-add{
+    font-family:'Inter',sans-serif;font-style:normal;font-size:12px;font-weight:500;
+    color:var(--rose);background:none;border:none;cursor:pointer;
+  }
+  .ov-empty-row .ov-empty-add:hover{color:#8A4F60;}
+  .ov-empty{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--muted);font-size:14px;}
+
+  .ideas-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(240px, 1fr));gap:14px;}
+  .idea-card{
+    background:var(--card);border:1px solid var(--taupe-line);border-radius:14px;
+    padding:16px;
+  }
+  .idea-card p{font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;margin:0 0 12px;line-height:1.4;}
+  .idea-card .idea-actions{display:flex;justify-content:space-between;align-items:center;}
+  .idea-plan-btn{
+    background:none;border:none;color:var(--rose);font-family:'Inter',sans-serif;
+    font-size:12px;font-weight:600;cursor:pointer;
+  }
+  .idea-plan-btn:hover{color:#8A4F60;}
+
+  /* ---------- Inspiration placeholder ---------- */
+  .inspiration-placeholder{
+    background:var(--card);border:1px dashed var(--taupe-line);border-radius:16px;
+    padding:48px 24px;text-align:center;
+  }
+  .inspiration-placeholder h3{font-family:'Marcellus',serif;font-size:18px;margin:0 0 8px;}
+  .inspiration-placeholder p{font-size:13.5px;color:var(--muted);max-width:380px;margin:0 auto;line-height:1.6;}
+
+  /* ---------- Modal ---------- */
+  .overlay{
+    position:fixed;inset:0;background:rgba(43,36,32,0.45);
+    display:flex;align-items:center;justify-content:center;
+    z-index:60;padding:16px;
+  }
+  .modal{
+    background:var(--ivory);border-radius:18px;
+    width:100%;max-width:460px;max-height:88vh;
+    display:flex;flex-direction:column;
+    overflow:hidden;
+  }
+  .modal-head{padding:24px 26px 4px;flex-shrink:0;}
+  .modal-head h2{font-family:'Marcellus',serif;font-size:20px;margin:0 0 4px;}
+  .modal-head .modal-sub{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--muted);font-size:13px;margin:0 0 14px;}
+  .modal-body{padding:2px 26px 6px;overflow-y:auto;flex:1;}
+  .field{margin-bottom:14px;}
+  .field label{
+    display:block;font-family:'Inter',sans-serif;font-size:11px;
+    text-transform:uppercase;letter-spacing:0.05em;color:var(--muted);margin-bottom:5px;
+  }
+  .field input, .field select, .field textarea{
+    width:100%;padding:9px 11px;border:1px solid var(--taupe-line);
+    background:var(--card);font-family:'Inter',sans-serif;
+    font-size:14px;border-radius:8px;color:var(--espresso);
+  }
+  .field textarea{resize:vertical;min-height:56px;}
+  .field-row{display:flex;gap:10px;}
+  .field-row > .field{flex:1;}
+  .details-toggle{
+    background:none;border:none;color:var(--rose);font-family:'Inter',sans-serif;
+    font-size:12.5px;font-weight:500;cursor:pointer;padding:4px 0 16px;
+  }
+  .details-block{display:none;}
+  .details-block.open{display:block;}
+  .detail-group-heading{
+    font-family:'Inter',sans-serif;font-size:11px;font-weight:600;
+    letter-spacing:0.08em;text-transform:uppercase;color:var(--rose);
+    margin:22px 0 12px;padding-top:14px;border-top:1px solid var(--taupe-line);
+  }
+  .detail-group-heading:first-child{margin-top:4px;padding-top:0;border-top:none;}
+  .modal-actions{
+    display:flex;gap:10px;padding:16px 26px;justify-content:flex-end;
+    border-top:1px solid var(--taupe-line);flex-shrink:0;
+  }
+  .btn-secondary{
+    background:none;border:1px solid var(--taupe-line);color:var(--espresso);
+    padding:9px 16px;cursor:pointer;font-family:'Inter',sans-serif;
+    font-size:13px;border-radius:20px;
+  }
+  .btn-primary{
+    background:var(--espresso);color:var(--ivory);border:none;
+    padding:9px 18px;cursor:pointer;font-family:'Inter',sans-serif;
+    font-size:13px;border-radius:20px;
+  }
+  .btn-primary:hover{background:#413a33;}
+  .btn-danger-text{
+    background:none;border:none;color:var(--rose);font-family:'Inter',sans-serif;
+    font-size:12px;cursor:pointer;margin-right:auto;
+  }
+
+  .save-pill{
+    font-family:'Inter',sans-serif;font-size:11px;color:var(--muted);
+    min-height:14px;margin-bottom:4px;
+  }
+  .save-pill.failed{color:var(--rose);}
+
+  /* ---------- Bottom nav (mobile) ---------- */
+  .bottom-nav{
+    display:none;position:fixed;left:0;right:0;bottom:0;
+    background:var(--card);border-top:1px solid var(--taupe-line);
+    padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:50;
+  }
+  .bottom-nav-row{display:flex;align-items:center;justify-content:space-around;}
+  .bn-item{
+    display:flex;flex-direction:column;align-items:center;gap:3px;
+    text-decoration:none;color:var(--muted);font-size:10.5px;
+    font-family:'Inter',sans-serif;padding:4px 6px;flex:1;
+  }
+  .bn-item.active{color:var(--espresso);font-weight:500;}
+  .bn-dot{width:5px;height:5px;border-radius:50%;background:var(--rose);opacity:0;}
+  .bn-item.active .bn-dot{opacity:1;}
+  .bn-add{
+    width:44px;height:44px;border-radius:50%;background:var(--espresso);color:var(--ivory);
+    display:flex;align-items:center;justify-content:center;font-size:22px;
+    border:none;cursor:pointer;flex-shrink:0;margin:0 4px;position:relative;top:-4px;
+  }
+
+  @media (max-width: 760px){
+    .sidebar{display:none;}
+    .bottom-nav{display:block;}
+    body{padding-bottom:70px;}
+    .topbar{padding:14px 16px;}
+    .brand-tagline{display:none;}
+    .topbar-date{display:none;}
+    main{padding:20px 16px 40px;}
+    .pipeline-col{flex:0 0 78vw;}
+    .content-header-row{flex-direction:column;align-items:stretch;}
+    .content-header-row .add-btn{width:100%;}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <span class="brand-name">Maison</span>
+    <span class="brand-tagline">Your creative world.</span>
+  </div>
+  <div class="topbar-right">
+    <div class="topbar-date" id="topbar-date"></div>
+    <div class="avatar">K</div>
+  </div>
+</div>
+
+<div class="app">
+  <div class="sidebar">
+    <a class="nav-item" href="home.html"><span class="nav-dot"></span>Home</a>
+    <a class="nav-item active" href="content.html"><span class="nav-dot"></span>Content</a>
+    <a class="nav-item" href="#"><span class="nav-dot"></span>Planner</a>
+    <a class="nav-item" href="#"><span class="nav-dot"></span>Inbox</a>
+    <a class="nav-item" href="#"><span class="nav-dot"></span>Goals</a>
+  </div>
+
+  <main>
+    <div class="content-header-row">
+      <div>
+        <h1 class="content-title">Content</h1>
+        <p class="content-sub">Everything you're creating, all in one place.</p>
+      </div>
+      <button class="add-btn" onclick="openNewContentModal()">+ New Content</button>
+    </div>
+    <div class="save-pill" id="save-pill"></div>
+
+    <div class="content-tabs">
+      <button class="content-tab active" data-tab="overview" onclick="switchTab('overview')">Overview</button>
+      <button class="content-tab" data-tab="ideas" onclick="switchTab('ideas')">Ideas</button>
+      <button class="content-tab" data-tab="pipeline" onclick="switchTab('pipeline')">Pipeline</button>
+      <button class="content-tab" data-tab="inspiration" onclick="switchTab('inspiration')">Inspiration</button>
+    </div>
+
+    <!-- ---------- Overview ---------- -->
+    <div class="tab-panel active" id="panel-overview">
+      <div class="ov-section">
+        <div class="ov-section-head">
+          <h2 class="ov-heading">Ready to film</h2>
+          <button class="ov-viewall" id="ov-viewall-readytofilm" style="display:none;" onclick="viewAllInPipeline('Ready to Film')">View all →</button>
+        </div>
+        <div id="ov-ready-to-film"></div>
+      </div>
+      <div class="ov-section">
+        <div class="ov-section-head">
+          <h2 class="ov-heading">Waiting to edit</h2>
+          <button class="ov-viewall" id="ov-viewall-editing" style="display:none;" onclick="viewAllInPipeline('Editing')">View all →</button>
+        </div>
+        <div id="ov-editing"></div>
+      </div>
+      <div class="ov-section">
+        <div class="ov-section-head">
+          <h2 class="ov-heading">Scheduled this week</h2>
+          <button class="ov-viewall" id="ov-viewall-scheduled" style="display:none;" onclick="viewAllInPipeline('Scheduled')">View all →</button>
+        </div>
+        <div id="ov-scheduled"></div>
+      </div>
+      <div class="ov-section">
+        <div class="ov-section-head">
+          <h2 class="ov-heading">Due soon</h2>
+        </div>
+        <div id="ov-due-soon"></div>
+      </div>
+      <div class="ov-section">
+        <div class="ov-section-head">
+          <h2 class="ov-heading">Recently worked on</h2>
+        </div>
+        <div id="ov-recent"></div>
+      </div>
+    </div>
+
+    <!-- ---------- Ideas ---------- -->
+    <div class="tab-panel" id="panel-ideas">
+      <div class="ideas-grid" id="ideas-grid"></div>
+    </div>
+
+    <!-- ---------- Pipeline ---------- -->
+    <div class="tab-panel" id="panel-pipeline">
+      <div class="pipeline-header-row">
+        <div>
+          <h2 class="pipeline-title">Pipeline</h2>
+          <p class="pipeline-sub">Move your content from idea to posted.</p>
+        </div>
+      </div>
+
+      <div class="pipeline-controls">
+        <select class="filter-select" id="filter-platform" onchange="renderPipeline()">
+          <option value="">All Platforms</option>
+          <option>TikTok</option>
+          <option>Instagram</option>
+          <option>YouTube</option>
+          <option>Other</option>
+        </select>
+        <select class="filter-select" id="filter-pillar" onchange="renderPipeline()">
+          <option value="">All Pillars</option>
+        </select>
+        <input type="text" class="filter-search" id="filter-search" placeholder="Search..." oninput="renderPipeline()">
+        <div class="view-toggle">
+          <button class="active" id="view-board-btn" onclick="setView('board')">Board</button>
+          <button id="view-list-btn" onclick="setView('list')">List</button>
+        </div>
+      </div>
+
+      <div class="batch-prompt" id="batch-prompt" style="display:none;">
+        <span id="batch-count-text"></span>
+        <a href="#" onclick="startBatch();return false;">Start Batch →</a>
+      </div>
+
+      <div class="pipeline-scroll" id="pipeline-board-view">
+        <div class="pipeline-board" id="pipeline-board"></div>
+      </div>
+
+      <div id="pipeline-list-view" style="display:none;"></div>
+    </div>
+
+    <!-- ---------- Inspiration ---------- -->
+    <div class="tab-panel" id="panel-inspiration">
+      <div class="inspiration-placeholder">
+        <h3>Inspiration is coming soon</h3>
+        <p>Save TikToks, Reels, articles, and images that spark ideas — along with your own angle on why they inspire you. This space is being built next.</p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="bottom-nav">
+  <div class="bottom-nav-row">
+    <a class="bn-item" href="home.html"><span class="bn-dot"></span>Home</a>
+    <a class="bn-item active" href="content.html"><span class="bn-dot"></span>Content</a>
+    <button class="bn-add" onclick="openNewContentModal()" aria-label="Add content">+</button>
+    <a class="bn-item" href="#"><span class="bn-dot"></span>Planner</a>
+    <a class="bn-item" href="#"><span class="bn-dot"></span>Inbox</a>
+  </div>
+</div>
+
+<div id="modal-root"></div>
+
+<script>
+const CONTENT_STORAGE_KEY = 'content-desk-items';
+const PILLARS_STORAGE_KEY = 'maison-content-pillars';
+
+const STAGES = ['Ideas','Planning','Ready to Film','Filmed','Editing','Ready to Post','Scheduled','Posted'];
+const PLATFORMS = ['TikTok','Instagram','YouTube','Other'];
+const DEFAULT_PILLARS = ['Beauty','Lifestyle','Fashion','Travel'];
+
+// Old 6-stage board mapped onto the new 8-stage pipeline
+const OLD_TO_NEW_STAGE = [0, 1, 4, 5, 6, 7]; // Idea, Outline, Draft, Review, Scheduled, Published
+
+let items = [];
+let pillars = [];
+let currentTab = 'overview';
+let currentView = 'board';
+let draggedId = null;
+let quickAddOpenFor = null;
+
+document.getElementById('topbar-date').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+
+function uid(){
+  return 'id_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
+}
+
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str == null ? '' : str;
+  return div.innerHTML;
+}
+
+function setSavePill(msg, failed){
+  const el = document.getElementById('save-pill');
+  if(!el) return;
+  el.textContent = msg || '';
+  el.className = 'save-pill' + (failed ? ' failed' : '');
+}
+
+/* ---------- Pillars (mock stand-in for future onboarding/profile settings) ---------- */
+function loadPillars(){
+  try{
+    const raw = localStorage.getItem(PILLARS_STORAGE_KEY);
+    pillars = raw ? JSON.parse(raw) : [...DEFAULT_PILLARS];
+  }catch(e){
+    pillars = [...DEFAULT_PILLARS];
+  }
+  if(!Array.isArray(pillars) || pillars.length === 0) pillars = [...DEFAULT_PILLARS];
+}
+function savePillars(){
+  try{ localStorage.setItem(PILLARS_STORAGE_KEY, JSON.stringify(pillars)); }catch(e){ console.error('Pillar save failed', e); }
+}
+function pillarSelectHtml(idPrefix, selectedValue){
+  const opts = pillars.map(p => `<option value="${escapeHtml(p)}" ${p===selectedValue?'selected':''}>${escapeHtml(p)}</option>`).join('');
+  return `<select id="${idPrefix}-pillar" onchange="handlePillarSelectChange(this)">
+    <option value="">No pillar</option>
+    ${opts}
+    <option value="__add__">+ Add new pillar</option>
+  </select>`;
+}
+function handlePillarSelectChange(selectEl){
+  if(selectEl.value === '__add__'){
+    const name = prompt('New content pillar name:');
+    const trimmed = (name || '').trim();
+    if(trimmed && !pillars.includes(trimmed)){
+      pillars.push(trimmed);
+      savePillars();
+    }
+    // rebuild this select in place with the new value selected (or revert if cancelled)
+    const idPrefix = selectEl.id.replace('-pillar','');
+    selectEl.outerHTML = pillarSelectHtml(idPrefix, trimmed && pillars.includes(trimmed) ? trimmed : '');
+  }
+}
+
+/* ---------- Load, migrate, save ---------- */
+function loadItems(){
+  try{
+    const raw = localStorage.getItem(CONTENT_STORAGE_KEY);
+    items = raw ? JSON.parse(raw) : [];
+  }catch(e){
+    console.error('Load failed', e);
+    items = [];
+  }
+  let migrated = false;
+  items = items.map(it => {
+    if(it.platform !== undefined) return it; // already new-shape
+    migrated = true;
+    const oldStage = typeof it.stage === 'number' ? it.stage : 0;
+    return {
+      id: it.id || uid(),
+      title: it.title || 'Untitled',
+      platform: 'Other',
+      pillar: '',
+      thought: it.notes || '',
+      stage: OLD_TO_NEW_STAGE[oldStage] !== undefined ? OLD_TO_NEW_STAGE[oldStage] : 0,
+      dueDate: it.dueDate || null,
+      campaign: '',
+      hook: '',
+      script: '',
+      caption: '',
+      notes: it.notes || '',
+      inspirationLink: it.reference ? it.reference.url : '',
+      websiteLink: '',
+      media: [],
+      checklist: [],
+      createdAt: it.createdAt || new Date().toISOString(),
+      updatedAt: it.createdAt || new Date().toISOString()
+    };
+  });
+  if(migrated) saveItems();
+}
+
+function saveItems(){
+  try{
+    localStorage.setItem(CONTENT_STORAGE_KEY, JSON.stringify(items));
+    setSavePill('');
+  }catch(e){
+    console.error('Save failed', e);
+    setSavePill("couldn't save — storage may be full or disabled", true);
+  }
+}
+
+function fmtDueDate(dateStr){
+  if(!dateStr) return '';
+  const [y,m,d] = dateStr.split('-').map(Number);
+  return new Date(y, m-1, d).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+}
+
+/* ---------- Tabs ---------- */
+function switchTab(tab){
+  currentTab = tab;
+  document.querySelectorAll('.content-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
+  if(tab === 'overview') renderOverview();
+  if(tab === 'ideas') renderIdeas();
+  if(tab === 'pipeline') renderPipeline();
+}
+
+function setView(view){
+  currentView = view;
+  document.getElementById('view-board-btn').classList.toggle('active', view === 'board');
+  document.getElementById('view-list-btn').classList.toggle('active', view === 'list');
+  document.getElementById('pipeline-board-view').style.display = view === 'board' ? 'block' : 'none';
+  document.getElementById('pipeline-list-view').style.display = view === 'list' ? 'block' : 'none';
+  if(view === 'list') renderListView();
+}
+
+/* ---------- Shared helpers ---------- */
+function isWithinDays(dateStr, days){
+  if(!dateStr) return false;
+  const [y,m,d] = dateStr.split('-').map(Number);
+  const due = new Date(y, m-1, d);
+  const today = new Date(); today.setHours(0,0,0,0);
+  const diff = (due - today) / (1000*60*60*24);
+  return diff >= 0 && diff <= days;
+}
+
+function miniCard(it){
+  return `
+    <div class="content-card" style="cursor:pointer;" onclick="openDetailModal('${it.id}')">
+      <p class="cc-title">${escapeHtml(it.title)}</p>
+      <p class="cc-meta"><span class="platform">${escapeHtml(it.platform || 'Other')}</span>${it.pillar ? ' · ' + escapeHtml(it.pillar) : ''}</p>
+      ${it.thought ? `<p class="cc-thought">${escapeHtml(it.thought)}</p>` : ''}
+      <div class="cc-footer">
+        <span class="cc-badge" style="background:var(--taupe);color:var(--espresso-soft);">${escapeHtml(STAGES[it.stage])}</span>
+        ${it.dueDate ? `<span class="cc-badge due">Due ${fmtDueDate(it.dueDate)}</span>` : ''}
+      </div>
+    </div>
+  `;
+}
+
+/* ---------- Overview ---------- */
+function renderOverview(){
+  const readyToFilm = items.filter(i => STAGES[i.stage] === 'Ready to Film');
+  const editing = items.filter(i => STAGES[i.stage] === 'Editing');
+  const scheduled = items.filter(i => STAGES[i.stage] === 'Scheduled');
+  const dueSoon = items.filter(i => isWithinDays(i.dueDate, 7)).sort((a,b) => (a.dueDate||'').localeCompare(b.dueDate||''));
+  const recent = [...items].sort((a,b) => (b.updatedAt||'').localeCompare(a.updatedAt||'')).slice(0, 6);
+
+  fillOverviewSection('ov-ready-to-film', 'ov-viewall-readytofilm', readyToFilm, 'Nothing ready to film yet.', 0);
+  fillOverviewSection('ov-editing', 'ov-viewall-editing', editing, 'Nothing waiting on edits.', STAGES.indexOf('Editing'));
+  fillOverviewSection('ov-scheduled', 'ov-viewall-scheduled', scheduled, 'Nothing scheduled this week.', STAGES.indexOf('Scheduled'));
+  fillOverviewSection('ov-due-soon', null, dueSoon, 'Nothing due soon.', null);
+  fillOverviewSection('ov-recent', null, recent, 'Nothing worked on yet.', null);
+}
+
+function fillOverviewSection(gridId, viewAllId, list, emptyText, addStageIdx){
+  const el = document.getElementById(gridId);
+  if(list.length === 0){
+    const addLink = addStageIdx !== null ? `<button class="ov-empty-add" onclick="openQuickAddFromOverview(${addStageIdx})">+ Add content</button>` : '';
+    el.innerHTML = `<div class="ov-empty-row"><span>${emptyText}</span>${addLink}</div>`;
+    el.className = '';
+  } else {
+    el.innerHTML = list.map(miniCard).join('');
+    el.className = 'ov-grid';
+  }
+  if(viewAllId){
+    document.getElementById(viewAllId).style.display = list.length > 0 ? 'inline-block' : 'none';
+  }
+}
+
+function openQuickAddFromOverview(stageIdx){
+  switchTab('pipeline');
+  setTimeout(() => openQuickAdd(stageIdx), 60);
+}
+
+function viewAllInPipeline(stageName){
+  switchTab('pipeline');
+  setTimeout(() => {
+    const idx = STAGES.indexOf(stageName);
+    const col = document.querySelector(`.pipeline-col[data-stage="${idx}"]`);
+    if(col){
+      col.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+      col.style.borderColor = 'var(--rose)';
+      setTimeout(() => { col.style.borderColor = ''; }, 1400);
+    }
+  }, 60);
+}
+
+/* ---------- Ideas ---------- */
+function renderIdeas(){
+  const ideas = items.filter(i => STAGES[i.stage] === 'Ideas').sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||''));
+  const grid = document.getElementById('ideas-grid');
+  if(ideas.length === 0){
+    grid.innerHTML = '<p class="ov-empty">No ideas captured yet — use the quick capture bar on Home, or add one here.</p>';
+    return;
+  }
+  grid.innerHTML = ideas.map(it => `
+    <div class="idea-card">
+      <p onclick="openDetailModal('${it.id}')" style="cursor:pointer;">${escapeHtml(it.title)}</p>
+      <div class="idea-actions">
+        <button class="idea-plan-btn" onclick="moveToPlanning('${it.id}')">Start planning →</button>
+        <button class="cc-remove" onclick="removeItem('${it.id}')" title="Remove">&times;</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function moveToPlanning(id){
+  const it = items.find(x => x.id === id);
+  if(!it) return;
+  it.stage = STAGES.indexOf('Planning');
+  it.updatedAt = new Date().toISOString();
+  saveItems();
+  renderIdeas();
+}
+
+/* ---------- Pipeline ---------- */
+function getFilteredItems(){
+  const platform = document.getElementById('filter-platform').value;
+  const pillar = document.getElementById('filter-pillar').value;
+  const search = document.getElementById('filter-search').value.trim().toLowerCase();
+  return items.filter(it => {
+    if(platform && it.platform !== platform) return false;
+    if(pillar && it.pillar !== pillar) return false;
+    if(search && !it.title.toLowerCase().includes(search)) return false;
+    return true;
+  });
+}
+
+function refreshPillarFilter(){
+  const sel = document.getElementById('filter-pillar');
+  const current = sel.value;
+  sel.innerHTML = '<option value="">All Pillars</option>' + pillars.map(p => `<option ${p===current?'selected':''}>${escapeHtml(p)}</option>`).join('');
+}
+
+function renderPipeline(){
+  refreshPillarFilter();
+  const filtered = getFilteredItems();
+  const board = document.getElementById('pipeline-board');
+
+  board.innerHTML = STAGES.map((stageName, sIdx) => {
+    const stageItems = filtered.filter(i => i.stage === sIdx);
+    const isQuickAdd = quickAddOpenFor === sIdx;
+    return `
+      <div class="pipeline-col" data-stage="${sIdx}" ondragover="onColDragOver(event, ${sIdx})" ondragleave="onColDragLeave(event)" ondrop="onColDrop(event, ${sIdx})">
+        <div class="pcol-head">
+          <span class="pcol-name">${stageName}</span>
+          <span class="pcol-count">${stageItems.length}</span>
+        </div>
+        ${isQuickAdd ? `
+          <div class="pcol-quickadd">
+            <input type="text" id="quickadd-input-${sIdx}" placeholder="Title..." onkeydown="if(event.key==='Enter') submitQuickAdd(${sIdx}); if(event.key==='Escape') closeQuickAdd();">
+            <button onclick="submitQuickAdd(${sIdx})">Add</button>
+          </div>
+        ` : `<button class="pcol-add" onclick="openQuickAdd(${sIdx})">+ Add ${sIdx===0?'idea':'content'}</button>`}
+        ${stageItems.length === 0 ? '<p class="pcol-empty">Nothing here yet.</p>' : ''}
+        ${stageItems.map(it => `
+          <div class="content-card" draggable="true"
+               ondragstart="onCardDragStart(event, '${it.id}')"
+               ondragend="onCardDragEnd(event)">
+            <div onclick="openDetailModal('${it.id}')" style="cursor:pointer;">
+              <p class="cc-title">${escapeHtml(it.title)}</p>
+              <p class="cc-meta"><span class="platform">${escapeHtml(it.platform || 'Other')}</span>${it.pillar ? ' · ' + escapeHtml(it.pillar) : ''}</p>
+              ${it.thought ? `<p class="cc-thought">${escapeHtml(it.thought)}</p>` : ''}
+            </div>
+            <div class="cc-footer">
+              <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                ${it.dueDate ? `<span class="cc-badge due">Due ${fmtDueDate(it.dueDate)}</span>` : ''}
+                ${it.campaign ? `<span class="cc-badge campaign">${escapeHtml(it.campaign)}</span>` : ''}
+              </div>
+              <div class="cc-actions">
+                <select class="cc-move" onchange="moveItemToStage('${it.id}', this.value)" onclick="event.stopPropagation()">
+                  ${STAGES.map((s,i) => `<option value="${i}" ${i===it.stage?'selected':''}>${s}</option>`).join('')}
+                </select>
+                <button class="cc-remove" onclick="event.stopPropagation();removeItem('${it.id}')" title="Remove">&times;</button>
+              </div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }).join('');
+
+  renderBatchPrompt(filtered);
+  if(currentView === 'list') renderListView();
+}
+
+function renderBatchPrompt(filtered){
+  const readyCount = filtered.filter(i => STAGES[i.stage] === 'Ready to Film').length;
+  const el = document.getElementById('batch-prompt');
+  if(readyCount > 0){
+    el.style.display = 'inline-flex';
+    document.getElementById('batch-count-text').textContent = `${readyCount} ready to film ·`;
+  } else {
+    el.style.display = 'none';
+  }
+}
+
+function startBatch(){
+  const root = document.getElementById('modal-root');
+  root.innerHTML = `
+    <div class="overlay" onclick="if(event.target===this) closeModal()">
+      <div class="modal" style="max-width:380px;text-align:center;">
+        <h2>Batch Filming</h2>
+        <p class="modal-sub" style="margin-bottom:18px;">This is a placeholder for now — Batch Filming Mode will walk you through everything that's Ready to Film in one session.</p>
+        <div class="modal-actions" style="justify-content:center;">
+          <button class="btn-primary" onclick="closeModal()">Got it</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderListView(){
+  const filtered = getFilteredItems();
+  const el = document.getElementById('pipeline-list-view');
+  if(filtered.length === 0){
+    el.innerHTML = '<p class="ov-empty">Nothing matches your filters.</p>';
+    return;
+  }
+  el.innerHTML = `<div class="ideas-grid">${filtered.map(miniCard).join('')}</div>`;
+}
+
+/* ---------- Quick add per column ---------- */
+function openQuickAdd(stageIdx){
+  quickAddOpenFor = stageIdx;
+  renderPipeline();
+  setTimeout(() => document.getElementById(`quickadd-input-${stageIdx}`)?.focus(), 30);
+}
+function closeQuickAdd(){
+  quickAddOpenFor = null;
+  renderPipeline();
+}
+function submitQuickAdd(stageIdx){
+  const input = document.getElementById(`quickadd-input-${stageIdx}`);
+  const title = input.value.trim();
+  if(!title){ input.focus(); return; }
+  createItem({ title, stage: stageIdx });
+  quickAddOpenFor = null;
+  renderPipeline();
+  if(currentTab === 'overview') renderOverview();
+}
+
+/* ---------- Create / update / remove ---------- */
+function createItem(fields){
+  const now = new Date().toISOString();
+  const item = Object.assign({
+    id: uid(),
+    title: 'Untitled',
+    platform: 'Other',
+    pillar: '',
+    thought: '',
+    stage: 0,
+    dueDate: null,
+    campaign: '',
+    hook: '',
+    script: '',
+    caption: '',
+    notes: '',
+    inspirationLink: '',
+    websiteLink: '',
+    media: [],
+    checklist: [],
+    createdAt: now,
+    updatedAt: now
+  }, fields);
+  items.push(item);
+  saveItems();
+  return item;
+}
+
+function moveItemToStage(id, stageIdx){
+  const it = items.find(x => x.id === id);
+  if(!it) return;
+  it.stage = parseInt(stageIdx, 10);
+  it.updatedAt = new Date().toISOString();
+  saveItems();
+  renderPipeline();
+  if(currentTab === 'overview') renderOverview();
+}
+
+function removeItem(id){
+  items = items.filter(x => x.id !== id);
+  saveItems();
+  if(currentTab === 'pipeline') renderPipeline();
+  if(currentTab === 'ideas') renderIdeas();
+  if(currentTab === 'overview') renderOverview();
+}
+
+/* ---------- Drag and drop (native HTML5 — desktop only; mobile uses the dropdown above) ---------- */
+function onCardDragStart(e, id){
+  draggedId = id;
+  e.target.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+}
+function onCardDragEnd(e){
+  e.target.classList.remove('dragging');
+  draggedId = null;
+}
+function onColDragOver(e, stageIdx){
+  e.preventDefault();
+  e.currentTarget.classList.add('drag-over');
+}
+function onColDragLeave(e){
+  e.currentTarget.classList.remove('drag-over');
+}
+function onColDrop(e, stageIdx){
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if(draggedId){
+    moveItemToStage(draggedId, stageIdx);
+  }
+}
+
+/* ---------- New Content modal ---------- */
+function openNewContentModal(){
+  const root = document.getElementById('modal-root');
+  root.innerHTML = `
+    <div class="overlay" onclick="if(event.target===this) closeModal()">
+      <div class="modal">
+        <div class="modal-head">
+          <h2>New Content</h2>
+          <p class="modal-sub">What's the idea?</p>
+        </div>
+        <div class="modal-body">
+          <div class="field">
+            <input type="text" id="nc-title" placeholder="What's the idea?" autofocus>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>Platform</label>
+              <select id="nc-platform">
+                ${PLATFORMS.map(p => `<option>${p}</option>`).join('')}
+              </select>
+            </div>
+            <div class="field">
+              <label>Content pillar</label>
+              ${pillarSelectHtml('nc', '')}
+            </div>
+          </div>
+          <div class="field">
+            <label>Status</label>
+            <select id="nc-stage">
+              ${STAGES.map((s,i) => `<option value="${i}" ${i===0?'selected':''}>${s}</option>`).join('')}
+            </select>
+          </div>
+
+          <button type="button" class="details-toggle" onclick="toggleDetails()">Add more details ↓</button>
+          <div class="details-block" id="nc-details">
+            <div class="detail-group-heading">The idea</div>
+            <div class="field"><label>Quick thought</label><textarea id="nc-thought" placeholder="Short description of the idea..."></textarea></div>
+            <div class="field"><label>Hook</label><input type="text" id="nc-hook"></div>
+            <div class="field"><label>Script</label><textarea id="nc-script"></textarea></div>
+
+            <div class="detail-group-heading">Publishing</div>
+            <div class="field"><label>Caption</label><textarea id="nc-caption"></textarea></div>
+            <div class="field"><label>Due date</label><input type="date" id="nc-due"></div>
+
+            <div class="detail-group-heading">References</div>
+            <div class="field"><label>Inspiration link</label><input type="text" id="nc-inspiration"></div>
+            <div class="field"><label>Website link</label><input type="text" id="nc-website"></div>
+
+            <div class="detail-group-heading">Organization</div>
+            <div class="field"><label>Campaign</label><input type="text" id="nc-campaign" placeholder="Optional"></div>
+            <div class="field"><label>Notes</label><textarea id="nc-notes"></textarea></div>
+            <div class="field"><label>Checklist (one item per line)</label><textarea id="nc-checklist"></textarea></div>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+          <button class="btn-primary" onclick="submitNewContent()">Create Content</button>
+        </div>
+      </div>
+    </div>
+  `;
+  setTimeout(() => document.getElementById('nc-title')?.focus(), 50);
+}
+
+function toggleDetails(){
+  document.getElementById('nc-details').classList.toggle('open');
+}
+
+function submitNewContent(){
+  const title = document.getElementById('nc-title').value.trim();
+  if(!title){ document.getElementById('nc-title').focus(); return; }
+  const checklistRaw = document.getElementById('nc-checklist').value.trim();
+  createItem({
+    title,
+    platform: document.getElementById('nc-platform').value,
+    pillar: document.getElementById('nc-pillar').value.trim(),
+    stage: parseInt(document.getElementById('nc-stage').value, 10),
+    thought: document.getElementById('nc-thought').value.trim(),
+    dueDate: document.getElementById('nc-due').value || null,
+    campaign: document.getElementById('nc-campaign').value.trim(),
+    hook: document.getElementById('nc-hook').value.trim(),
+    script: document.getElementById('nc-script').value.trim(),
+    caption: document.getElementById('nc-caption').value.trim(),
+    notes: document.getElementById('nc-notes').value.trim(),
+    inspirationLink: document.getElementById('nc-inspiration').value.trim(),
+    websiteLink: document.getElementById('nc-website').value.trim(),
+    checklist: checklistRaw ? checklistRaw.split('\n').map(s=>s.trim()).filter(Boolean) : []
+  });
+  closeModal();
+  if(currentTab === 'pipeline') renderPipeline();
+  if(currentTab === 'ideas') renderIdeas();
+  if(currentTab === 'overview') renderOverview();
+}
+
+/* ---------- Detail modal (view/edit existing item) ---------- */
+function openDetailModal(id){
+  const it = items.find(x => x.id === id);
+  if(!it) return;
+  const root = document.getElementById('modal-root');
+  root.innerHTML = `
+    <div class="overlay" onclick="if(event.target===this) closeModal()">
+      <div class="modal">
+        <div class="modal-head">
+          <h2>Content details</h2>
+        </div>
+        <div class="modal-body">
+          <div class="field"><label>Title</label><input type="text" id="dt-title" value="${escapeHtml(it.title)}"></div>
+          <div class="field-row">
+            <div class="field">
+              <label>Platform</label>
+              <select id="dt-platform">${PLATFORMS.map(p => `<option ${p===it.platform?'selected':''}>${p}</option>`).join('')}</select>
+            </div>
+            <div class="field">
+              <label>Content pillar</label>
+              ${pillarSelectHtml('dt', it.pillar || '')}
+            </div>
+          </div>
+          <div class="field">
+            <label>Status</label>
+            <select id="dt-stage">${STAGES.map((s,i) => `<option value="${i}" ${i===it.stage?'selected':''}>${s}</option>`).join('')}</select>
+          </div>
+
+          <div class="detail-group-heading">The idea</div>
+          <div class="field"><label>Quick thought</label><textarea id="dt-thought">${escapeHtml(it.thought||'')}</textarea></div>
+          <div class="field"><label>Hook</label><input type="text" id="dt-hook" value="${escapeHtml(it.hook||'')}"></div>
+          <div class="field"><label>Script</label><textarea id="dt-script">${escapeHtml(it.script||'')}</textarea></div>
+
+          <div class="detail-group-heading">Publishing</div>
+          <div class="field"><label>Caption</label><textarea id="dt-caption">${escapeHtml(it.caption||'')}</textarea></div>
+          <div class="field"><label>Due date</label><input type="date" id="dt-due" value="${it.dueDate||''}"></div>
+
+          <div class="detail-group-heading">References</div>
+          <div class="field"><label>Inspiration link</label><input type="text" id="dt-inspiration" value="${escapeHtml(it.inspirationLink||'')}"></div>
+          <div class="field"><label>Website link</label><input type="text" id="dt-website" value="${escapeHtml(it.websiteLink||'')}"></div>
+
+          <div class="detail-group-heading">Organization</div>
+          <div class="field"><label>Campaign</label><input type="text" id="dt-campaign" value="${escapeHtml(it.campaign||'')}"></div>
+          <div class="field"><label>Notes</label><textarea id="dt-notes">${escapeHtml(it.notes||'')}</textarea></div>
+          <div class="field"><label>Checklist (one item per line)</label><textarea id="dt-checklist">${escapeHtml((it.checklist||[]).join('\n'))}</textarea></div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn-danger-text" onclick="removeItem('${it.id}');closeModal();">Delete</button>
+          <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+          <button class="btn-primary" onclick="saveDetail('${it.id}')">Save</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function saveDetail(id){
+  const it = items.find(x => x.id === id);
+  if(!it) return;
+  const title = document.getElementById('dt-title').value.trim();
+  if(title) it.title = title;
+  it.platform = document.getElementById('dt-platform').value;
+  it.pillar = document.getElementById('dt-pillar').value.trim();
+  it.stage = parseInt(document.getElementById('dt-stage').value, 10);
+  it.thought = document.getElementById('dt-thought').value.trim();
+  it.dueDate = document.getElementById('dt-due').value || null;
+  it.campaign = document.getElementById('dt-campaign').value.trim();
+  it.hook = document.getElementById('dt-hook').value.trim();
+  it.script = document.getElementById('dt-script').value.trim();
+  it.caption = document.getElementById('dt-caption').value.trim();
+  it.notes = document.getElementById('dt-notes').value.trim();
+  it.inspirationLink = document.getElementById('dt-inspiration').value.trim();
+  it.websiteLink = document.getElementById('dt-website').value.trim();
+  const checklistRaw = document.getElementById('dt-checklist').value.trim();
+  it.checklist = checklistRaw ? checklistRaw.split('\n').map(s=>s.trim()).filter(Boolean) : [];
+  it.updatedAt = new Date().toISOString();
+  saveItems();
+  closeModal();
+  if(currentTab === 'pipeline') renderPipeline();
+  if(currentTab === 'ideas') renderIdeas();
+  if(currentTab === 'overview') renderOverview();
+}
+
+function closeModal(){
+  document.getElementById('modal-root').innerHTML = '';
+}
+
+/* ============================================================
+   DEV SEED DATA — remove this whole block (and the seedIfEmpty
+   call below) once Maison is connected to real persisted data.
+   Populates Overview, Ideas, and Pipeline from the SAME records,
+   so nothing here is hardcoded per-page.
+   ============================================================ */
+function daysAgoISO(days, hours){
+  const d = new Date();
+  d.setDate(d.getDate() - (days || 0));
+  d.setHours(d.getHours() - (hours || 0));
+  return d.toISOString();
+}
+function dateInDays(days){
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  return d.toISOString().slice(0,10);
+}
+function seedIfEmpty(){
+  if(items.length > 0) return;
+  const seeds = [
+    { title: 'Kylie Lip Liner Comparison', platform: 'TikTok', pillar: 'Beauty', stage: STAGES.indexOf('Ready to Film'),
+      thought: 'Compare my favorite Kylie liners side-by-side on my lips.', updatedAt: daysAgoISO(0, 3) },
+    { title: 'Beach Day GRWM', platform: 'Instagram', pillar: 'Lifestyle', stage: STAGES.indexOf('Ideas'),
+      thought: 'Get ready with me for a beach day — breezy summer look.', updatedAt: daysAgoISO(1) },
+    { title: 'Cider Summer Outfits', platform: 'Instagram', pillar: 'Fashion', stage: STAGES.indexOf('Editing'),
+      thought: 'Styling three summer outfits from the new Cider drop.', campaign: 'Cider', dueDate: dateInDays(2), updatedAt: daysAgoISO(0, 6) },
+    { title: 'Morning Routine', platform: 'TikTok', pillar: 'Lifestyle', stage: STAGES.indexOf('Scheduled'),
+      thought: 'A calm, realistic morning routine — no 5am wake-up nonsense.', dueDate: dateInDays(7), updatedAt: daysAgoISO(2) },
+    { title: 'Products I Regret Buying', platform: 'TikTok', pillar: 'Beauty', stage: STAGES.indexOf('Planning'),
+      thought: 'Honest talk on the hyped products that didn\u2019t work for me.', updatedAt: daysAgoISO(3) },
+    { title: 'Sephora Favorites', platform: 'Instagram', pillar: 'Beauty', stage: STAGES.indexOf('Filmed'),
+      thought: 'Monthly Sephora haul and what I\u2019m actually repurchasing.', updatedAt: daysAgoISO(1, 4) },
+    { title: 'GRWM Storytime', platform: 'TikTok', pillar: 'Lifestyle', stage: STAGES.indexOf('Ready to Film'),
+      thought: 'GRWM while telling the story of how I started this account.', updatedAt: daysAgoISO(0, 1) },
+    { title: 'Summer Skincare Routine', platform: 'Instagram', pillar: 'Beauty', stage: STAGES.indexOf('Ready to Post'),
+      thought: 'My simplified 4-step summer skincare routine.', updatedAt: daysAgoISO(4) },
+    { title: 'Spring Try-On Haul', platform: 'Instagram', pillar: 'Fashion', stage: STAGES.indexOf('Posted'),
+      thought: 'Try-on haul from my last spring shopping trip.', updatedAt: daysAgoISO(6) }
+  ];
+  items = seeds.map(s => {
+    const now = new Date().toISOString();
+    return Object.assign({
+      id: uid(), platform: 'Other', pillar: '', thought: '', stage: 0, dueDate: null,
+      campaign: '', hook: '', script: '', caption: '', notes: '',
+      inspirationLink: '', websiteLink: '', media: [], checklist: [],
+      createdAt: now, updatedAt: now
+    }, s, { createdAt: s.updatedAt || now });
+  });
+  saveItems();
+}
+/* ========================= END DEV SEED DATA ========================= */
+
+window.addEventListener('error', function(e){
+  setSavePill('Something went wrong: ' + (e.message || 'unknown error'), true);
+});
+
+loadPillars();
+loadItems();
+seedIfEmpty();
+renderOverview();
+</script>
+
+</body>
+</html>
