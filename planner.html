@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>Maison — Planner</title>
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Maison">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#F7F3EC">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --ivory: #F7F3EC;
+    --card: #FFFFFF;
+    --taupe: #EFE8DC;
+    --taupe-line: #E2D9C8;
+    --espresso: #2B2420;
+    --espresso-soft: #5B4F45;
+    --muted: #948A7C;
+    --rose: #B98498;
+    --rose-bg: #F3E7EA;
+    --sage: #8FA084;
+    --sage-bg: #EBEFE4;
+    --gold: #B99456;
+    --gold-bg: #F4EBDA;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{margin:0;background:var(--ivory);color:var(--espresso);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;}
+  a{color:inherit;}
+  button{font-family:inherit;}
+
+  /* ---------- Shared shell (same as home.html / content.html) ---------- */
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:18px 28px;border-bottom:1px solid var(--taupe-line);background:var(--ivory);}
+  .brand{display:flex;align-items:baseline;gap:10px;}
+  .brand-name{font-family:'Marcellus',serif;font-size:22px;letter-spacing:0.3px;}
+  .brand-tagline{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--muted);}
+  .topbar-right{display:flex;align-items:center;gap:16px;}
+  .topbar-date{font-size:13px;color:var(--espresso-soft);}
+  .avatar{width:34px;height:34px;border-radius:50%;background:var(--taupe);display:flex;align-items:center;justify-content:center;font-family:'Marcellus',serif;font-size:14px;color:var(--espresso-soft);cursor:pointer;}
+
+  .app{display:flex;align-items:flex-start;}
+  .sidebar{width:220px;flex-shrink:0;padding:24px 14px;border-right:1px solid var(--taupe-line);min-height:calc(100vh - 71px);}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:10px;font-size:14px;color:var(--espresso-soft);text-decoration:none;margin-bottom:2px;}
+  .nav-item:hover{background:var(--taupe);}
+  .nav-item.active{background:var(--taupe);color:var(--espresso);font-weight:500;}
+  .nav-dot{width:6px;height:6px;border-radius:50%;background:var(--rose);opacity:0;}
+  .nav-item.active .nav-dot{opacity:1;}
+
+  main{flex:1;padding:32px 36px 60px;max-width:1300px;}
+
+  .add-btn{background:var(--espresso);color:var(--ivory);border:none;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;padding:10px 18px;border-radius:20px;cursor:pointer;flex-shrink:0;}
+  .add-btn:hover{background:#413a33;}
+  .add-btn:disabled{opacity:0.45;cursor:default;}
+
+  /* ---------- Planner header ---------- */
+  .planner-header-row{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:4px;}
+  .planner-title{font-family:'Marcellus',serif;font-size:28px;margin:0 0 4px;}
+  .planner-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--muted);margin:0 0 20px;}
+
+  .planner-toolbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:18px;}
+  .view-toggle{display:flex;gap:2px;background:var(--taupe);border-radius:16px;padding:2px;}
+  .view-toggle button{background:none;border:none;font-size:12.5px;font-family:'Inter',sans-serif;color:var(--espresso-soft);padding:7px 16px;border-radius:14px;cursor:pointer;}
+  .view-toggle button.active{background:var(--card);color:var(--espresso);font-weight:500;}
+  .cal-nav{display:flex;align-items:center;gap:10px;font-family:'Inter',sans-serif;font-size:13px;color:var(--espresso-soft);}
+  .cal-nav button{background:none;border:1px solid var(--taupe-line);border-radius:50%;width:26px;height:26px;cursor:pointer;color:var(--espresso-soft);font-size:12px;}
+  .cal-nav button:hover{background:var(--taupe);}
+  .cal-today-btn{background:none;border:1px solid var(--taupe-line);border-radius:16px;padding:5px 12px;font-size:12px;cursor:pointer;color:var(--espresso-soft);font-family:'Inter',sans-serif;}
+  .cal-today-btn:hover{background:var(--taupe);}
+  .cal-range{font-family:'Marcellus',serif;font-size:14.5px;color:var(--espresso);}
+
+  /* ---------- Weekly goal strip ---------- */
+  .goal-strip{display:flex;align-items:center;gap:22px;flex-wrap:wrap;padding:14px 18px;background:var(--card);border:1px solid var(--taupe-line);border-radius:14px;margin-bottom:22px;}
+  .goal-strip-label{font-family:'Inter',sans-serif;font-size:10.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);}
+  .goal-item{display:flex;align-items:center;gap:8px;}
+  .goal-name{font-size:12.5px;color:var(--espresso-soft);}
+  .goal-value{font-family:'Marcellus',serif;font-size:14px;}
+  .plan-week-btn{
+    margin-left:auto;background:var(--rose-bg);color:#8A4F60;border:none;
+    font-family:'Inter',sans-serif;font-size:12px;font-weight:600;
+    padding:8px 14px;border-radius:16px;cursor:not-allowed;opacity:0.8;
+  }
+
+  /* ---------- Layout: calendar + needs-a-home ---------- */
+  .planner-layout{display:flex;gap:20px;align-items:flex-start;}
+  .planner-main{flex:1;min-width:0;}
+  .needs-home-panel{
+    width:270px;flex-shrink:0;background:var(--card);border:1px solid var(--taupe-line);
+    border-radius:16px;padding:18px;max-height:74vh;overflow-y:auto;
+  }
+  .needs-home-heading{font-family:'Marcellus',serif;font-size:16px;margin:0 0 14px;}
+  .needs-home-group{margin-bottom:18px;}
+  .needs-home-group-label{font-family:'Inter',sans-serif;font-size:11.5px;font-weight:600;color:var(--espresso-soft);margin:0 0 8px;}
+  .needs-home-card{
+    background:var(--taupe);border-radius:10px;padding:10px 12px;margin-bottom:8px;cursor:grab;
+  }
+  .needs-home-card:active{cursor:grabbing;}
+  .needs-home-card.dragging{opacity:0.4;}
+  .nh-title{font-family:'Marcellus',serif;font-size:13.5px;margin:0 0 3px;line-height:1.25;}
+  .nh-meta{font-family:'Inter',sans-serif;font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:0.02em;}
+  .needs-home-empty{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--muted);font-size:13px;}
+
+  /* ---------- Maison insight (Planner) ---------- */
+  .planner-insight{
+    background:var(--rose-bg);border:1px solid #E7CBD3;border-radius:14px;
+    padding:14px 18px;margin-bottom:20px;
+  }
+  .planner-insight-label{font-family:'Inter',sans-serif;font-size:10.5px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--rose);}
+  .planner-insight-body{font-family:'Cormorant Garamond',serif;font-size:15px;color:#4A2E37;margin:5px 0 6px;}
+  .planner-insight-cta{font-family:'Inter',sans-serif;font-size:12.5px;font-weight:600;color:#8A4F60;text-decoration:none;border-bottom:1px solid #C48A9B;}
+
+  /* ---------- Week grid ---------- */
+  .week-scroll{overflow-x:auto;}
+  .week-grid{
+    display:grid;
+    grid-template-columns:56px repeat(7, minmax(120px, 1fr));
+    border:1px solid var(--taupe-line);border-radius:14px;overflow:hidden;background:var(--card);
+    min-width:760px;
+  }
+  .week-head-cell{
+    padding:10px 8px;text-align:center;border-bottom:1px solid var(--taupe-line);
+    border-left:1px solid var(--taupe-line);background:var(--card);
+  }
+  .week-head-cell:first-child{border-left:none;}
+  .week-head-day{font-family:'Inter',sans-serif;font-size:10.5px;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);}
+  .week-head-date{font-family:'Marcellus',serif;font-size:17px;margin-top:2px;}
+  .week-head-date.today{color:var(--rose);}
+  .week-corner{border-bottom:1px solid var(--taupe-line);}
+
+  .allday-row{display:contents;}
+  .allday-label{
+    padding:8px 6px;font-family:'Inter',sans-serif;font-size:9.5px;color:var(--muted);
+    text-transform:uppercase;letter-spacing:0.04em;border-bottom:1px solid var(--taupe-line);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .allday-cell{
+    border-left:1px solid var(--taupe-line);border-bottom:1px solid var(--taupe-line);
+    padding:5px;min-height:34px;background:var(--taupe);
+  }
+  .allday-cell:first-of-type{border-left:none;}
+
+  .time-col{border-right:1px solid var(--taupe-line);}
+  .time-label{
+    font-family:'Inter',sans-serif;font-size:9.5px;color:var(--muted);
+    padding:2px 6px 0 0;text-align:right;border-top:1px solid var(--taupe-line);
+    height:34px;box-sizing:border-box;
+  }
+  .day-col{border-left:1px solid var(--taupe-line);position:relative;}
+  .day-col:first-of-type{border-left:none;}
+  .hour-slot{
+    height:34px;border-top:1px solid var(--taupe-line);box-sizing:border-box;
+  }
+  .hour-slot.drag-over{background:var(--rose-bg);}
+
+  .planner-block{
+    position:absolute;left:3px;right:3px;border-radius:8px;
+    padding:4px 7px;overflow:hidden;cursor:pointer;
+    font-family:'Inter',sans-serif;
+  }
+  .planner-block .pb-title{font-family:'Marcellus',serif;font-size:12px;line-height:1.2;margin:0;}
+  .planner-block .pb-time{font-size:9.5px;color:var(--espresso-soft);margin:1px 0 0;}
+  .planner-block.type-content{background:var(--card);border:1px solid var(--rose);}
+  .planner-block.type-workBlock{background:var(--card);border:1px solid var(--taupe-line);}
+  .planner-block.type-deadline{background:var(--gold-bg);border:1px solid var(--gold);}
+  .routine-chip{
+    display:inline-block;font-size:9.5px;color:var(--espresso-soft);
+    background:var(--sage-bg);border-radius:8px;padding:2px 7px;margin:1px 2px 1px 0;
+  }
+  .deadline-chip{
+    display:inline-block;font-size:9.5px;color:#8A6A2E;
+    background:var(--gold-bg);border-radius:8px;padding:2px 7px;margin:1px 2px 1px 0;cursor:pointer;
+  }
+
+  /* ---------- Mobile agenda (day-by-day list) ---------- */
+  .mobile-agenda{display:none;}
+  .agenda-day{margin-bottom:18px;}
+  .agenda-day-head{
+    font-family:'Marcellus',serif;font-size:15px;margin:0 0 8px;
+    display:flex;align-items:baseline;gap:8px;
+  }
+  .agenda-day-head .adh-date{font-size:12px;color:var(--muted);font-family:'Inter',sans-serif;}
+  .agenda-item{
+    display:flex;gap:10px;background:var(--card);border:1px solid var(--taupe-line);
+    border-radius:10px;padding:10px 12px;margin-bottom:8px;cursor:pointer;
+  }
+  .agenda-time{font-family:'Marcellus',serif;font-size:12.5px;color:var(--espresso-soft);width:64px;flex-shrink:0;}
+  .agenda-body .ai-title{font-family:'Marcellus',serif;font-size:13.5px;margin:0 0 2px;}
+  .agenda-body .ai-meta{font-family:'Inter',sans-serif;font-size:10.5px;color:var(--muted);text-transform:uppercase;}
+  .agenda-empty{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--muted);font-size:13px;padding:6px 0 0;}
+
+  /* ---------- Month view ---------- */
+  .month-grid{
+    display:grid;grid-template-columns:repeat(7, 1fr);
+    border:1px solid var(--taupe-line);border-radius:14px;overflow:hidden;background:var(--card);
+  }
+  .month-dow{padding:8px;text-align:center;font-family:'Inter',sans-serif;font-size:10.5px;letter-spacing:0.05em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--taupe-line);}
+  .month-cell{
+    min-height:88px;border-left:1px solid var(--taupe-line);border-top:1px solid var(--taupe-line);
+    padding:6px;cursor:pointer;
+  }
+  .month-cell:nth-child(7n+1){border-left:none;}
+  .month-cell.other-month{background:var(--taupe);opacity:0.55;}
+  .month-cell.today .month-date{color:var(--rose);font-weight:600;}
+  .month-date{font-family:'Marcellus',serif;font-size:13px;}
+  .month-indicator{font-size:10px;color:var(--espresso-soft);margin-top:3px;line-height:1.4;}
+
+  /* ---------- Modal (shared pattern) ---------- */
+  .overlay{position:fixed;inset:0;background:rgba(43,36,32,0.45);display:flex;align-items:center;justify-content:center;z-index:60;padding:16px;}
+  .modal{background:var(--ivory);border-radius:18px;width:100%;max-width:440px;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;}
+  .modal-head{padding:24px 26px 4px;flex-shrink:0;}
+  .modal-head h2{font-family:'Marcellus',serif;font-size:20px;margin:0 0 4px;}
+  .modal-head .modal-sub{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--muted);font-size:13px;margin:0 0 14px;}
+  .modal-body{padding:2px 26px 6px;overflow-y:auto;flex:1;}
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-family:'Inter',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted);margin-bottom:5px;}
+  .field input, .field select, .field textarea{width:100%;padding:9px 11px;border:1px solid var(--taupe-line);background:var(--card);font-family:'Inter',sans-serif;font-size:14px;border-radius:8px;color:var(--espresso);}
+  .field textarea{resize:vertical;min-height:56px;}
+  .field-row{display:flex;gap:10px;}
+  .field-row > .field{flex:1;}
+  .type-picker{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px;}
+  .type-picker button{
+    background:var(--card);border:1px solid var(--taupe-line);border-radius:12px;
+    padding:14px 10px;cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;color:var(--espresso);
+    text-align:left;
+  }
+  .type-picker button:hover{border-color:var(--rose);}
+  .type-picker button .tp-sub{display:block;font-size:11px;color:var(--muted);margin-top:2px;}
+  .modal-actions{display:flex;gap:10px;padding:16px 26px;justify-content:space-between;border-top:1px solid var(--taupe-line);flex-shrink:0;}
+  .modal-actions-right{display:flex;gap:10px;}
+  .btn-secondary{background:none;border:1px solid var(--taupe-line);color:var(--espresso);padding:9px 16px;cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;border-radius:20px;}
+  .btn-primary{background:var(--espresso);color:var(--ivory);border:none;padding:9px 18px;cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;border-radius:20px;}
+  .btn-primary:hover{background:#413a33;}
+  .btn-danger-text{background:none;border:none;color:var(--rose);font-family:'Inter',sans-serif;font-size:12px;cursor:pointer;}
+
+  .save-pill{font-family:'Inter',sans-serif;font-size:11px;color:var(--muted);min-height:14px;margin-bottom:4px;}
+  .save-pill.failed{color:var(--rose);}
+
+  /* ---------- Bottom nav (mobile) ---------- */
+  .bottom-nav{display:none;position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--taupe-line);padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:50;}
+  .bottom-nav-row{display:flex;align-items:center;justify-content:space-around;}
+  .bn-item{display:flex;flex-direction:column;align-items:center;gap:3px;text-decoration:none;color:var(--muted);font-size:10.5px;font-family:'Inter',sans-serif;padding:4px 6px;flex:1;}
+  .bn-item.active{color:var(--espresso);font-weight:500;}
+  .bn-dot{width:5px;height:5px;border-radius:50%;background:var(--rose);opacity:0;}
+  .bn-item.active .bn-dot{opacity:1;}
+  .bn-add{width:44px;height:44px;border-radius:50%;background:var(--espresso);color:var(--ivory);display:flex;align-items:center;justify-content:center;font-size:22px;border:none;cursor:pointer;flex-shrink:0;margin:0 4px;position:relative;top:-4px;}
+
+  .needs-home-fab{
+    display:none;position:fixed;right:16px;bottom:86px;z-index:45;
+    background:var(--espresso);color:var(--ivory);border:none;border-radius:20px;
+    padding:10px 16px;font-family:'Inter',sans-serif;font-size:12.5px;font-weight:500;cursor:pointer;
+  }
+  .needs-home-sheet{
+    display:none;position:fixed;left:0;right:0;bottom:0;top:20%;z-index:65;
+    background:var(--ivory);border-radius:20px 20px 0 0;padding:20px;overflow-y:auto;
+    box-shadow:0 -4px 24px rgba(43,36,32,0.2);
+  }
+  .needs-home-sheet.open{display:block;}
+  .nh-sheet-close{background:none;border:none;font-size:20px;color:var(--muted);position:absolute;right:16px;top:14px;cursor:pointer;}
+
+  @media (max-width: 900px){
+    .needs-home-panel{display:none;}
+    .needs-home-fab{display:block;}
+  }
+  @media (max-width: 760px){
+    .sidebar{display:none;}
+    .bottom-nav{display:block;}
+    body{padding-bottom:70px;}
+    .topbar{padding:14px 16px;}
+    .brand-tagline{display:none;}
+    .topbar-date{display:none;}
+    main{padding:20px 16px 40px;}
+    .week-scroll{display:none;}
+    .mobile-agenda{display:block;}
+    .planner-header-row{flex-direction:column;align-items:stretch;}
+    .goal-strip{gap:14px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <span class="brand-name">Maison</span>
+    <span class="brand-tagline">Your creative world.</span>
+  </div>
+  <div class="topbar-right">
+    <div class="topbar-date" id="topbar-date"></div>
+    <div class="avatar">K</div>
+  </div>
+</div>
+
+<div class="app">
+  <div class="sidebar">
+    <a class="nav-item" href="home.html"><span class="nav-dot"></span>Home</a>
+    <a class="nav-item" href="content.html"><span class="nav-dot"></span>Content</a>
+    <a class="nav-item active" href="planner.html"><span class="nav-dot"></span>Planner</a>
+    <a class="nav-item" href="#"><span class="nav-dot"></span>Inbox</a>
+    <a class="nav-item" href="#"><span class="nav-dot"></span>Goals</a>
+  </div>
+
+  <main>
+    <div class="planner-header-row">
+      <div>
+        <h1 class="planner-title">Planner</h1>
+        <p class="planner-sub">Plan your creative week.</p>
+      </div>
+      <button class="add-btn" onclick="openScheduleModal()">+ Schedule</button>
+    </div>
+    <div class="save-pill" id="save-pill"></div>
+
+    <div class="planner-insight">
+      <span class="planner-insight-label">&#10022; From Maison</span>
+      <p class="planner-insight-body" id="planner-insight-text">You normally film Sunday, but nothing is ready yet.</p>
+      <a class="planner-insight-cta" href="content.html?tab=ideas">Choose ideas to prep &rarr;</a>
+    </div>
+
+    <div class="planner-toolbar">
+      <div class="view-toggle">
+        <button class="active" id="view-week-btn" onclick="setPlannerView('week')">Week</button>
+        <button id="view-month-btn" onclick="setPlannerView('month')">Month</button>
+      </div>
+      <div class="cal-nav">
+        <button onclick="navCal(-1)" title="Previous">&larr;</button>
+        <button class="cal-today-btn" onclick="goToday()">Today</button>
+        <button onclick="navCal(1)" title="Next">&rarr;</button>
+        <span class="cal-range" id="cal-range"></span>
+      </div>
+    </div>
+
+    <div class="goal-strip" id="goal-strip"></div>
+
+    <div class="planner-layout">
+      <div class="planner-main">
+        <!-- Desktop week grid -->
+        <div class="week-scroll" id="week-view">
+          <div class="week-grid" id="week-grid"></div>
+        </div>
+        <!-- Mobile agenda -->
+        <div class="mobile-agenda" id="mobile-agenda"></div>
+        <!-- Month view -->
+        <div class="month-grid" id="month-view" style="display:none;"></div>
+      </div>
+
+      <div class="needs-home-panel">
+        <h2 class="needs-home-heading">Needs a home</h2>
+        <div id="needs-home-content"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<button class="needs-home-fab" onclick="openNeedsHomeSheet()">Needs a home</button>
+<div class="needs-home-sheet" id="needs-home-sheet">
+  <button class="nh-sheet-close" onclick="closeNeedsHomeSheet()">&times;</button>
+  <h2 class="needs-home-heading">Needs a home</h2>
+  <div id="needs-home-content-mobile"></div>
+</div>
+
+<div class="bottom-nav">
+  <div class="bottom-nav-row">
+    <a class="bn-item" href="home.html"><span class="bn-dot"></span>Home</a>
+    <a class="bn-item" href="content.html"><span class="bn-dot"></span>Content</a>
+    <button class="bn-add" onclick="openScheduleModal()" aria-label="Schedule">+</button>
+    <a class="bn-item active" href="planner.html"><span class="bn-dot"></span>Planner</a>
+    <a class="bn-item" href="#"><span class="bn-dot"></span>Inbox</a>
+  </div>
+</div>
+
+<div id="modal-root"></div>
+
+<script>
+const CONTENT_STORAGE_KEY = 'content-desk-items';
+const ACTIVITIES_KEY = 'maison-planner-activities';
+const ROUTINES_KEY = 'maison-planner-routines';
+const GOALS_KEY = 'maison-planner-goals';
+
+const STAGES = ['Ideas','Planning','Ready to Film','Filmed','Editing','Ready to Post','Scheduled','Posted'];
+const PLATFORMS = ['TikTok','Instagram','YouTube','Other'];
+const OLD_TO_NEW_STAGE = [0, 1, 4, 5, 6, 7];
+
+const DOW_LABELS = ['MON','TUE','WED','THU','FRI','SAT','SUN'];
+const HOURS = []; // 7am - 10pm, 30-min rows
+for(let h = 7; h <= 22; h++){ HOURS.push(h); }
+
+let contentItems = [];
+let activities = [];
+let routines = [];
+let goals = [];
+let plannerView = 'week';
+let anchorDate = new Date(); // any date within the currently viewed week/month
+let draggedContentId = null;
+let scheduleState = { type: null, contentId: null, prefillDate: null, prefillTime: null };
+
+document.getElementById('topbar-date').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+
+function uid(){ return 'id_' + Date.now() + '_' + Math.random().toString(36).slice(2,7); }
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str == null ? '' : str;
+  return div.innerHTML;
+}
+function setSavePill(msg, failed){
+  const el = document.getElementById('save-pill');
+  if(!el) return;
+  el.textContent = msg || '';
+  el.className = 'save-pill' + (failed ? ' failed' : '');
+}
+
+/* ---------- Date helpers ---------- */
+function toISODate(d){
+  const y = d.getFullYear(), m = String(d.getMonth()+1).padStart(2,'0'), day = String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
+}
+function parseISODate(s){
+  const [y,m,d] = s.split('-').map(Number);
+  return new Date(y, m-1, d);
+}
+function isSameDate(a,b){ return toISODate(a) === toISODate(b); }
+function getMonday(d){
+  const date = new Date(d);
+  const day = date.getDay(); // 0=Sun..6=Sat
+  const diff = day === 0 ? -6 : 1 - day;
+  date.setDate(date.getDate() + diff);
+  date.setHours(0,0,0,0);
+  return date;
+}
+function fmtMonthDay(d){ return d.toLocaleDateString('en-US',{month:'short',day:'numeric'}); }
+function fmtTime12(hhmm){
+  if(!hhmm) return '';
+  const [h,m] = hhmm.split(':').map(Number);
+  const period = h >= 12 ? 'PM' : 'AM';
+  const h12 = h % 12 === 0 ? 12 : h % 12;
+  return `${h12}${m ? ':' + String(m).padStart(2,'0') : ':00'} ${period}`;
+}
+function timeToRowOffset(hhmm){
+  // returns number of 30-min rows from HOURS[0]:00
+  const [h,m] = hhmm.split(':').map(Number);
+  return (h - HOURS[0]) * 2 + (m >= 30 ? 1 : 0);
+}
+
+/* ---------- Load content (same key/shape as content.html) ---------- */
+function loadContentItems(){
+  try{
+    const raw = localStorage.getItem(CONTENT_STORAGE_KEY);
+    contentItems = raw ? JSON.parse(raw) : [];
+  }catch(e){
+    contentItems = [];
+  }
+  let migrated = false;
+  contentItems = contentItems.map(it => {
+    if(it.platform !== undefined) return it;
+    migrated = true;
+    const oldStage = typeof it.stage === 'number' ? it.stage : 0;
+    return {
+      id: it.id || uid(), title: it.title || 'Untitled', platform: 'Other', pillar: '',
+      thought: it.notes || '', stage: OLD_TO_NEW_STAGE[oldStage] !== undefined ? OLD_TO_NEW_STAGE[oldStage] : 0,
+      dueDate: it.dueDate || null, campaign: '', hook: '', script: '', caption: '', notes: it.notes || '',
+      inspirationLink: it.reference ? it.reference.url : '', websiteLink: '', media: [], checklist: [],
+      createdAt: it.createdAt || new Date().toISOString(), updatedAt: it.createdAt || new Date().toISOString()
+    };
+  });
+  if(migrated) saveContentItems();
+}
+function saveContentItems(){
+  try{ localStorage.setItem(CONTENT_STORAGE_KEY, JSON.stringify(contentItems)); }
+  catch(e){ console.error('Content save failed', e); }
+}
+
+function loadActivities(){
+  try{
+    const raw = localStorage.getItem(ACTIVITIES_KEY);
+    activities = raw ? JSON.parse(raw) : [];
+  }catch(e){ activities = []; }
+}
+function saveActivities(){
+  try{ localStorage.setItem(ACTIVITIES_KEY, JSON.stringify(activities)); setSavePill(''); }
+  catch(e){ console.error('Save failed', e); setSavePill("couldn't save — storage may be full or disabled", true); }
+}
+
+function loadRoutines(){
+  try{
+    const raw = localStorage.getItem(ROUTINES_KEY);
+    routines = raw ? JSON.parse(raw) : [];
+  }catch(e){ routines = []; }
+}
+function saveRoutines(){
+  try{ localStorage.setItem(ROUTINES_KEY, JSON.stringify(routines)); }
+  catch(e){ console.error('Save failed', e); }
+}
+
+function loadGoals(){
+  try{
+    const raw = localStorage.getItem(GOALS_KEY);
+    goals = raw ? JSON.parse(raw) : null;
+  }catch(e){ goals = null; }
+  if(!goals || !Array.isArray(goals) || goals.length === 0){
+    goals = [
+      { name: 'TikTok', current: 3, target: 5 },
+      { name: 'Instagram Reels', current: 2, target: 3 },
+      { name: 'YouTube', current: 0, target: 1 }
+    ];
+    try{ localStorage.setItem(GOALS_KEY, JSON.stringify(goals)); }catch(e){}
+  }
+}
+
+function findContent(id){ return contentItems.find(c => c.id === id); }
+
+/* ============================================================
+   DEV SEED DATA — remove this whole block once Maison connects
+   to real persisted data. Same content-seeding as content.html
+   (kept identical so either page can be opened first), plus
+   Planner Activities and Routines that REFERENCE that content
+   rather than duplicating it.
+   ============================================================ */
+function daysAgoISO(days, hours){
+  const d = new Date(); d.setDate(d.getDate() - (days||0)); d.setHours(d.getHours() - (hours||0));
+  return d.toISOString();
+}
+function dateInDays(days){
+  const d = new Date(); d.setDate(d.getDate() + days);
+  return d.toISOString().slice(0,10);
+}
+function seedContentIfEmpty(){
+  if(contentItems.length > 0) return;
+  const seeds = [
+    { title: 'Kylie Lip Liner Comparison', platform: 'TikTok', pillar: 'Beauty', stage: STAGES.indexOf('Ready to Film'),
+      thought: 'Compare my favorite Kylie liners side-by-side on my lips.', updatedAt: daysAgoISO(0, 3) },
+    { title: 'Beach Day GRWM', platform: 'Instagram', pillar: 'Lifestyle', stage: STAGES.indexOf('Ideas'),
+      thought: 'Get ready with me for a beach day — breezy summer look.', updatedAt: daysAgoISO(1) },
+    { title: 'Cider Summer Outfits', platform: 'Instagram', pillar: 'Fashion', stage: STAGES.indexOf('Editing'),
+      thought: 'Styling three summer outfits from the new Cider drop.', campaign: 'Cider', dueDate: dateInDays(2), updatedAt: daysAgoISO(0, 6) },
+    { title: 'Morning Routine', platform: 'TikTok', pillar: 'Lifestyle', stage: STAGES.indexOf('Scheduled'),
+      thought: 'A calm, realistic morning routine.', dueDate: dateInDays(7), updatedAt: daysAgoISO(2) },
+    { title: 'Products I Regret Buying', platform: 'TikTok', pillar: 'Beauty', stage: STAGES.indexOf('Planning'),
+      thought: 'Honest talk on hyped products that didn\u2019t work for me.', updatedAt: daysAgoISO(3) },
+    { title: 'Sephora Favorites', platform: 'Instagram', pillar: 'Beauty', stage: STAGES.indexOf('Filmed'),
+      thought: 'Monthly Sephora haul and what I\u2019m repurchasing.', updatedAt: daysAgoISO(1, 4) },
+    { title: 'GRWM Storytime', platform: 'TikTok', pillar: 'Lifestyle', stage: STAGES.indexOf('Ready to Film'),
+      thought: 'GRWM while telling the story of how I started this account.', updatedAt: daysAgoISO(0, 1) },
+    { title: 'Summer Skincare Routine', platform: 'Instagram', pillar: 'Beauty', stage: STAGES.indexOf('Ready to Post'),
+      thought: 'My simplified 4-step summer skincare routine.', updatedAt: daysAgoISO(4) },
+    { title: 'Spring Try-On Haul', platform: 'Instagram', pillar: 'Fashion', stage: STAGES.indexOf('Posted'),
+      thought: 'Try-on haul from my last spring shopping trip.', updatedAt: daysAgoISO(6) }
+  ];
+  contentItems = seeds.map(s => {
+    const now = new Date().toISOString();
+    return Object.assign({
+      id: uid(), platform: 'Other', pillar: '', thought: '', stage: 0, dueDate: null,
+      campaign: '', hook: '', script: '', caption: '', notes: '',
+      inspirationLink: '', websiteLink: '', media: [], checklist: [],
+      createdAt: now, updatedAt: now
+    }, s, { createdAt: s.updatedAt || now });
+  });
+  saveContentItems();
+}
+
+function seedActivitiesIfEmpty(){
+  if(activities.length > 0) return;
+  const monday = getMonday(new Date());
+  const dayISO = (offset) => { const d = new Date(monday); d.setDate(d.getDate()+offset); return toISODate(d); };
+  const byTitle = (t) => contentItems.find(c => c.title === t);
+
+  const cider = byTitle('Cider Summer Outfits');
+  const skincare = byTitle('Summer Skincare Routine');
+
+  const seeds = [];
+  if(cider){
+    seeds.push({ type: 'content', contentId: cider.id, action: 'Edit', date: dayISO(1), startTime: '14:00', endTime: '16:00' });
+    seeds.push({ type: 'content', contentId: cider.id, action: 'Post', date: dayISO(4), startTime: '18:00', endTime: null });
+    seeds.push({ type: 'deadline', title: 'Cider Campaign Draft', date: cider.dueDate || dayISO(2), startTime: null, endTime: null, notes: 'Related to Cider campaign' });
+  }
+  if(skincare){
+    seeds.push({ type: 'content', contentId: skincare.id, action: 'Post', date: dayISO(3), startTime: '17:00', endTime: null });
+  }
+  seeds.push({ type: 'workBlock', title: 'Planning Session', date: dayISO(0), startTime: '10:00', endTime: '11:00' });
+  seeds.push({ type: 'workBlock', title: 'Editing Block', date: dayISO(2), startTime: '14:00', endTime: '16:00' });
+
+  activities = seeds.map(s => Object.assign({ id: uid(), notes: '' }, s));
+  saveActivities();
+}
+
+function seedRoutinesIfEmpty(){
+  if(routines.length > 0) return;
+  routines = [
+    { id: uid(), name: 'Batch Filming', day: 6, time: '12:00', repeat: 'weekly' },
+    { id: uid(), name: 'Weekly Creator Reset', day: 6, time: '19:00', repeat: 'weekly' }
+  ];
+  saveRoutines();
+}
+/* ========================= END DEV SEED DATA ========================= */
+
+/* ---------- Goal strip ---------- */
+function renderGoalStrip(){
+  const el = document.getElementById('goal-strip');
+  el.innerHTML = `
+    <span class="goal-strip-label">This week</span>
+    ${goals.map(g => `
+      <div class="goal-item">
+        <span class="goal-name">${escapeHtml(g.name)}</span>
+        <span class="goal-value">${g.current} / ${g.target}</span>
+      </div>
+    `).join('')}
+    <button class="plan-week-btn" title="Coming soon">&#10022; Plan My Week</button>
+  `;
+}
+
+/* ---------- Needs a home ---------- */
+function readyItems(stageName){
+  return contentItems.filter(c => STAGES[c.stage] === stageName);
+}
+function needsHomeCardHtml(it, draggable){
+  return `
+    <div class="needs-home-card" ${draggable ? `draggable="true" ondragstart="onNHDragStart(event, '${it.id}')" ondragend="onNHDragEnd(event)"` : ''} onclick="startScheduleForContent('${it.id}')">
+      <p class="nh-title">${escapeHtml(it.title)}</p>
+      <p class="nh-meta">${escapeHtml(it.platform || 'Other')}${it.pillar ? ' · ' + escapeHtml(it.pillar) : ''}</p>
+    </div>
+  `;
+}
+function renderNeedsHome(){
+  const readyToFilm = readyItems('Ready to Film');
+  const readyToPost = readyItems('Ready to Post');
+  const html = `
+    <div class="needs-home-group">
+      <p class="needs-home-group-label">${readyToFilm.length} Ready to Film</p>
+      ${readyToFilm.length ? readyToFilm.map(it => needsHomeCardHtml(it, true)).join('') : '<p class="needs-home-empty">Nothing ready to film.</p>'}
+    </div>
+    <div class="needs-home-group">
+      <p class="needs-home-group-label">${readyToPost.length} Ready to Post</p>
+      ${readyToPost.length ? readyToPost.map(it => needsHomeCardHtml(it, true)).join('') : '<p class="needs-home-empty">Nothing ready to post.</p>'}
+    </div>
+  `;
+  document.getElementById('needs-home-content').innerHTML = html;
+  // mobile sheet copy (no drag needed there — tap to schedule)
+  document.getElementById('needs-home-content-mobile').innerHTML = html.replace(/draggable="true" ondragstart="[^"]*" ondragend="[^"]*"/g, '');
+}
+
+function openNeedsHomeSheet(){ document.getElementById('needs-home-sheet').classList.add('open'); }
+function closeNeedsHomeSheet(){ document.getElementById('needs-home-sheet').classList.remove('open'); }
+
+/* ---------- Week view ---------- */
+function getWeekDays(){
+  const monday = getMonday(anchorDate);
+  const days = [];
+  for(let i = 0; i < 7; i++){
+    const d = new Date(monday); d.setDate(d.getDate() + i);
+    days.push(d);
+  }
+  return days;
+}
+
+function activitiesForDate(dateISO){
+  return activities.filter(a => a.date === dateISO);
+}
+function routinesForDow(dowIdx){
+  return routines.filter(r => r.day === dowIdx);
+}
+
+function activityDisplay(a){
+  if(a.type === 'content'){
+    const c = findContent(a.contentId);
+    const title = c ? `${a.action} ${c.title}` : `${a.action} (deleted content)`;
+    const meta = c ? `${c.platform || 'Other'}${c.pillar ? ' · ' + c.pillar : ''}` : '';
+    return { title, meta };
+  }
+  if(a.type === 'deadline'){
+    return { title: a.title, meta: 'Deadline' };
+  }
+  return { title: a.title, meta: 'Work block' };
+}
+
+function renderWeekGrid(){
+  const days = getWeekDays();
+  const today = new Date();
+  const grid = document.getElementById('week-grid');
+
+  let html = `<div class="week-corner"></div>`;
+  days.forEach((d, i) => {
+    html += `<div class="week-head-cell"><div class="week-head-day">${DOW_LABELS[i]}</div><div class="week-head-date ${isSameDate(d,today)?'today':''}">${d.getDate()}</div></div>`;
+  });
+
+  // all-day row: deadlines + routines
+  html += `<div class="allday-label">All day</div>`;
+  days.forEach((d, i) => {
+    const dISO = toISODate(d);
+    const deadlines = activitiesForDate(dISO).filter(a => a.type === 'deadline');
+    const dayRoutines = routinesForDow(i);
+    html += `<div class="allday-cell">`;
+    deadlines.forEach(dl => { html += `<span class="deadline-chip" onclick="openActivityDetail('${dl.id}')">${escapeHtml(dl.title)}</span>`; });
+    dayRoutines.forEach(r => { html += `<span class="routine-chip" title="${fmtTime12(r.time)}">${escapeHtml(r.name)}</span>`; });
+    html += `</div>`;
+  });
+
+  // time column + day columns as CSS grid rows
+  const rowCount = HOURS.length * 2;
+  html += `<div class="time-col" style="display:grid;grid-template-rows:repeat(${rowCount}, 34px);">`;
+  HOURS.forEach(h => {
+    const label = h === 12 ? '12 PM' : h > 12 ? (h-12) + ' PM' : h + ' AM';
+    html += `<div class="time-label">${label}</div><div class="time-label"></div>`;
+  });
+  html += `</div>`;
+
+  days.forEach((d, i) => {
+    const dISO = toISODate(d);
+    const dayActs = activitiesForDate(dISO).filter(a => a.type !== 'deadline' && a.startTime);
+    html += `<div class="day-col" data-date="${dISO}" style="display:grid;grid-template-rows:repeat(${rowCount}, 34px);">`;
+    for(let r = 0; r < rowCount; r++){
+      html += `<div class="hour-slot" data-date="${dISO}" data-row="${r}" ondragover="onSlotDragOver(event)" ondragleave="onSlotDragLeave(event)" ondrop="onSlotDrop(event, '${dISO}', ${r})"></div>`;
+    }
+    dayActs.forEach(a => {
+      const startRow = timeToRowOffset(a.startTime);
+      const endRow = a.endTime ? timeToRowOffset(a.endTime) : startRow + 1;
+      const span = Math.max(1, endRow - startRow);
+      const disp = activityDisplay(a);
+      html += `<div class="planner-block type-${a.type}" style="grid-row:${startRow+1} / span ${span};" onclick="openActivityDetail('${a.id}')">
+        <p class="pb-title">${escapeHtml(disp.title)}</p>
+        <p class="pb-time">${fmtTime12(a.startTime)}${a.endTime ? '–' + fmtTime12(a.endTime) : ''}</p>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+
+  grid.innerHTML = html;
+}
+
+/* ---------- Mobile agenda ---------- */
+function renderMobileAgenda(){
+  const days = getWeekDays();
+  const today = new Date();
+  const el = document.getElementById('mobile-agenda');
+  el.innerHTML = days.map((d, i) => {
+    const dISO = toISODate(d);
+    const dayActs = activitiesForDate(dISO).sort((a,b) => (a.startTime||'').localeCompare(b.startTime||''));
+    const dayRoutines = routinesForDow(i);
+    const items = [...dayActs.map(a => ({a})), ...dayRoutines.map(r => ({r}))];
+    return `
+      <div class="agenda-day">
+        <p class="agenda-day-head">${DOW_LABELS[i]} <span class="adh-date">${fmtMonthDay(d)}${isSameDate(d,today) ? ' · today' : ''}</span></p>
+        ${items.length === 0 ? '<p class="agenda-empty">Nothing scheduled.</p>' : items.map(x => {
+          if(x.r){
+            return `<div class="agenda-item" onclick="alert('Routine: ${escapeHtml(x.r.name)}')">
+              <div class="agenda-time">${fmtTime12(x.r.time)}</div>
+              <div class="agenda-body"><p class="ai-title">${escapeHtml(x.r.name)}</p><p class="ai-meta">Routine</p></div>
+            </div>`;
+          }
+          const disp = activityDisplay(x.a);
+          return `<div class="agenda-item" onclick="openActivityDetail('${x.a.id}')">
+            <div class="agenda-time">${x.a.startTime ? fmtTime12(x.a.startTime) : 'All day'}</div>
+            <div class="agenda-body"><p class="ai-title">${escapeHtml(disp.title)}</p><p class="ai-meta">${escapeHtml(disp.meta)}</p></div>
+          </div>`;
+        }).join('')}
+      </div>
+    `;
+  }).join('');
+}
+
+/* ---------- Month view ---------- */
+function renderMonthView(){
+  const el = document.getElementById('month-view');
+  const year = anchorDate.getFullYear(), month = anchorDate.getMonth();
+  const firstOfMonth = new Date(year, month, 1);
+  const startGrid = getMonday(firstOfMonth);
+  const today = new Date();
+
+  let html = DOW_LABELS.map(l => `<div class="month-dow">${l}</div>`).join('');
+  for(let i = 0; i < 42; i++){
+    const d = new Date(startGrid); d.setDate(d.getDate() + i);
+    const dISO = toISODate(d);
+    const inMonth = d.getMonth() === month;
+    const dayActs = activitiesForDate(dISO);
+    const dow = (d.getDay() + 6) % 7;
+    const dayRoutines = routinesForDow(dow);
+    const indicators = [...dayActs.map(a => activityDisplay(a).title), ...dayRoutines.map(r => r.name)].slice(0, 2);
+    const extra = (dayActs.length + dayRoutines.length) - indicators.length;
+    html += `
+      <div class="month-cell ${inMonth ? '' : 'other-month'} ${isSameDate(d,today) ? 'today' : ''}" onclick="openDayDetail('${dISO}')">
+        <div class="month-date">${d.getDate()}</div>
+        <div class="month-indicator">
+          ${indicators.map(t => `• ${escapeHtml(t)}`).join('<br>')}
+          ${extra > 0 ? `<br>+${extra} more` : ''}
+        </div>
+      </div>
+    `;
+  }
+  el.innerHTML = html;
+}
+
+function openDayDetail(dISO){
+  const d = parseISODate(dISO);
+  const dayActs = activitiesForDate(dISO).sort((a,b) => (a.startTime||'').localeCompare(b.startTime||''));
+  const dow = (d.getDay() + 6) % 7;
+  const dayRoutines = routinesForDow(dow);
+  const root = document.getElementById('modal-root');
+  const items = [...dayActs.map(a => ({a})), ...dayRoutines.map(r => ({r}))];
+  root.innerHTML = `
+    <div class="overlay" onclick="if(event.target===this) closeModal()">
+      <div class="modal" style="max-width:380px;">
+        <div class="modal-head"><h2>${d.toLocaleDateString('en-US',{weekday:'long', month:'long', day:'numeric'})}</h2></div>
+        <div class="modal-body">
+          ${items.length === 0 ? '<p class="agenda-empty">Nothing scheduled.</p>' : items.map(x => {
+            if(x.r) return `<div class="agenda-item"><div class="agenda-time">${fmtTime12(x.r.time)}</div><div class="agenda-body"><p class="ai-title">${escapeHtml(x.r.name)}</p><p class="ai-meta">Routine</p></div></div>`;
+            const disp = activityDisplay(x.a);
+            return `<div class="agenda-item" onclick="closeModal();openActivityDetail('${x.a.id}')"><div class="agenda-time">${x.a.startTime ? fmtTime12(x.a.startTime) : 'All day'}</div><div class="agenda-body"><p class="ai-title">${escapeHtml(disp.title)}</p><p class="ai-meta">${escapeHtml(disp.meta)}</p></div></div>`;
+          }).join('')}
+        </div>
+        <div class="modal-actions"><span></span><button class="btn-secondary" onclick="closeModal()">Close</button></div>
+      </div>
+    </div>
+  `;
+}
+
+/* ---------- View + navigation ---------- */
+function setPlannerView(view){
+  plannerView = view;
+  document.getElementById('view-week-btn').classList.toggle('active', view === 'week');
+  document.getElementById('view-month-btn').classList.toggle('active', view === 'month');
+  document.getElementById('week-view').style.display = view === 'week' ? 'block' : 'none';
+  document.getElementById('mobile-agenda').style.display = view === 'week' ? '' : 'none';
+  document.getElementById('month-view').style.display = view === 'month' ? 'grid' : 'none';
+  renderCalRange();
+  renderAll();
+}
+
+function navCal(dir){
+  if(plannerView === 'week'){
+    anchorDate.setDate(anchorDate.getDate() + dir * 7);
+  } else {
+    anchorDate.setMonth(anchorDate.getMonth() + dir);
+  }
+  anchorDate = new Date(anchorDate);
+  renderCalRange();
+  renderAll();
+}
+function goToday(){
+  anchorDate = new Date();
+  renderCalRange();
+  renderAll();
+}
+
+function renderCalRange(){
+  const el = document.getElementById('cal-range');
+  if(plannerView === 'week'){
+    const days = getWeekDays();
+    const start = days[0], end = days[6];
+    if(start.getMonth() === end.getMonth()){
+      el.textContent = `${start.toLocaleDateString('en-US',{month:'long'})} ${start.getDate()} – ${end.getDate()}`;
+    } else {
+      el.textContent = `${fmtMonthDay(start)} – ${fmtMonthDay(end)}`;
+    }
+  } else {
+    el.textContent = anchorDate.toLocaleDateString('en-US',{month:'long', year:'numeric'});
+  }
+}
+
+function renderAll(){
+  renderGoalStrip();
+  renderNeedsHome();
+  if(plannerView === 'week'){
+    renderWeekGrid();
+    renderMobileAgenda();
+  } else {
+    renderMonthView();
+  }
+}
+
+/* ---------- Drag and drop: Needs a Home -> calendar slot (desktop only; mobile taps to schedule) ---------- */
+function onNHDragStart(e, contentId){
+  draggedContentId = contentId;
+  e.target.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+}
+function onNHDragEnd(e){ e.target.classList.remove('dragging'); draggedContentId = null; }
+function onSlotDragOver(e){ e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
+function onSlotDragLeave(e){ e.currentTarget.classList.remove('drag-over'); }
+function onSlotDrop(e, dateISO, row){
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if(!draggedContentId) return;
+  const h = HOURS[0] + Math.floor(row / 2);
+  const m = row % 2 === 0 ? '00' : '30';
+  const time = `${String(h).padStart(2,'0')}:${m}`;
+  startScheduleForContent(draggedContentId, dateISO, time);
+}
+
+/* ---------- + Schedule modal (multi-step) ---------- */
+function openScheduleModal(){
+  scheduleState = { type: null, contentId: null, prefillDate: null, prefillTime: null };
+  renderScheduleStepType();
+}
+function startScheduleForContent(contentId, dateISO, time){
+  scheduleState = { type: 'content', contentId, prefillDate: dateISO || null, prefillTime: time || null };
+  renderScheduleStepContentAction();
+}
+
+function renderScheduleStepType(){
+  const root = document.getElementById('modal-root');
+  root.innerHTML = `
+    <div class="overlay" onclick="if(event.target===this) closeModal()">
+      <div class="modal" style="max-width:400px;">
+        <div class="modal-head"><h2>Schedule</h2><p class="modal-sub">What are you scheduling?</p></div>
+        <div class="modal-body">
+          <div class="type-picker">
+            <button onclick="chooseScheduleType('content')">Content<span class="tp-sub">Film, edit, or post something you're making</span></button>
+            <button onclick="chooseScheduleType('workBlock')">Work Block<span class="tp-sub">Dedicated creative time</span></button>
+            <button onclick="chooseScheduleType('routine')">Routine<span class="tp-sub">Something that repeats weekly</span></button>
+            <button onclick="chooseScheduleType('deadline')">Deadline<span class="tp-sub">Something due by a date</span></button>
+          </div>
+        </div>
+        <div class="modal-actions"><span></span><button class="btn-secondary" onclick="closeModal()">Cancel</button></div>
+      </div>
+    </div>
+  `;
+}
+
+function chooseScheduleType(type){
+  scheduleState.type = type;
+  if(type === 'content') renderScheduleStepChooseContent();
+  else if(type === 'workBlock') renderScheduleStepWorkBlock();
+  else if(type === 'routine') renderScheduleStepRoutine();
+  else if(type === 'deadline') renderScheduleStepDeadline();
+}
+
+function renderScheduleStepChooseContent(){
+  const root = document.getElementById('modal-root');
+  root.innerHTML = `
+    <div class="overlay" onclick="if(event.target===this) closeModal()">
+      <div class="modal" style="max-width:400px;">
+        <div class="modal-head"><h2>Schedule content</h2><p class="modal-sub">Choose content</p></div>
+        <div class="modal-body">
+          <div class="field">
+            <select id="sc-content-select">
+              ${contentItems.length === 0 ? '<option value="">No content yet</option>' :
+                contentItems.map(c => `<option value="${c.id}">${escapeHtml(c.title)} — ${escapeHtml(c.platform||'Other')}${c.pillar ? ' · ' + escapeHtml(c.pillar) : ''}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-secondary" onclick="renderScheduleStepType()">Back</button>
+          <button class="btn-primary" onclick="proceedFromContentChoice()">Next</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+function proceedFromContentChoice(){
+  const id = document.getElementById('sc-content-select').value;
+  if(!id) return;
+  scheduleState.contentId = id;
+  renderScheduleStepContentAction();
+}
+
+function renderScheduleStepContentAction(){
+  const c = findContent(scheduleState.contentId);
+  const root = document.getElementById('modal-root');
+  root.innerHTML = `
+    <div class="overlay" onclick="if(event.target===this) closeModal()">
+      <div class="modal" style="max-width:400px;">
+        <div class="modal-head"><h2>${c ? escapeHtml(c.title) : 'Schedule content'}</h2><p class="modal-sub">What are you scheduling?</p></div>
+        <div class="modal-body">
+          <div class="field">
+            <select id="sc-action">
+              <option>Film</option><option>Edit</option><option>Post</option>
+            </select>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Date</label><input type="date" id="sc-date" value="${scheduleState.prefillDate || toISODate(new Date())}"></div>
+            <div class="field"><label>Time</label><input type="time" id="sc-time" value="${scheduleState.prefillTime || '10:00'}"></div>
+          </div>
+          <div class="field"><label>End time (optional)</label><input type="time" id="sc-end-time"></div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-secondary" onclick="scheduleState.contentId ? renderScheduleStepChooseContent() : renderScheduleStepType()">Back</button>
+          <button class="btn-primary" onclick="submitContentSchedule()">Add to Planner</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+function submitContentSchedule(){
+  const action = document.getElementById('sc-action').value;
+  const date = document.getElementById('sc-date').value;
+  const startTime = document.getElementById('sc-time').value;
+  const endTime = document.getElementById('sc-end-time').value || null;
+  if(!date || !startTime) return;
+  activities.push({ id: uid(), type: 'content', contentId: scheduleState.contentId, action, date, startTime, endTime, notes: '' });
+  saveActivities();
+  closeModal();
+  renderAll();
+}
+
+function renderScheduleStepWorkBlock(){
+  const root = document.getElementById('modal-root');
+  root.innerHTML = `
+    <div class="overlay" onclick="if(event.target===this) closeModal()">
+      <div class="modal" style="max-width:400px;">
+        <div class="modal-head"><h2>Work Block</h2></div>
+        <div class="modal-body">
+          <div class="field">
+            <label>Title</label>
+            <input type="text" id="wb-title" list="wb-suggestions" placeholder="e.g. Editing Block">
+            <datalist id="wb-suggestions">
+              <option value="Editing Block"><option value="Planning Session"><option value="Content Admin"><option value="Brand Outreach">
+            </datalist>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Date</label><input type="date" id="wb-date" value="${toISODate(new Date())}"></div>
+            <div class="field"><label>Start time</label><input type="time" id="wb-start" value="10:00"></div>
+          </div>
+          <div class="field"><label>End time</label><input type="time" id="wb-end" value="11:00"></div>
+          <div class="field"><label>Notes</label><textarea id="wb-notes"></textarea></div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-secondary" onclick="renderScheduleStepType()">Back</button>
+          <button class="btn-primary" onclick="submitWorkBlock()">Add to Planner</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+function submitWorkBlock(){
+  const title = document.getElementById('wb-title').value.trim();
+  const date = document.getElementById('wb-date').value;
+  const startTime = document.getElementById('wb-start').value;
+  const endTime = document.getElementById('wb-end').value || null;
+  const notes = document.getElementById('wb-notes').value.trim();
+  if(!title || !date || !startTime) return;
+  activities.push({ id: uid(), type: 'workBlock', contentId: null, title, date, startTime, endTime, notes });
+  saveActivities();
+  closeModal();
+  renderAll();
+}
+
+function renderScheduleStepRoutine(){
+  const root = document.getElementById('modal-root');
+  root.innerHTML = `
+    <div class="overlay" onclick="if(event.target===this) closeModal()">
+      <div class="modal" style="max-width:400px;">
+        <div class="modal-head"><h2>Routine</h2></div>
+        <div class="modal-body">
+          <div class="field">
+            <label>Routine name</label>
+            <input type="text" id="rt-name" list="rt-suggestions" placeholder="e.g. Batch Filming">
+            <datalist id="rt-suggestions">
+              <option value="Batch Filming"><option value="Weekly Creator Reset"><option value="Planning Day"><option value="Editing Day">
+            </datalist>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>Day</label>
+              <select id="rt-day">${DOW_LABELS.map((l,i) => `<option value="${i}">${l[0]}${l.slice(1).toLowerCase()}</option>`).join('')}</select>
+            </div>
+            <div class="field"><label>Time</label><input type="time" id="rt-time" value="10:00"></div>
+          </div>
+          <div class="field">
+            <label>Repeat</label>
+            <select id="rt-repeat"><option value="weekly">Weekly</option><option value="custom">Custom</option></select>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-secondary" onclick="renderScheduleStepType()">Back</button>
+          <button class="btn-primary" onclick="submitRoutine()">Add to Planner</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+function submitRoutine(){
+  const name = document.getElementById('rt-name').value.trim();
+  const day = parseInt(document.getElementById('rt-day').value, 10);
+  const time = document.getElementById('rt-time').value;
+  const repeat = document.getElementById('rt-repeat').value;
+  if(!name || !time) return;
+  routines.push({ id: uid(), name, day, time, repeat });
+  saveRoutines();
+  closeModal();
+  renderAll();
+}
+
+function renderScheduleStepDeadline(){
+  const root = document.getElementById('modal-root');
+  root.innerHTML = `
+    <div class="overlay" onclick="if(event.target===this) closeModal()">
+      <div class="modal" style="max-width:400px;">
+        <div class="modal-head"><h2>Deadline</h2></div>
+        <div class="modal-body">
+          <div class="field"><label>Deadline name</label><input type="text" id="dl-title" placeholder="e.g. Campaign analytics due"></div>
+          <div class="field-row">
+            <div class="field"><label>Date</label><input type="date" id="dl-date" value="${toISODate(new Date())}"></div>
+            <div class="field"><label>Time (optional)</label><input type="time" id="dl-time"></div>
+          </div>
+          <div class="field">
+            <label>Related content (optional)</label>
+            <select id="dl-content">
+              <option value="">None</option>
+              ${contentItems.map(c => `<option value="${c.id}">${escapeHtml(c.title)}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-secondary" onclick="renderScheduleStepType()">Back</button>
+          <button class="btn-primary" onclick="submitDeadline()">Add to Planner</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+function submitDeadline(){
+  const title = document.getElementById('dl-title').value.trim();
+  const date = document.getElementById('dl-date').value;
+  const startTime = document.getElementById('dl-time').value || null;
+  const relatedContentId = document.getElementById('dl-content').value || null;
+  if(!title || !date) return;
+  activities.push({ id: uid(), type: 'deadline', contentId: relatedContentId, title, date, startTime, endTime: null, notes: '' });
+  saveActivities();
+  closeModal();
+  renderAll();
+}
+
+/* ---------- Activity detail (work block / deadline) or hand off to Content detail ---------- */
+function openActivityDetail(activityId){
+  const a = activities.find(x => x.id === activityId);
+  if(!a) return;
+  if(a.type === 'content'){
+    if(a.contentId) openContentDetail(a.contentId);
+    return;
+  }
+  const root = document.getElementById('modal-root');
+  root.innerHTML = `
+    <div class="overlay" onclick="if(event.target===this) closeModal()">
+      <div class="modal" style="max-width:400px;">
+        <div class="modal-head"><h2>${a.type === 'deadline' ? 'Deadline' : 'Work block'}</h2></div>
+        <div class="modal-body">
+          <div class="field"><label>Title</label><input type="text" id="ad-title" value="${escapeHtml(a.title)}"></div>
+          <div class="field-row">
+            <div class="field"><label>Date</label><input type="date" id="ad-date" value="${a.date}"></div>
+            <div class="field"><label>Time</label><input type="time" id="ad-start" value="${a.startTime || ''}"></div>
+          </div>
+          ${a.type === 'workBlock' ? `<div class="field"><label>End time</label><input type="time" id="ad-end" value="${a.endTime || ''}"></div>` : ''}
+          <div class="field"><label>Notes</label><textarea id="ad-notes">${escapeHtml(a.notes || '')}</textarea></div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-danger-text" onclick="removeActivity('${a.id}');closeModal();">Delete</button>
+          <div class="modal-actions-right">
+            <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+            <button class="btn-primary" onclick="saveActivityDetail('${a.id}')">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+function saveActivityDetail(id){
+  const a = activities.find(x => x.id === id);
+  if(!a) return;
+  const title = document.getElementById('ad-title').value.trim();
+  if(title) a.title = title;
+  a.date = document.getElementById('ad-date').value || a.date;
+  a.startTime = document.getElementById('ad-start').value || null;
+  const endEl = document.getElementById('ad-end');
+  if(endEl) a.endTime = endEl.value || null;
+  a.notes = document.getElementById('ad-notes').value.trim();
+  saveActivities();
+  closeModal();
+  renderAll();
+}
+function removeActivity(id){
+  activities = activities.filter(x => x.id !== id);
+  saveActivities();
+  renderAll();
+}
+
+/* ---------- Content detail (equivalent to content.html's modal — same storage key, kept in sync) ---------- */
+function openContentDetail(id){
+  const it = findContent(id);
+  if(!it) return;
+  const root = document.getElementById('modal-root');
+  root.innerHTML = `
+    <div class="overlay" onclick="if(event.target===this) closeModal()">
+      <div class="modal">
+        <div class="modal-head"><h2>Content details</h2></div>
+        <div class="modal-body">
+          <div class="field"><label>Title</label><input type="text" id="ct-title" value="${escapeHtml(it.title)}"></div>
+          <div class="field-row">
+            <div class="field"><label>Platform</label><select id="ct-platform">${PLATFORMS.map(p => `<option ${p===it.platform?'selected':''}>${p}</option>`).join('')}</select></div>
+            <div class="field"><label>Content pillar</label><input type="text" id="ct-pillar" value="${escapeHtml(it.pillar||'')}"></div>
+          </div>
+          <div class="field"><label>Status</label><select id="ct-stage">${STAGES.map((s,i) => `<option value="${i}" ${i===it.stage?'selected':''}>${s}</option>`).join('')}</select></div>
+          <div class="field"><label>Quick thought</label><textarea id="ct-thought">${escapeHtml(it.thought||'')}</textarea></div>
+          <div class="field-row">
+            <div class="field"><label>Due date</label><input type="date" id="ct-due" value="${it.dueDate||''}"></div>
+            <div class="field"><label>Campaign</label><input type="text" id="ct-campaign" value="${escapeHtml(it.campaign||'')}"></div>
+          </div>
+          <div class="field"><label>Notes</label><textarea id="ct-notes">${escapeHtml(it.notes||'')}</textarea></div>
+        </div>
+        <div class="modal-actions">
+          <span></span>
+          <div class="modal-actions-right">
+            <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+            <button class="btn-primary" onclick="saveContentDetail('${it.id}')">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+function saveContentDetail(id){
+  const it = findContent(id);
+  if(!it) return;
+  const title = document.getElementById('ct-title').value.trim();
+  if(title) it.title = title;
+  it.platform = document.getElementById('ct-platform').value;
+  it.pillar = document.getElementById('ct-pillar').value.trim();
+  it.stage = parseInt(document.getElementById('ct-stage').value, 10);
+  it.thought = document.getElementById('ct-thought').value.trim();
+  it.dueDate = document.getElementById('ct-due').value || null;
+  it.campaign = document.getElementById('ct-campaign').value.trim();
+  it.notes = document.getElementById('ct-notes').value.trim();
+  it.updatedAt = new Date().toISOString();
+  saveContentItems();
+  closeModal();
+  renderAll();
+}
+
+function closeModal(){
+  document.getElementById('modal-root').innerHTML = '';
+}
+
+window.addEventListener('error', function(e){
+  setSavePill('Something went wrong: ' + (e.message || 'unknown error'), true);
+});
+
+loadContentItems();
+seedContentIfEmpty();
+loadActivities();
+seedActivitiesIfEmpty();
+loadRoutines();
+seedRoutinesIfEmpty();
+loadGoals();
+renderCalRange();
+renderAll();
+</script>
+
+</body>
+</html>
+
+</body>
+</html>
