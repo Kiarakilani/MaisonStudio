@@ -439,8 +439,8 @@
     <a class="nav-item" href="home.html"><span class="nav-dot"></span>Home</a>
     <a class="nav-item active" href="content.html"><span class="nav-dot"></span>Content</a>
     <a class="nav-item" href="planner.html"><span class="nav-dot"></span>Planner</a>
-    <a class="nav-item" href="#"><span class="nav-dot"></span>Inbox</a>
-    <a class="nav-item" href="#"><span class="nav-dot"></span>Goals</a>
+    <a class="nav-item" href="inbox.html"><span class="nav-dot"></span>Inbox</a>
+    <a class="nav-item" href="goals.html"><span class="nav-dot"></span>Goals</a>
   </div>
 
   <main>
@@ -576,7 +576,7 @@
     <a class="bn-item active" href="content.html"><span class="bn-dot"></span>Content</a>
     <button class="bn-add" onclick="openNewContentModal()" aria-label="Add content">+</button>
     <a class="bn-item" href="planner.html"><span class="bn-dot"></span>Planner</a>
-    <a class="bn-item" href="#"><span class="bn-dot"></span>Inbox</a>
+    <a class="bn-item" href="inbox.html"><span class="bn-dot"></span>Inbox</a>
   </div>
 </div>
 
@@ -1566,11 +1566,11 @@ function seedIfEmpty(){
       thought: 'Styling three summer outfits from the new Cider drop.', campaign: 'Cider', dueDate: dateInDays(2), updatedAt: daysAgoISO(0, 6) },
     { title: 'Morning Routine', platform: 'TikTok', format: 'Video', pillar: 'Lifestyle', stage: STAGES.indexOf('Scheduled'),
       thought: 'A calm, realistic morning routine — no 5am wake-up nonsense.', dueDate: dateInDays(7), updatedAt: daysAgoISO(2) },
-    { title: 'Products I Regret Buying', platform: 'TikTok', format: 'Video', pillar: 'Beauty', stage: STAGES.indexOf('Planning'),
+    { title: 'Products I Regret Buying', platform: 'TikTok', format: 'Video', pillar: 'Beauty', stage: STAGES.indexOf('Posted'),
       thought: 'Honest talk on the hyped products that didn\u2019t work for me.', updatedAt: daysAgoISO(3) },
     { title: 'Sephora Favorites', platform: 'Instagram', format: 'Reel', pillar: 'Beauty', stage: STAGES.indexOf('Created'),
       thought: 'Monthly Sephora haul and what I\u2019m actually repurchasing.', updatedAt: daysAgoISO(1, 4) },
-    { title: 'GRWM Storytime', platform: 'TikTok', format: 'Video', pillar: 'Lifestyle', stage: STAGES.indexOf('Ready to Create'),
+    { title: 'GRWM Storytime', platform: 'TikTok', format: 'Video', pillar: 'Lifestyle', stage: STAGES.indexOf('Posted'),
       thought: 'GRWM while telling the story of how I started this account.', updatedAt: daysAgoISO(0, 1) },
     { title: 'Summer Skincare Routine', platform: 'Instagram', format: 'Reel', pillar: 'Beauty', stage: STAGES.indexOf('Ready to Post'),
       thought: 'My simplified 4-step summer skincare routine.', updatedAt: daysAgoISO(4) },
@@ -1584,7 +1584,7 @@ function seedIfEmpty(){
       thought: 'The five products I reach for every single day.', updatedAt: daysAgoISO(1, 1) },
     { title: 'Vacation Favorites', platform: 'TikTok', format: 'Photo Carousel', pillar: 'Travel', stage: STAGES.indexOf('Planning'),
       thought: 'Favorite shots and finds from my last trip.', updatedAt: daysAgoISO(5) },
-    { title: 'Current Skincare Rotation', platform: 'Instagram', format: 'Carousel', pillar: 'Beauty', stage: STAGES.indexOf('Ready to Post'),
+    { title: 'Current Skincare Rotation', platform: 'Instagram', format: 'Carousel', pillar: 'Beauty', stage: STAGES.indexOf('Posted'),
       thought: 'Walking through my current AM/PM skincare rotation.', updatedAt: daysAgoISO(3, 3) }
   ];
   items = seeds.map(s => {
