@@ -396,54 +396,50 @@
     padding-top:1px;
   }
 
-  /* ---------- This week ---------- */
-  .week-grid{
-    display:grid;
-    grid-template-columns:repeat(4, 1fr);
-    gap:16px;
-    margin-bottom:40px;
-  }
-  @media (max-width: 800px){
-    .week-grid{grid-template-columns:repeat(2, 1fr);}
-  }
-  .week-card{
+  /* ---------- This week (compact summary, not cards) ---------- */
+  .week-summary-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:14px;
     background:var(--card);
-    border-radius:14px;
     border:1px solid var(--taupe-line);
-    padding:16px;
+    border-radius:14px;
+    padding:18px 20px;
+    margin-bottom:36px;
+    flex-wrap:wrap;
   }
-  .week-label{
-    font-size:12px;
-    color:var(--muted);
-    margin:0 0 8px;
-  }
-  .week-value{
+  .week-summary-row .section-heading{margin-bottom:6px;}
+  .week-summary-line{
     font-family:'Marcellus',serif;
-    font-size:19px;
-    margin:0 0 10px;
+    font-size:16px;
+    margin:0 0 4px;
   }
-  .progress-track{
-    height:5px;
-    background:var(--taupe);
-    border-radius:4px;
-    overflow:hidden;
+  .week-summary-sub{
+    font-size:12.5px;
+    color:var(--muted);
+    margin:0;
   }
-  .progress-fill{
-    height:100%;
-    background:var(--rose);
-    border-radius:4px;
+  .week-summary-link{
+    font-family:'Inter',sans-serif;
+    font-size:12.5px;
+    font-weight:500;
+    color:var(--rose);
+    text-decoration:none;
+    white-space:nowrap;
+    padding-top:4px;
   }
-  .progress-fill.complete{background:var(--sage);}
+  .week-summary-link:hover{color:#8A4F60;}
 
-  /* ---------- Ready for you ---------- */
+  /* ---------- Ready for you (3 action cards) ---------- */
   .ready-grid{
     display:grid;
-    grid-template-columns:repeat(4, 1fr);
+    grid-template-columns:repeat(3, 1fr);
     gap:16px;
     margin-bottom:40px;
   }
   @media (max-width: 800px){
-    .ready-grid{grid-template-columns:repeat(2, 1fr);}
+    .ready-grid{grid-template-columns:1fr;}
   }
   .ready-card{
     background:var(--card);
@@ -462,7 +458,16 @@
   .ready-label{
     font-size:12.5px;
     color:var(--espresso-soft);
+    margin:0 0 6px;
+    font-weight:500;
+  }
+  .ready-context{
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;
+    font-size:12.5px;
+    color:var(--muted);
     margin:0 0 12px;
+    line-height:1.4;
   }
   .ready-link{
     font-size:12px;
@@ -470,32 +475,44 @@
     font-weight:500;
   }
 
-  /* ---------- Coming up ---------- */
-  .coming-list{
-    background:var(--card);
-    border-radius:16px;
-    border:1px solid var(--taupe-line);
-    padding:6px 22px;
-  }
-  .coming-item{
+  /* ---------- Next up (lightweight list, not a calendar) ---------- */
+  .next-up-list{display:flex;flex-direction:column;gap:10px;}
+  .next-up-item{
     display:flex;
-    justify-content:space-between;
+    gap:16px;
+    background:var(--card);
+    border:1px solid var(--taupe-line);
+    border-radius:14px;
+    padding:16px 18px;
     align-items:center;
-    padding:14px 0;
-    border-bottom:1px solid var(--taupe-line);
   }
-  .coming-item:last-child{border-bottom:none;}
-  .coming-day{
-    font-size:12px;
-    color:var(--muted);
+  .next-up-day{
+    font-family:'IBM Plex Mono',monospace, 'Inter',sans-serif;
+    font-size:10.5px;
+    letter-spacing:0.06em;
     text-transform:uppercase;
-    letter-spacing:0.04em;
-    width:90px;
+    color:var(--muted);
+    width:76px;
     flex-shrink:0;
   }
-  .coming-what{
+  .next-up-body{flex:1;min-width:0;}
+  .next-up-title{font-family:'Marcellus',serif;font-size:14.5px;margin:0 0 3px;}
+  .next-up-meta{font-size:12px;color:var(--muted);margin:0;}
+  .next-up-link{
+    font-size:12px;
+    color:var(--rose);
+    font-weight:500;
+    text-decoration:none;
+    white-space:nowrap;
+    flex-shrink:0;
+  }
+  .next-up-link:hover{color:#8A4F60;}
+  .next-up-empty{
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;
+    color:var(--muted);
     font-size:14px;
-    flex:1;
+    padding:8px 0;
   }
 
   /* ---------- Editable UI ---------- */
@@ -538,9 +555,8 @@
     font-size:12px;cursor:pointer;opacity:0;transition:opacity .12s;
     padding:2px 4px;
   }
-  .week-card:hover .card-edit-toggle,
   .ready-card:hover .card-edit-toggle{opacity:1;}
-  .week-card, .ready-card{position:relative;}
+  .ready-card{position:relative;}
   .card-top-row{display:flex;justify-content:space-between;align-items:flex-start;}
 
   .edit-form{display:flex;flex-direction:column;gap:8px;}
@@ -625,9 +641,8 @@
     .intel-banner{padding:16px 18px;}
     .today-row{gap:14px;}
     .today-card, .schedule-card{padding:16px;}
-    .week-grid, .ready-grid{grid-template-columns:repeat(2, 1fr);gap:10px;}
-    .week-card, .ready-card{padding:14px;}
-    .coming-list{padding:4px 16px;}
+    .ready-card{padding:14px;}
+    .week-summary-row{padding:16px 16px;}
     .add-menu{
       position:fixed;
       top:auto;
@@ -638,7 +653,7 @@
     }
   }
   @media (max-width: 420px){
-    .week-grid, .ready-grid{grid-template-columns:1fr;}
+    .ready-grid{grid-template-columns:1fr;}
   }
 </style>
 </head>
@@ -687,9 +702,9 @@
 
     <div class="intel-banner">
       <span class="intel-label">&#10022; From Maison</span>
-      <p class="intel-title">Filming tomorrow</p>
-      <p class="intel-body">You have 5 ideas ready to film.</p>
-      <a class="intel-cta" href="content.html">Prep my batch &rarr;</a>
+      <p class="intel-title" id="intel-title">Filming tomorrow</p>
+      <p class="intel-body" id="intel-body">You have 5 ideas ready to film.</p>
+      <a class="intel-cta" id="intel-cta" href="content.html">Prep my batch &rarr;</a>
     </div>
 
     <div class="today-row">
@@ -704,27 +719,20 @@
       </div>
     </div>
 
-    <h2 class="section-heading">This week</h2>
-    <div class="week-grid" id="week-grid"></div>
+    <div class="week-summary-row">
+      <div>
+        <h2 class="section-heading" style="margin-bottom:6px;">This week</h2>
+        <p class="week-summary-line" id="week-summary-line"></p>
+        <p class="week-summary-sub" id="week-summary-sub"></p>
+      </div>
+      <a class="week-summary-link" href="goals.html">View goals &rarr;</a>
+    </div>
 
     <h2 class="section-heading">Ready for you</h2>
     <div class="ready-grid" id="ready-grid"></div>
 
-    <h2 class="section-heading">Coming up</h2>
-    <div class="coming-list">
-      <div class="coming-item">
-        <div class="coming-day">Tomorrow</div>
-        <div class="coming-what">Cider Reel</div>
-      </div>
-      <div class="coming-item">
-        <div class="coming-day">Sunday</div>
-        <div class="coming-what">Batch filming</div>
-      </div>
-      <div class="coming-item">
-        <div class="coming-day">Monday</div>
-        <div class="coming-what">Brand pitch goal resets</div>
-      </div>
-    </div>
+    <h2 class="section-heading">Next up</h2>
+    <div class="next-up-list" id="next-up-list"></div>
   </main>
 </div>
 
@@ -743,6 +751,19 @@ document.getElementById('topbar-date').textContent = new Date().toLocaleDateStri
 
 const STORAGE_KEY = 'maison-home-v2';
 const CONTENT_STORAGE_KEY = 'content-desk-items';
+const GOALS_STORAGE_KEY = 'maison-goals';
+const PLANNER_ACTIVITIES_KEY = 'maison-planner-activities';
+const PLANNER_ROUTINES_KEY = 'maison-planner-routines';
+
+const STAGES = ['Ideas','Planning','Ready to Create','Created','Editing','Ready to Post','Scheduled','Posted'];
+const VIDEO_FORMATS = ['Reel','Video','Long-form Video','Short','Video Pin'];
+function formatCategory(format){
+  if(!format) return 'video';
+  if(VIDEO_FORMATS.includes(format)) return 'video';
+  if(format === 'Story') return 'story';
+  if(format === 'Photo Post') return 'photo';
+  return 'carousel';
+}
 
 const DEFAULT_STATE = {
   tasks: [
@@ -755,28 +776,44 @@ const DEFAULT_STATE = {
     { id: uid(), time: '14:00', what: 'Editing block' },
     { id: uid(), time: '18:00', what: 'Post Instagram Reel' }
   ],
-  week: [
-    { id: uid(), name: 'TikTok', current: 3, target: 5 },
-    { id: uid(), name: 'Instagram Reels', current: 2, target: 3 },
-    { id: uid(), name: 'YouTube', current: 0, target: 1 },
-    { id: uid(), name: 'Brand pitches', current: 4, target: 5 }
-  ],
-  ready: [
-    { id: uid(), count: 5, label: 'Ready to film', linkLabel: 'Start a batch' },
-    { id: uid(), count: 3, label: 'Waiting to edit', linkLabel: 'View content' },
-    { id: uid(), count: 2, label: 'Emails need attention', linkLabel: 'Review' },
-    { id: uid(), count: 4, label: 'Saved ideas', linkLabel: 'Explore ideas' }
-  ]
+  emailsCount: 2,
+  emailsContext: 'Oldest waiting 2 days.'
 };
 
 let state = null;
-let editingWeekId = null;
-let editingReadyId = null;
+let contentItems = [];
+let goals = [];
+let plannerActivities = [];
+let plannerRoutines = [];
 let editingTaskId = null;
 let editingSchedId = null;
 
 function uid(){
   return 'id_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
+}
+
+/* ---------- Shared data (read-only from Home's perspective) ---------- */
+function loadContentItems(){
+  try{
+    const raw = localStorage.getItem(CONTENT_STORAGE_KEY);
+    contentItems = raw ? JSON.parse(raw) : [];
+  }catch(e){ contentItems = []; }
+}
+function loadGoals(){
+  try{
+    const raw = localStorage.getItem(GOALS_STORAGE_KEY);
+    goals = raw ? JSON.parse(raw) : [];
+  }catch(e){ goals = []; }
+}
+function loadPlannerData(){
+  try{
+    const raw = localStorage.getItem(PLANNER_ACTIVITIES_KEY);
+    plannerActivities = raw ? JSON.parse(raw) : [];
+  }catch(e){ plannerActivities = []; }
+  try{
+    const raw2 = localStorage.getItem(PLANNER_ROUTINES_KEY);
+    plannerRoutines = raw2 ? JSON.parse(raw2) : [];
+  }catch(e){ plannerRoutines = []; }
 }
 
 function loadState(){
@@ -787,6 +824,17 @@ function loadState(){
     console.error('Load failed', e);
     state = JSON.parse(JSON.stringify(DEFAULT_STATE));
   }
+  // Migrate away from the old week/ready-array shape if present
+  if(state.week || Array.isArray(state.ready)){
+    delete state.week;
+    state.emailsCount = state.emailsCount != null ? state.emailsCount : 2;
+    state.emailsContext = state.emailsContext || 'Oldest waiting 2 days.';
+    delete state.ready;
+    saveState();
+  }
+  loadContentItems();
+  loadGoals();
+  loadPlannerData();
   renderAll();
 }
 
@@ -822,10 +870,12 @@ function fmtTime(hhmm){
 }
 
 function renderAll(){
+  renderFromMaison();
   renderTasks();
   renderSchedule();
-  renderWeek();
+  renderWeekSummary();
   renderReady();
+  renderNextUp();
 }
 
 /* ---------- Quick idea capture (writes into the real Content pipeline) ---------- */
@@ -1034,124 +1084,252 @@ function removeSchedule(id){
   saveState();
 }
 
-/* ---------- This week (goal-driven: name / current / target) ---------- */
-function weekDisplay(w){
-  if(!w.target || w.target <= 0) return String(w.current);
-  if(w.current >= w.target) return 'Complete';
-  return `${w.current} of ${w.target}`;
+/* ---------- From Maison (one deterministic insight, picked by simple priority) ---------- */
+function isThisWeek(dateStr){
+  if(!dateStr) return false;
+  const d = new Date(dateStr);
+  const monday = getMonday(new Date());
+  const nextMonday = new Date(monday); nextMonday.setDate(nextMonday.getDate() + 7);
+  return d >= monday && d < nextMonday;
 }
-function weekPercent(w){
-  if(!w.target || w.target <= 0) return 0;
-  return Math.max(0, Math.min(100, Math.round((w.current / w.target) * 100)));
+function getMonday(d){
+  const date = new Date(d);
+  const day = date.getDay();
+  const diff = day === 0 ? -6 : 1 - day;
+  date.setDate(date.getDate() + diff);
+  date.setHours(0,0,0,0);
+  return date;
 }
-
-function renderWeek(){
-  const grid = document.getElementById('week-grid');
-  grid.innerHTML = state.week.map(w => {
-    if(editingWeekId === w.id){
-      return `
-        <div class="week-card">
-          <div class="edit-form">
-            <input type="text" id="week-name-${w.id}" value="${escapeHtml(w.name)}" placeholder="Goal name, e.g. TikTok">
-            <div class="edit-form-row">
-              <input type="number" id="week-current-${w.id}" value="${w.current}" min="0" placeholder="Current">
-              <input type="number" id="week-target-${w.id}" value="${w.target}" min="0" placeholder="Target">
-            </div>
-            <div class="edit-form-actions">
-              <button class="edit-save" onclick="saveWeek('${w.id}')">Save</button>
-              <button class="edit-cancel" onclick="cancelWeekEdit()">Cancel</button>
-            </div>
-          </div>
-        </div>
-      `;
-    }
-    const pct = weekPercent(w);
-    return `
-      <div class="week-card">
-        <div class="card-top-row">
-          <p class="week-label">${escapeHtml(w.name)}</p>
-          <button class="card-edit-toggle" onclick="editWeek('${w.id}')" title="Edit">edit</button>
-        </div>
-        <p class="week-value">${weekDisplay(w)}</p>
-        <div class="progress-track"><div class="progress-fill ${pct >= 100 ? 'complete' : ''}" style="width:${pct}%"></div></div>
-      </div>
-    `;
-  }).join('');
+function daysUntil(dateStr){
+  if(!dateStr) return null;
+  const [y,m,d] = dateStr.split('-').map(Number);
+  const due = new Date(y, m-1, d);
+  const today = new Date(); today.setHours(0,0,0,0);
+  return Math.round((due - today) / (1000*60*60*24));
 }
 
-function editWeek(id){
-  editingWeekId = id;
-  renderWeek();
-}
-function cancelWeekEdit(){
-  editingWeekId = null;
-  renderWeek();
-}
-function saveWeek(id){
-  const w = state.week.find(x => x.id === id);
-  if(!w) return;
-  const name = document.getElementById(`week-name-${id}`).value.trim();
-  if(name) w.name = name;
-  const current = parseInt(document.getElementById(`week-current-${id}`).value, 10);
-  const target = parseInt(document.getElementById(`week-target-${id}`).value, 10);
-  w.current = isNaN(current) ? w.current : Math.max(0, current);
-  w.target = isNaN(target) ? w.target : Math.max(0, target);
-  editingWeekId = null;
-  renderWeek();
-  saveState();
+function renderFromMaison(){
+  const readyToFilm = contentItems.filter(it => STAGES[it.stage] === 'Ready to Create' && formatCategory(it.format) === 'video');
+  const editingDueSoon = contentItems
+    .filter(it => STAGES[it.stage] === 'Editing' && it.dueDate)
+    .sort((a,b) => daysUntil(a.dueDate) - daysUntil(b.dueDate))[0];
+  const readyToPost = contentItems.filter(it => STAGES[it.stage] === 'Ready to Post');
+
+  let title, body, ctaLabel, ctaHref;
+
+  if(editingDueSoon){
+    const du = daysUntil(editingDueSoon.dueDate);
+    title = `Finish ${editingDueSoon.title} before starting something new.`;
+    body = du <= 0 ? `It's due today and is currently Editing.` : du === 1 ? `It's due tomorrow and is currently Editing.` : `It's due in ${du} days and is currently Editing.`;
+    ctaLabel = 'Continue editing →';
+    ctaHref = 'content.html?tab=pipeline';
+  } else if(readyToFilm.length >= 3){
+    title = 'Filming day coming up';
+    body = `You have ${readyToFilm.length} pieces ready to film.`;
+    ctaLabel = 'Prep my batch →';
+    ctaHref = 'content.html?tab=pipeline';
+  } else if(readyToPost.length > 0){
+    title = `${readyToPost.length} piece${readyToPost.length === 1 ? '' : 's'} ready to post`;
+    body = `Whenever you're ready, these are waiting for a spot on the calendar.`;
+    ctaLabel = 'Plan them →';
+    ctaHref = 'planner.html';
+  } else {
+    title = 'A quiet moment';
+    body = `Nothing urgent right now — a good time to capture a new idea.`;
+    ctaLabel = 'Open Ideas →';
+    ctaHref = 'content.html?tab=ideas';
+  }
+
+  document.getElementById('intel-title').textContent = title;
+  document.getElementById('intel-body').textContent = body;
+  const cta = document.getElementById('intel-cta');
+  cta.textContent = ctaLabel;
+  cta.href = ctaHref;
 }
 
-/* ---------- Ready for you ---------- */
+/* ---------- This week (compact summary, reads real Goals data) ---------- */
+function computeGoalProgress(goal){
+  if(goal.progressSource === 'content'){
+    const monday = getMonday(new Date());
+    const count = contentItems.filter(it => {
+      if(STAGES[it.stage] !== 'Posted') return false;
+      if(goal.platform && it.platform !== goal.platform) return false;
+      if(goal.format && it.format !== goal.format) return false;
+      const updated = it.updatedAt ? new Date(it.updatedAt) : null;
+      return updated && updated >= monday;
+    }).length;
+    return { current: count, target: goal.target || 0 };
+  }
+  // manual/routine goals: use whatever's already stored
+  return { current: goal.manualCurrent || 0, target: goal.target || 0 };
+}
+function shortGoalName(goal){
+  if(goal.format) return goal.format.endsWith('s') ? goal.format : goal.format + 's';
+  return goal.name;
+}
+
+function renderWeekSummary(){
+  const active = goals.filter(g => g.type === 'activity' && g.status === 'active');
+  const lineEl = document.getElementById('week-summary-line');
+  const subEl = document.getElementById('week-summary-sub');
+
+  if(active.length === 0){
+    lineEl.textContent = 'No active goals yet.';
+    subEl.textContent = 'Set weekly posting goals to see your progress here.';
+    return;
+  }
+
+  const withProgress = active.slice(0, 3).map(g => {
+    const p = computeGoalProgress(g);
+    return { name: shortGoalName(g), current: p.current, target: p.target };
+  });
+  lineEl.innerHTML = withProgress.map(g => `${escapeHtml(g.name)} <strong>${g.current}/${g.target}</strong>`).join(' &nbsp;·&nbsp; ');
+
+  const remaining = active.reduce((sum, g) => {
+    const p = computeGoalProgress(g);
+    return sum + Math.max(0, p.target - p.current);
+  }, 0);
+  subEl.textContent = remaining === 0 ? 'All posting goals met this week.' : `${remaining} posting goal${remaining === 1 ? '' : 's'} remaining this week.`;
+}
+
+/* ---------- Ready for you (3 action cards, mostly computed) ---------- */
 function renderReady(){
+  const readyToFilm = contentItems.filter(it => STAGES[it.stage] === 'Ready to Create' && formatCategory(it.format) === 'video');
+  const editing = contentItems.filter(it => STAGES[it.stage] === 'Editing');
+  const soonestEditing = [...editing].sort((a,b) => {
+    const da = a.dueDate ? daysUntil(a.dueDate) : 999;
+    const db = b.dueDate ? daysUntil(b.dueDate) : 999;
+    return da - db;
+  })[0];
+
+  const filmContext = readyToFilm.length > 0 ? 'Your next batch is ready.' : 'Nothing waiting right now.';
+  const editContext = soonestEditing
+    ? `${soonestEditing.title} is due ${daysUntil(soonestEditing.dueDate) <= 0 ? 'today' : daysUntil(soonestEditing.dueDate) === 1 ? 'tomorrow' : 'soon'}.`
+    : (editing.length > 0 ? 'A few pieces are mid-edit.' : 'Nothing in progress right now.');
+
   const grid = document.getElementById('ready-grid');
-  grid.innerHTML = state.ready.map(r => {
-    if(editingReadyId === r.id){
-      return `
-        <div class="ready-card">
-          <div class="edit-form">
-            <input type="number" id="ready-count-${r.id}" value="${r.count}" min="0" placeholder="Count">
-            <input type="text" id="ready-label-${r.id}" value="${escapeHtml(r.label)}" placeholder="Label">
-            <input type="text" id="ready-link-${r.id}" value="${escapeHtml(r.linkLabel)}" placeholder="Link text">
-            <div class="edit-form-actions">
-              <button class="edit-save" onclick="saveReady('${r.id}')">Save</button>
-              <button class="edit-cancel" onclick="cancelReadyEdit()">Cancel</button>
-            </div>
-          </div>
-        </div>
-      `;
-    }
-    return `
-      <div class="ready-card">
-        <div class="card-top-row">
-          <span></span>
-          <button class="card-edit-toggle" onclick="editReady('${r.id}')" title="Edit">edit</button>
-        </div>
-        <p class="ready-count">${r.count}</p>
-        <p class="ready-label">${escapeHtml(r.label)}</p>
-        <span class="ready-link">${escapeHtml(r.linkLabel)} →</span>
+  grid.innerHTML = `
+    <div class="ready-card" onclick="window.location.href='content.html?tab=pipeline'">
+      <p class="ready-count">${readyToFilm.length}</p>
+      <p class="ready-label">Ready to film</p>
+      <p class="ready-context">${escapeHtml(filmContext)}</p>
+      <span class="ready-link">Start a batch →</span>
+    </div>
+    <div class="ready-card" onclick="window.location.href='content.html?tab=pipeline'">
+      <p class="ready-count">${editing.length}</p>
+      <p class="ready-label">Waiting to edit</p>
+      <p class="ready-context">${escapeHtml(editContext)}</p>
+      <span class="ready-link">Continue editing →</span>
+    </div>
+    <div class="ready-card" onclick="window.location.href='inbox.html'">
+      <div class="card-top-row">
+        <span></span>
+        <button class="card-edit-toggle" onclick="event.stopPropagation();editEmails()" title="Edit">edit</button>
       </div>
-    `;
-  }).join('');
+      <p class="ready-count">${state.emailsCount}</p>
+      <p class="ready-label">Emails need attention</p>
+      <p class="ready-context">${escapeHtml(state.emailsContext)}</p>
+      <span class="ready-link">Review inbox →</span>
+    </div>
+  `;
 }
 
-function editReady(id){
-  editingReadyId = id;
-  renderReady();
+function editEmails(){
+  const grid = document.getElementById('ready-grid');
+  const cards = grid.querySelectorAll('.ready-card');
+  const emailCard = cards[cards.length - 1];
+  emailCard.innerHTML = `
+    <div class="edit-form">
+      <input type="number" id="emails-count-input" value="${state.emailsCount}" min="0" placeholder="Count">
+      <input type="text" id="emails-context-input" value="${escapeHtml(state.emailsContext)}" placeholder="e.g. Oldest waiting 2 days.">
+      <div class="edit-form-actions">
+        <button class="edit-save" onclick="saveEmails()">Save</button>
+        <button class="edit-cancel" onclick="renderReady()">Cancel</button>
+      </div>
+    </div>
+  `;
 }
-function cancelReadyEdit(){
-  editingReadyId = null;
-  renderReady();
-}
-function saveReady(id){
-  const r = state.ready.find(x => x.id === id);
-  if(!r) return;
-  const count = parseInt(document.getElementById(`ready-count-${id}`).value, 10);
-  r.count = isNaN(count) ? r.count : Math.max(0, count);
-  r.label = document.getElementById(`ready-label-${id}`).value.trim() || r.label;
-  r.linkLabel = document.getElementById(`ready-link-${id}`).value.trim() || r.linkLabel;
-  editingReadyId = null;
-  renderReady();
+function saveEmails(){
+  const count = parseInt(document.getElementById('emails-count-input').value, 10);
+  state.emailsCount = isNaN(count) ? state.emailsCount : Math.max(0, count);
+  state.emailsContext = document.getElementById('emails-context-input').value.trim() || state.emailsContext;
   saveState();
+  renderReady();
+}
+
+/* ---------- Next up (2-3 meaningful upcoming items, not a calendar) ---------- */
+function renderNextUp(){
+  const candidates = [];
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  // Nearest upcoming content due date (not yet Posted)
+  contentItems
+    .filter(it => it.dueDate && STAGES[it.stage] !== 'Posted')
+    .forEach(it => {
+      const du = daysUntil(it.dueDate);
+      if(du !== null && du >= 0 && du <= 7){
+        candidates.push({
+          date: it.dueDate, du,
+          dayLabel: du === 0 ? 'Today' : du === 1 ? 'Tomorrow' : new Date(it.dueDate).toLocaleDateString('en-US',{weekday:'long'}),
+          title: it.title,
+          meta: `${it.platform || 'Other'}${it.format ? ' · ' + it.format : ''} · Due ${du === 0 ? 'today' : du === 1 ? 'tomorrow' : 'in ' + du + ' days'} · ${STAGES[it.stage]}`,
+          href: 'content.html?tab=pipeline'
+        });
+      }
+    });
+
+  // Nearest upcoming planner activity (content or deadline)
+  plannerActivities
+    .filter(a => a.date)
+    .forEach(a => {
+      const du = daysUntil(a.date);
+      if(du !== null && du >= 0 && du <= 7){
+        const label = a.type === 'content' ? `${a.action} ${(contentItems.find(c=>c.id===a.contentId)||{}).title || ''}`.trim() : a.title;
+        candidates.push({
+          date: a.date, du,
+          dayLabel: du === 0 ? 'Today' : du === 1 ? 'Tomorrow' : new Date(a.date).toLocaleDateString('en-US',{weekday:'long'}),
+          title: label,
+          meta: a.startTime ? `Scheduled ${fmtTime(a.startTime)}` : 'Scheduled',
+          href: 'planner.html'
+        });
+      }
+    });
+
+  // Nearest upcoming routine (by day-of-week)
+  const todayDow = (today.getDay() + 6) % 7; // Mon=0..Sun=6
+  plannerRoutines.forEach(r => {
+    let diff = r.day - todayDow;
+    if(diff < 0) diff += 7;
+    if(diff <= 7){
+      const readyCount = contentItems.filter(it => STAGES[it.stage] === 'Ready to Create' && formatCategory(it.format) === 'video').length;
+      candidates.push({
+        date: null, du: diff,
+        dayLabel: diff === 0 ? 'Today' : diff === 1 ? 'Tomorrow' : new Date(new Date().setDate(today.getDate()+diff)).toLocaleDateString('en-US',{weekday:'long'}),
+        title: r.name,
+        meta: readyCount > 0 ? `${readyCount} ready to film` : 'Recurring routine',
+        href: 'planner.html'
+      });
+    }
+  });
+
+  candidates.sort((a,b) => a.du - b.du);
+  const top = candidates.slice(0, 3);
+
+  const list = document.getElementById('next-up-list');
+  if(top.length === 0){
+    list.innerHTML = '<p class="next-up-empty">Nothing pressing on the horizon.</p>';
+    return;
+  }
+  list.innerHTML = top.map(c => `
+    <div class="next-up-item">
+      <div class="next-up-day">${escapeHtml(c.dayLabel)}</div>
+      <div class="next-up-body">
+        <p class="next-up-title">${escapeHtml(c.title)}</p>
+        <p class="next-up-meta">${escapeHtml(c.meta)}</p>
+      </div>
+      <a class="next-up-link" href="${c.href}">View →</a>
+    </div>
+  `).join('');
 }
 
 /* ---------- Add menu ---------- */
