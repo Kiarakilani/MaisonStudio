@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>Maison — Goals</title>
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Maison">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#F7F3EC">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --ivory: #F7F3EC;
+    --card: #FFFFFF;
+    --taupe: #EFE8DC;
+    --taupe-line: #E2D9C8;
+    --espresso: #2B2420;
+    --espresso-soft: #5B4F45;
+    --muted: #948A7C;
+    --rose: #B98498;
+    --rose-bg: #F3E7EA;
+    --sage: #8FA084;
+    --sage-bg: #EBEFE4;
+    --gold: #B99456;
+    --gold-bg: #F4EBDA;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{margin:0;background:var(--ivory);color:var(--espresso);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;}
+  a{color:inherit;}
+  button{font-family:inherit;}
+
+  /* ---------- Shared shell ---------- */
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:18px 28px;border-bottom:1px solid var(--taupe-line);background:var(--ivory);}
+  .brand{display:flex;align-items:baseline;gap:10px;}
+  .brand-name{font-family:'Marcellus',serif;font-size:22px;letter-spacing:0.3px;}
+  .brand-tagline{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--muted);}
+  .topbar-right{display:flex;align-items:center;gap:16px;}
+  .topbar-date{font-size:13px;color:var(--espresso-soft);}
+  .avatar{width:34px;height:34px;border-radius:50%;background:var(--taupe);display:flex;align-items:center;justify-content:center;font-family:'Marcellus',serif;font-size:14px;color:var(--espresso-soft);cursor:pointer;}
+
+  .app{display:flex;align-items:flex-start;}
+  .sidebar{width:220px;flex-shrink:0;padding:24px 14px;border-right:1px solid var(--taupe-line);min-height:calc(100vh - 71px);}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:10px;font-size:14px;color:var(--espresso-soft);text-decoration:none;margin-bottom:2px;}
+  .nav-item:hover{background:var(--taupe);}
+  .nav-item.active{background:var(--taupe);color:var(--espresso);font-weight:500;}
+  .nav-dot{width:6px;height:6px;border-radius:50%;background:var(--rose);opacity:0;}
+  .nav-item.active .nav-dot{opacity:1;}
+
+  main{flex:1;padding:32px 36px 60px;max-width:1100px;}
+
+  .add-btn{background:var(--espresso);color:var(--ivory);border:none;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;padding:10px 18px;border-radius:20px;cursor:pointer;flex-shrink:0;}
+  .add-btn:hover{background:#413a33;}
+
+  /* ---------- Header + tabs ---------- */
+  .goals-header-row{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:4px;}
+  .goals-title{font-family:'Marcellus',serif;font-size:28px;margin:0 0 4px;}
+  .goals-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--muted);margin:0 0 22px;}
+  .goals-tabs{display:flex;gap:4px;border-bottom:1px solid var(--taupe-line);margin-bottom:26px;flex-wrap:wrap;}
+  .goals-tab{background:none;border:none;cursor:pointer;font-family:'Inter',sans-serif;font-size:13.5px;color:var(--muted);padding:10px 6px;margin-right:20px;border-bottom:2px solid transparent;}
+  .goals-tab.active{color:var(--espresso);font-weight:500;border-bottom-color:var(--rose);}
+  .goals-tab:hover{color:var(--espresso);}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+
+  .save-pill{font-family:'Inter',sans-serif;font-size:11px;color:var(--muted);min-height:14px;margin-bottom:4px;}
+  .save-pill.failed{color:var(--rose);}
+
+  /* ---------- This Week header ---------- */
+  .week-title-row{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:20px;}
+  .week-title{font-family:'Marcellus',serif;font-size:20px;margin:0;}
+  .week-remaining{font-family:'Inter',sans-serif;font-size:12px;color:var(--muted);}
+
+  /* ---------- Current Focus card ---------- */
+  .focus-card{
+    background:var(--rose-bg);border:1px solid #E7CBD3;border-radius:18px;
+    padding:26px 28px;margin-bottom:32px;
+  }
+  .focus-label{font-family:'Inter',sans-serif;font-size:10.5px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--rose);}
+  .focus-name{font-family:'Marcellus',serif;font-size:24px;color:#4A2E37;margin:8px 0 10px;}
+  .focus-values{font-family:'Inter',sans-serif;font-size:14px;color:#7A5560;margin:0 0 10px;}
+  .focus-track{height:6px;background:rgba(138,79,96,0.15);border-radius:6px;overflow:hidden;margin-bottom:20px;}
+  .focus-fill{height:100%;background:var(--rose);border-radius:6px;}
+  .focus-sub-label{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:#8A4F60;margin:0 0 12px;}
+  .focus-activity-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-top:1px solid rgba(138,79,96,0.15);}
+  .focus-activity-row:first-of-type{border-top:none;}
+  .focus-activity-name{font-size:13px;color:#4A2E37;}
+  .focus-activity-value{font-family:'Marcellus',serif;font-size:13.5px;color:#4A2E37;}
+  .focus-empty{font-family:'Cormorant Garamond',serif;font-style:italic;color:#8A4F60;font-size:13.5px;}
+
+  /* ---------- Activity goal sections/cards ---------- */
+  .goal-section{margin-bottom:30px;}
+  .goal-section-heading{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin:0 0 14px;}
+  .goal-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(240px, 1fr));gap:14px;}
+  .goal-card{background:var(--card);border:1px solid var(--taupe-line);border-radius:14px;padding:16px 18px;}
+  .goal-card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
+  .goal-name{font-family:'Marcellus',serif;font-size:15px;margin:0 0 8px;}
+  .goal-edit-btn{background:none;border:none;color:var(--muted);font-size:11px;cursor:pointer;opacity:0;transition:opacity .12s;flex-shrink:0;}
+  .goal-card:hover .goal-edit-btn{opacity:1;}
+  .goal-value{font-family:'Marcellus',serif;font-size:16px;margin:0 0 8px;}
+  .goal-track{height:5px;background:var(--taupe);border-radius:4px;overflow:hidden;margin-bottom:8px;}
+  .goal-fill{height:100%;background:var(--rose);border-radius:4px;}
+  .goal-fill.complete{background:var(--sage);}
+  .goal-remaining{font-family:'Inter',sans-serif;font-size:11.5px;color:var(--muted);}
+  .goal-remaining.done{color:#4A5D3D;}
+  .goal-routine-row{display:flex;align-items:center;justify-content:space-between;}
+  .routine-check-btn{
+    background:none;border:1px solid var(--taupe-line);border-radius:14px;
+    padding:5px 12px;font-family:'Inter',sans-serif;font-size:11.5px;color:var(--espresso-soft);cursor:pointer;
+  }
+  .routine-check-btn.done{background:var(--sage-bg);border-color:var(--sage);color:#4A5D3D;}
+
+  /* ---------- Goals list tab ---------- */
+  .goal-list-row{
+    display:flex;align-items:center;justify-content:space-between;gap:14px;
+    background:var(--card);border:1px solid var(--taupe-line);border-radius:12px;
+    padding:14px 16px;margin-bottom:8px;
+  }
+  .glr-left{flex:1;min-width:0;}
+  .glr-name{font-family:'Marcellus',serif;font-size:14.5px;}
+  .glr-meta{font-family:'Inter',sans-serif;font-size:11.5px;color:var(--muted);margin-top:2px;}
+  .glr-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+  .glr-badge{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;padding:3px 9px;border-radius:14px;background:var(--taupe);color:var(--espresso-soft);}
+  .glr-badge.focus{background:var(--rose-bg);color:#8A4F60;}
+  .glr-badge.paused{background:var(--gold-bg);color:#8A6A2E;}
+  .glr-btn{background:none;border:none;color:var(--muted);font-family:'Inter',sans-serif;font-size:11.5px;cursor:pointer;text-decoration:underline;}
+  .glr-btn:hover{color:var(--espresso);}
+  .goals-empty{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--muted);font-size:14px;padding:10px 0 24px;}
+
+  /* ---------- Progress tab ---------- */
+  .progress-placeholder{background:var(--card);border:1px solid var(--taupe-line);border-radius:16px;padding:32px 26px;margin-bottom:16px;}
+  .progress-placeholder h3{font-family:'Marcellus',serif;font-size:17px;margin:0 0 8px;}
+  .progress-placeholder p{font-size:13.5px;color:var(--espresso-soft);line-height:1.6;margin:0;}
+  .progress-outcome-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--taupe-line);}
+  .progress-outcome-row:last-child{border-bottom:none;}
+
+  /* ---------- Modal (shared pattern) ---------- */
+  .overlay{position:fixed;inset:0;background:rgba(43,36,32,0.45);display:flex;align-items:center;justify-content:center;z-index:60;padding:16px;}
+  .modal{background:var(--ivory);border-radius:18px;width:100%;max-width:440px;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;}
+  .modal-head{padding:24px 26px 4px;flex-shrink:0;}
+  .modal-head h2{font-family:'Marcellus',serif;font-size:20px;margin:0 0 4px;}
+  .modal-head .modal-sub{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--muted);font-size:13px;margin:0 0 14px;}
+  .modal-body{padding:2px 26px 6px;overflow-y:auto;flex:1;}
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-family:'Inter',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted);margin-bottom:5px;}
+  .field input, .field select, .field textarea{width:100%;padding:9px 11px;border:1px solid var(--taupe-line);background:var(--card);font-family:'Inter',sans-serif;font-size:14px;border-radius:8px;color:var(--espresso);}
+  .field-row{display:flex;gap:10px;}
+  .field-row > .field{flex:1;}
+  .checkbox-field{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--espresso-soft);margin-bottom:14px;}
+  .checkbox-field input{width:auto;}
+
+  .type-picker{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px;}
+  .type-picker button{background:var(--card);border:1px solid var(--taupe-line);border-radius:12px;padding:16px 12px;cursor:pointer;font-family:'Inter',sans-serif;font-size:13.5px;color:var(--espresso);text-align:left;}
+  .type-picker button:hover{border-color:var(--rose);}
+  .type-picker button .tp-sub{display:block;font-size:11.5px;color:var(--muted);margin-top:4px;font-weight:400;}
+  .type-picker button strong{font-family:'Marcellus',serif;font-size:15px;}
+
+  .template-group{margin-bottom:16px;}
+  .template-group-label{font-family:'Inter',sans-serif;font-size:10.5px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);margin:0 0 8px;}
+  .template-btn{
+    display:block;width:100%;text-align:left;background:none;border:1px solid var(--taupe-line);
+    border-radius:10px;padding:10px 12px;margin-bottom:6px;cursor:pointer;
+    font-family:'Inter',sans-serif;font-size:13px;color:var(--espresso);
+  }
+  .template-btn:hover{border-color:var(--rose);background:var(--rose-bg);}
+
+  .modal-actions{display:flex;gap:10px;padding:16px 26px;justify-content:space-between;border-top:1px solid var(--taupe-line);flex-shrink:0;}
+  .modal-actions-right{display:flex;gap:10px;}
+  .btn-secondary{background:none;border:1px solid var(--taupe-line);color:var(--espresso);padding:9px 16px;cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;border-radius:20px;}
+  .btn-primary{background:var(--espresso);color:var(--ivory);border:none;padding:9px 18px;cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;border-radius:20px;}
+  .btn-primary:hover{background:#413a33;}
+  .btn-danger-text{background:none;border:none;color:var(--rose);font-family:'Inter',sans-serif;font-size:12px;cursor:pointer;}
+
+  /* ---------- Bottom nav (mobile) ---------- */
+  .bottom-nav{display:none;position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--taupe-line);padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:50;}
+  .bottom-nav-row{display:flex;align-items:center;justify-content:space-around;}
+  .bn-item{display:flex;flex-direction:column;align-items:center;gap:3px;text-decoration:none;color:var(--muted);font-size:10.5px;font-family:'Inter',sans-serif;padding:4px 6px;flex:1;}
+  .bn-item.active{color:var(--espresso);font-weight:500;}
+  .bn-dot{width:5px;height:5px;border-radius:50%;background:var(--rose);opacity:0;}
+  .bn-item.active .bn-dot{opacity:1;}
+  .bn-add{width:44px;height:44px;border-radius:50%;background:var(--espresso);color:var(--ivory);display:flex;align-items:center;justify-content:center;font-size:22px;border:none;cursor:pointer;flex-shrink:0;margin:0 4px;position:relative;top:-4px;}
+
+  @media (max-width: 760px){
+    .sidebar{display:none;}
+    .bottom-nav{display:block;}
+    body{padding-bottom:70px;}
+    .topbar{padding:14px 16px;}
+    .brand-tagline{display:none;}
+    .topbar-date{display:none;}
+    main{padding:20px 16px 40px;}
+    .goals-header-row{flex-direction:column;align-items:stretch;}
+    .goal-grid{grid-template-columns:1fr;}
+    .type-picker{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <span class="brand-name">Maison</span>
+    <span class="brand-tagline">Your creative world.</span>
+  </div>
+  <div class="topbar-right">
+    <div class="topbar-date" id="topbar-date"></div>
+    <div class="avatar">K</div>
+  </div>
+</div>
+
+<div class="app">
+  <div class="sidebar">
+    <a class="nav-item" href="home.html"><span class="nav-dot"></span>Home</a>
+    <a class="nav-item" href="content.html"><span class="nav-dot"></span>Content</a>
+    <a class="nav-item" href="planner.html"><span class="nav-dot"></span>Planner</a>
+    <a class="nav-item" href="inbox.html"><span class="nav-dot"></span>Inbox</a>
+    <a class="nav-item active" href="goals.html"><span class="nav-dot"></span>Goals</a>
+  </div>
+
+  <main>
+    <div class="goals-header-row">
+      <div>
+        <h1 class="goals-title">Goals</h1>
+        <p class="goals-sub">Turn what you want to achieve into what you can do today.</p>
+      </div>
+      <button class="add-btn" onclick="openAddGoalModal()">+ Add Goal</button>
+    </div>
+    <div class="save-pill" id="save-pill"></div>
+
+    <div class="goals-tabs">
+      <button class="goals-tab active" data-tab="week" onclick="switchGoalsTab('week')">This Week</button>
+      <button class="goals-tab" data-tab="goals" onclick="switchGoalsTab('goals')">Goals</button>
+      <button class="goals-tab" data-tab="progress" onclick="switchGoalsTab('progress')">Progress</button>
+    </div>
+
+    <!-- ---------- This Week ---------- -->
+    <div class="tab-panel active" id="panel-week">
+      <div class="week-title-row">
+        <h2 class="week-title">This week</h2>
+        <span class="week-remaining" id="week-remaining"></span>
+      </div>
+
+      <div id="current-focus-holder"></div>
+
+      <div class="goal-section">
+        <p class="goal-section-heading">Content</p>
+        <div class="goal-grid" id="week-content-goals"></div>
+      </div>
+      <div class="goal-section">
+        <p class="goal-section-heading">Creator business</p>
+        <div class="goal-grid" id="week-business-goals"></div>
+      </div>
+      <div class="goal-section">
+        <p class="goal-section-heading">Creation routine</p>
+        <div class="goal-grid" id="week-routine-goals"></div>
+      </div>
+    </div>
+
+    <!-- ---------- Goals list ---------- -->
+    <div class="tab-panel" id="panel-goals">
+      <div class="goal-section">
+        <p class="goal-section-heading">Activity goals</p>
+        <div id="list-activity-goals"></div>
+      </div>
+      <div class="goal-section">
+        <p class="goal-section-heading">Outcome goals</p>
+        <div id="list-outcome-goals"></div>
+      </div>
+    </div>
+
+    <!-- ---------- Progress ---------- -->
+    <div class="tab-panel" id="panel-progress">
+      <div id="progress-outcomes-holder"></div>
+      <div class="progress-placeholder">
+        <h3>Deeper trends are coming soon</h3>
+        <p>Once there's enough real activity to learn from, this space will show posting consistency, streaks, and how your outcomes are trending over time — without turning into a pressure-filled scoreboard.</p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="bottom-nav">
+  <div class="bottom-nav-row">
+    <a class="bn-item" href="home.html"><span class="bn-dot"></span>Home</a>
+    <a class="bn-item" href="content.html"><span class="bn-dot"></span>Content</a>
+    <a class="bn-item" href="planner.html"><span class="bn-dot"></span>Planner</a>
+    <button class="bn-add" onclick="openAddGoalModal()" aria-label="Add goal">+</button>
+    <a class="bn-item active" href="goals.html"><span class="bn-dot"></span>Goals</a>
+  </div>
+</div>
+
+<div id="modal-root"></div>
+
+<script>
+const CONTENT_STORAGE_KEY = 'content-desk-items';
+const GOALS_STORAGE_KEY = 'maison-goals';
+const ROUTINE_COMPLETION_KEY = 'maison-routine-goal-completions';
+
+const STAGES = ['Ideas','Planning','Ready to Create','Created','Editing','Ready to Post','Scheduled','Posted'];
+const PLATFORMS = ['TikTok','Instagram','YouTube','Pinterest','Other'];
+const FORMAT_OPTIONS = {
+  'Instagram': ['Reel','Carousel','Photo Post','Story'],
+  'TikTok': ['Video','Photo Carousel'],
+  'YouTube': ['Long-form Video','Short','Community Post'],
+  'Pinterest': ['Pin','Video Pin'],
+  'Other': ['Other']
+};
+const OLD_TO_NEW_STAGE = [0, 1, 4, 5, 6, 7];
+
+let contentItems = [];
+let goals = [];
+let routineCompletions = {}; // { "<goalId>:<weekStartISO>": true }
+let currentGoalsTab = 'week';
+let addGoalState = { type: null, category: null, template: null };
+
+document.getElementById('topbar-date').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+
+function uid(){ return 'id_' + Date.now() + '_' + Math.random().toString(36).slice(2,7); }
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str == null ? '' : str;
+  return div.innerHTML;
+}
+function setSavePill(msg, failed){
+  const el = document.getElementById('save-pill');
+  if(!el) return;
+  el.textContent = msg || '';
+  el.className = 'save-pill' + (failed ? ' failed' : '');
+}
+
+/* ---------- Date helpers ---------- */
+function toISODate(d){
+  const y = d.getFullYear(), m = String(d.getMonth()+1).padStart(2,'0'), day = String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
+}
+function getMonday(d){
+  const date = new Date(d);
+  const day = date.getDay();
+  const diff = day === 0 ? -6 : 1 - day;
+  date.setDate(date.getDate() + diff);
+  date.setHours(0,0,0,0);
+  return date;
+}
+function getMonthStart(d){
+  return new Date(d.getFullYear(), d.getMonth(), 1);
+}
+function currentPeriodStart(period){
+  return period === 'month' ? getMonthStart(new Date()) : getMonday(new Date());
+}
+function daysLeftInWeek(){
+  const day = new Date().getDay(); // 0=Sun..6=Sat
+  return day === 0 ? 0 : 7 - day;
+}
+
+/* ---------- Load shared Content (read + light write for routine completions only) ---------- */
+function loadContentItems(){
+  try{
+    const raw = localStorage.getItem(CONTENT_STORAGE_KEY);
+    contentItems = raw ? JSON.parse(raw) : [];
+  }catch(e){ contentItems = []; }
+  contentItems = contentItems.map(it => {
+    if(it.platform !== undefined) return it;
+    const oldStage = typeof it.stage === 'number' ? it.stage : 0;
+    return {
+      id: it.id || uid(), title: it.title || 'Untitled', platform: 'Other', format: '', pillar: '',
+      stage: OLD_TO_NEW_STAGE[oldStage] !== undefined ? OLD_TO_NEW_STAGE[oldStage] : 0,
+      createdAt: it.createdAt || new Date().toISOString(), updatedAt: it.createdAt || new Date().toISOString()
+    };
+  });
+  // Note: Goals never writes back to content-desk-items — read-only, per shared-data architecture.
+}
+
+/* ---------- Goals storage ---------- */
+function loadGoals(){
+  try{
+    const raw = localStorage.getItem(GOALS_STORAGE_KEY);
+    goals = raw ? JSON.parse(raw) : [];
+  }catch(e){ goals = []; }
+}
+function saveGoals(){
+  try{ localStorage.setItem(GOALS_STORAGE_KEY, JSON.stringify(goals)); setSavePill(''); }
+  catch(e){ console.error('Save failed', e); setSavePill("couldn't save — storage may be full or disabled", true); }
+}
+function loadRoutineCompletions(){
+  try{
+    const raw = localStorage.getItem(ROUTINE_COMPLETION_KEY);
+    routineCompletions = raw ? JSON.parse(raw) : {};
+  }catch(e){ routineCompletions = {}; }
+}
+function saveRoutineCompletions(){
+  try{ localStorage.setItem(ROUTINE_COMPLETION_KEY, JSON.stringify(routineCompletions)); }
+  catch(e){ console.error('Save failed', e); }
+}
+
+/* ---------- Progress calculation (never duplicates Content — always reads live) ---------- */
+function periodKeyFor(goal){
+  const start = currentPeriodStart(goal.period || 'week');
+  return toISODate(start);
+}
+function computeGoalProgress(goal){
+  if(goal.progressSource === 'content'){
+    const start = currentPeriodStart(goal.period || 'week');
+    const count = contentItems.filter(it => {
+      if(STAGES[it.stage] !== 'Posted') return false;
+      if(goal.platform && it.platform !== goal.platform) return false;
+      if(goal.format && it.format !== goal.format) return false;
+      const updated = it.updatedAt ? new Date(it.updatedAt) : null;
+      return updated && updated >= start;
+    }).length;
+    return { current: count, target: goal.target || 0 };
+  }
+  if(goal.progressSource === 'routine'){
+    const key = goal.id + ':' + periodKeyFor(goal);
+    const done = !!routineCompletions[key];
+    return { current: done ? 1 : 0, target: 1, isRoutine: true, done };
+  }
+  // manual
+  return { current: goal.manualCurrent || 0, target: goal.target || 0 };
+}
+function toggleRoutineGoal(goalId){
+  const goal = goals.find(g => g.id === goalId);
+  if(!goal) return;
+  const key = goalId + ':' + periodKeyFor(goal);
+  routineCompletions[key] = !routineCompletions[key];
+  saveRoutineCompletions();
+  renderAll();
+}
+function adjustManualGoal(goalId, delta){
+  const goal = goals.find(g => g.id === goalId);
+  if(!goal) return;
+  goal.manualCurrent = Math.max(0, (goal.manualCurrent || 0) + delta);
+  goal.updatedAt = new Date().toISOString();
+  saveGoals();
+  renderAll();
+}
+
+/* ---------- Tabs ---------- */
+function switchGoalsTab(tab){
+  currentGoalsTab = tab;
+  document.querySelectorAll('.goals-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
+  renderAll();
+}
+
+function activeGoals(type){
+  return goals.filter(g => g.type === type && g.status !== 'archived');
+}
+
+/* ---------- This Week ---------- */
+function goalDisplayName(goal){
+  if(goal.platform && goal.format){
+    return `${goal.platform} ${goal.format}${goal.format.endsWith('s') ? '' : (goal.target > 1 ? 's' : '')}`;
+  }
+  return goal.name;
+}
+
+function weekGoalCardHtml(goal){
+  const p = computeGoalProgress(goal);
+  if(p.isRoutine){
+    return `
+      <div class="goal-card">
+        <div class="goal-card-top">
+          <p class="goal-name">${escapeHtml(goal.name)}</p>
+          <button class="goal-edit-btn" onclick="openEditGoalModal('${goal.id}')">edit</button>
+        </div>
+        <div class="goal-routine-row">
+          <span class="goal-remaining ${p.done ? 'done' : ''}">${goal.scheduleNote ? escapeHtml(goal.scheduleNote) : 'This week'}</span>
+          <button class="routine-check-btn ${p.done ? 'done' : ''}" onclick="toggleRoutineGoal('${goal.id}')">${p.done ? 'Completed ✓' : 'Mark complete'}</button>
+        </div>
+      </div>
+    `;
+  }
+  const pct = p.target > 0 ? Math.min(100, Math.round((p.current / p.target) * 100)) : 0;
+  const remaining = Math.max(0, p.target - p.current);
+  const manualControls = goal.progressSource === 'manual' ? `
+    <div style="display:flex;gap:6px;margin-top:8px;">
+      <button class="routine-check-btn" onclick="adjustManualGoal('${goal.id}', -1)">−</button>
+      <button class="routine-check-btn" onclick="adjustManualGoal('${goal.id}', 1)">+</button>
+    </div>
+  ` : '';
+  return `
+    <div class="goal-card">
+      <div class="goal-card-top">
+        <p class="goal-name">${escapeHtml(goalDisplayName(goal))}</p>
+        <button class="goal-edit-btn" onclick="openEditGoalModal('${goal.id}')">edit</button>
+      </div>
+      <p class="goal-value">${p.current} of ${p.target} ${goal.unitLabel || 'posted'}</p>
+      <div class="goal-track"><div class="goal-fill ${pct>=100?'complete':''}" style="width:${pct}%"></div></div>
+      <p class="goal-remaining ${remaining===0?'done':''}">${remaining === 0 ? 'Complete ✓' : remaining + ' remaining'}</p>
+      ${manualControls}
+    </div>
+  `;
+}
+
+function renderThisWeek(){
+  document.getElementById('week-remaining').textContent = `${daysLeftInWeek()} day${daysLeftInWeek()===1?'':'s'} left`;
+
+  const active = activeGoals('activity');
+  const content = active.filter(g => g.category === 'posting');
+  const business = active.filter(g => g.category === 'business');
+  const routine = active.filter(g => g.category === 'routine' || g.category === 'creating');
+
+  fillGoalGrid('week-content-goals', content, 'No content goals yet.');
+  fillGoalGrid('week-business-goals', business, 'No business goals yet.');
+  fillGoalGrid('week-routine-goals', routine, 'No creation or routine goals yet.');
+
+  renderCurrentFocus();
+}
+
+function fillGoalGrid(elId, list, emptyText){
+  const el = document.getElementById(elId);
+  el.innerHTML = list.length ? list.map(weekGoalCardHtml).join('') : `<p class="goals-empty" style="grid-column:1/-1;">${emptyText}</p>`;
+}
+
+function renderCurrentFocus(){
+  const holder = document.getElementById('current-focus-holder');
+  const focus = goals.find(g => g.type === 'outcome' && g.isCurrentFocus && g.status !== 'archived');
+  if(!focus){
+    holder.innerHTML = '';
+    return;
+  }
+  const pct = focus.targetValue > 0 ? Math.min(100, Math.round((focus.currentValue / focus.targetValue) * 100)) : 0;
+  const linked = (focus.linkedActivityGoalIds || []).map(id => goals.find(g => g.id === id)).filter(Boolean);
+  holder.innerHTML = `
+    <div class="focus-card">
+      <span class="focus-label">✦ Current Focus</span>
+      <p class="focus-name">${escapeHtml(focus.name)}</p>
+      <p class="focus-values">${escapeHtml(formatOutcomeValue(focus.currentValue, focus.unit))} → ${escapeHtml(formatOutcomeValue(focus.targetValue, focus.unit))}</p>
+      <div class="focus-track"><div class="focus-fill" style="width:${pct}%"></div></div>
+      ${linked.length ? `
+        <p class="focus-sub-label">What I'm doing to get there</p>
+        ${linked.map(g => {
+          const p = computeGoalProgress(g);
+          const label = p.isRoutine ? (p.done ? 'Completed ✓' : 'Not yet') : `${p.current} / ${p.target} this week`;
+          return `<div class="focus-activity-row"><span class="focus-activity-name">${escapeHtml(goalDisplayName(g))}</span><span class="focus-activity-value">${escapeHtml(label)}</span></div>`;
+        }).join('')}
+      ` : `<p class="focus-empty">Link activity goals to this focus to see what's driving it.</p>`}
+    </div>
+  `;
+}
+
+function formatOutcomeValue(val, unit){
+  if(unit === 'currency') return '$' + Number(val || 0).toLocaleString();
+  if(unit === 'percent') return (val || 0) + '%';
+  return Number(val || 0).toLocaleString();
+}
+
+/* ---------- Goals list tab ---------- */
+function goalListRowHtml(goal){
+  const badges = [];
+  if(goal.type === 'outcome' && goal.isCurrentFocus) badges.push('<span class="glr-badge focus">Current focus</span>');
+  if(goal.status === 'paused') badges.push('<span class="glr-badge paused">Paused</span>');
+
+  let meta = '';
+  if(goal.type === 'activity'){
+    const p = computeGoalProgress(goal);
+    meta = p.isRoutine ? (goal.scheduleNote || 'Routine') : `${goalDisplayName(goal)} · ${goal.period === 'month' ? 'monthly' : 'weekly'}`;
+  } else {
+    meta = `${formatOutcomeValue(goal.currentValue, goal.unit)} → ${formatOutcomeValue(goal.targetValue, goal.unit)}${goal.targetDate ? ' · by ' + goal.targetDate : ''}`;
+  }
+
+  return `
+    <div class="goal-list-row">
+      <div class="glr-left">
+        <p class="glr-name">${escapeHtml(goal.name)}</p>
+        <p class="glr-meta">${escapeHtml(meta)}</p>
+      </div>
+      <div class="glr-actions">
+        ${badges.join('')}
+        <button class="glr-btn" onclick="openEditGoalModal('${goal.id}')">Edit</button>
+        <button class="glr-btn" onclick="togglePauseGoal('${goal.id}')">${goal.status === 'paused' ? 'Resume' : 'Pause'}</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderGoalsList(){
+  const activity = activeGoals('activity');
+  const outcome = activeGoals('outcome');
+  document.getElementById('list-activity-goals').innerHTML = activity.length
+    ? activity.map(goalListRowHtml).join('')
+    : '<p class="goals-empty">No activity goals yet — add one to start tracking your week.</p>';
+  document.getElementById('list-outcome-goals').innerHTML = outcome.length
+    ? outcome.map(goalListRowHtml).join('')
+    : '<p class="goals-empty">No outcome goals yet.</p>';
+}
+
+function togglePauseGoal(id){
+  const goal = goals.find(g => g.id === id);
+  if(!goal) return;
+  goal.status = goal.status === 'paused' ? 'active' : 'paused';
+  goal.updatedAt = new Date().toISOString();
+  saveGoals();
+  renderAll();
+}
+function archiveGoal(id){
+  const goal = goals.find(g => g.id === id);
+  if(!goal) return;
+  goal.status = 'archived';
+  goal.updatedAt = new Date().toISOString();
+  saveGoals();
+  closeModal();
+  renderAll();
+}
+
+/* ---------- Progress tab ---------- */
+function renderProgress(){
+  const outcomes = activeGoals('outcome');
+  const holder = document.getElementById('progress-outcomes-holder');
+  if(outcomes.length === 0){
+    holder.innerHTML = '';
+    return;
+  }
+  holder.innerHTML = `
+    <div class="progress-placeholder" style="margin-bottom:16px;">
+      <h3>Outcome snapshot</h3>
+      ${outcomes.map(o => `
+        <div class="progress-outcome-row">
+          <span>${escapeHtml(o.name)}</span>
+          <span style="font-family:'Marcellus',serif;">${escapeHtml(formatOutcomeValue(o.currentValue, o.unit))} → ${escapeHtml(formatOutcomeValue(o.targetValue, o.unit))}</span>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function renderAll(){
+  if(currentGoalsTab === 'week') renderThisWeek();
+  if(currentGoalsTab === 'goals') renderGoalsList();
+  if(currentGoalsTab === 'progress') renderProgress();
+}
+
+/* ============================================================
+   + ADD GOAL — multi-step flow
+   ============================================================ */
+const ACTIVITY_TEMPLATES = {
+  'Posting': [
+    { label: 'Post Instagram Reel', platform: 'Instagram', format: 'Reel' },
+    { label: 'Post Instagram Carousel', platform: 'Instagram', format: 'Carousel' },
+    { label: 'Post Instagram Photo', platform: 'Instagram', format: 'Photo Post' },
+    { label: 'Post TikTok', platform: 'TikTok', format: 'Video' },
+    { label: 'Publish YouTube Video', platform: 'YouTube', format: 'Long-form Video' }
+  ],
+  'Creating': [
+    { label: 'Batch film', category: 'routine', progressSource: 'routine' },
+    { label: 'Create content', category: 'creating', progressSource: 'manual' },
+    { label: 'Plan content', category: 'creating', progressSource: 'manual' },
+    { label: 'Edit content', category: 'creating', progressSource: 'manual' }
+  ],
+  'Business': [
+    { label: 'Pitch brands', category: 'business', progressSource: 'manual' },
+    { label: 'Follow up with brands', category: 'business', progressSource: 'manual' },
+    { label: 'Reply to business emails', category: 'business', progressSource: 'manual' },
+    { label: 'Complete campaign deliverables', category: 'business', progressSource: 'manual' }
+  ],
+  'Routines': [
+    { label: 'Weekly Creator Reset', category: 'routine', progressSource: 'routine' },
+    { label: 'Planning day', category: 'routine', progressSource: 'routine' },
+    { label: 'Batch filming day', category: 'routine', progressSource: 'routine' },
+    { label: 'Editing day', category: 'routine', progressSource: 'routine' }
+  ]
+};
+
+function openAddGoalModal(){
+  addGoalState = { type: null, category: null, template: null };
+  renderAddGoalStepType();
+}
+function renderAddGoalStepType(){
+  const root = document.getElementById('modal-root');
+  root.innerHTML = `
+    <div class="overlay" onclick="if(event.target===this) closeModal()">
+      <div class="modal">
+        <div class="modal-head"><h2>What kind of goal is this?</h2></div>
+        <div class="modal-body">
+          <div class="type-picker">
+            <button onclick="chooseAddGoalType('activity')"><strong>Activity</strong><span class="tp-sub">Something I can consistently do.</span></button>
+            <button onclick="chooseAddGoalType('outcome')"><strong>Outcome</strong><span class="tp-sub">A result I'm working toward.</span></button>
+          </div>
+        </div>
+        <div class="modal-actions"><span></span><button class="btn-secondary" onclick="closeModal()">Cancel</button></div>
+      </div>
+    </div>
+  `;
+}
+function chooseAddGoalType(type){
+  addGoalState.type = type;
+  if(type === 'activity') renderAddGoalStepTemplates();
+  else renderAddGoalStepOutcome();
+}
+
+function renderAddGoalStepTemplates(){
+  const root = document.getElementById('modal-root');
+  root.innerHTML = `
+    <div class="overlay" onclick="if(event.target===this) closeModal()">
+      <div class="modal">
+        <div class="modal-head"><h2>Add an activity goal</h2><p class="modal-sub">Pick a starting point.</p></div>
+        <div class="modal-body">
+          ${Object.keys(ACTIVITY_TEMPLATES).map(group => `
+            <div class="template-group">
+              <p class="template-group-label">${group}</p>
+              ${ACTIVITY_TEMPLATES[group].map((t, i) => `<button class="template-btn" onclick="chooseActivityTemplate('${group}', ${i})">${escapeHtml(t.label)}</button>`).join('')}
+            </div>
+          `).join('')}
+          <div class="template-group">
+            <p class="template-group-label">Custom</p>
+            <button class="template-btn" onclick="chooseActivityTemplate(null, null)">Create my own goal</button>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-secondary" onclick="renderAddGoalStepType()">Back</button>
+          <span></span>
+        </div>
+      </div>
+    </div>
+  `;
+}
+function chooseActivityTemplate(group, idx){
+  addGoalState.template = group ? ACTIVITY_TEMPLATES[group][idx] : null;
+  renderAddGoalStepActivityForm();
+}
+
+function renderAddGoalStepActivityForm(){
+  const t = addGoalState.template;
+  const isPosting = t && t.platform;
+  const root = document.getElementById('modal-root');
+  const platform = (t && t.platform) || PLATFORMS[0];
+  root.innerHTML = `
+    <div class="overlay" onclick="if(event.target===this) closeModal()">
+      <div class="modal">
+        <div class="modal-head"><h2>${t ? escapeHtml(t.label) : 'Custom activity goal'}</h2></div>
+        <div class="modal-body">
+          ${!t ? `<div class="field"><label>Name</label><input type="text" id="ag-name" placeholder="e.g. Reply to DMs"></div>` : ''}
+          ${isPosting ? `
+            <div class="field-row">
+              <div class="field">
+                <label>Platform</label>
+                <select id="ag-platform" onchange="onAgPlatformChange()">${PLATFORMS.map(p => `<option ${p===platform?'selected':''}>${p}</option>`).join('')}</select>
+              </div>
+              <div class="field">
+                <label>Format</label>
+                <select id="ag-format">${(FORMAT_OPTIONS[platform]||[]).map(f => `<option ${f===t.format?'selected':''}>${escapeHtml(f)}</option>`).join('')}</select>
+              </div>
+            </div>
+          ` : ''}
+          ${!t || (t && t.progressSource !== 'routine') ? `
+            <div class="field-row">
+              <div class="field"><label>How many?</label><input type="number" id="ag-target" min="1" value="${isPosting ? 1 : (t ? 5 : 1)}"></div>
+              <div class="field">
+                <label>How often?</label>
+                <select id="ag-period"><option value="week">Week</option><option value="month">Month</option></select>
+              </div>
+            </div>
+          ` : `<p style="font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--muted);font-size:13.5px;">This is tracked as a simple weekly check-off rather than a number.</p>`}
+          ${!t ? `
+            <div class="field">
+              <label>How should this be tracked?</label>
+              <select id="ag-source" onchange="onAgSourceChange()">
+                <option value="manual">I'll update it myself</option>
+                <option value="content">Automatically from posted content</option>
+                <option value="routine">Weekly check-off</option>
+              </select>
+            </div>
+            <div id="ag-custom-platform-holder"></div>
+          ` : ''}
+          <div class="field"><label>Optional note</label><input type="text" id="ag-note" placeholder="e.g. Usually Sunday mornings"></div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-secondary" onclick="renderAddGoalStepTemplates()">Back</button>
+          <button class="btn-primary" onclick="submitActivityGoal()">Add Goal</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+function onAgPlatformChange(){
+  const platform = document.getElementById('ag-platform').value;
+  document.getElementById('ag-format').innerHTML = (FORMAT_OPTIONS[platform]||[]).map(f => `<option>${escapeHtml(f)}</option>`).join('');
+}
+function onAgSourceChange(){
+  const source = document.getElementById('ag-source').value;
+  const holder = document.getElementById('ag-custom-platform-holder');
+  if(source === 'content'){
+    const platform = PLATFORMS[0];
+    holder.innerHTML = `
+      <div class="field-row">
+        <div class="field"><label>Platform</label><select id="ag-platform" onchange="onAgPlatformChange()">${PLATFORMS.map(p => `<option>${p}</option>`).join('')}</select></div>
+        <div class="field"><label>Format</label><select id="ag-format">${(FORMAT_OPTIONS[platform]||[]).map(f => `<option>${escapeHtml(f)}</option>`).join('')}</select></div>
+      </div>
+    `;
+  } else {
+    holder.innerHTML = '';
+  }
+}
+function submitActivityGoal(){
+  const t = addGoalState.template;
+  const now = new Date().toISOString();
+  const isPosting = t && t.platform;
+  const platformEl = document.getElementById('ag-platform');
+  const formatEl = document.getElementById('ag-format');
+  const targetEl = document.getElementById('ag-target');
+  const sourceEl = document.getElementById('ag-source');
+
+  let name, category, progressSource, platform = null, format = null;
+  if(t){
+    name = t.label;
+    category = t.category || 'posting';
+    progressSource = t.progressSource || (isPosting ? 'content' : 'manual');
+    if(isPosting){ platform = platformEl.value; format = formatEl.value; }
+  } else {
+    name = document.getElementById('ag-name').value.trim();
+    if(!name){ document.getElementById('ag-name').focus(); return; }
+    progressSource = sourceEl.value;
+    category = progressSource === 'routine' ? 'routine' : (progressSource === 'content' ? 'posting' : 'creating');
+    if(progressSource === 'content' && platformEl){ platform = platformEl.value; format = formatEl.value; }
+  }
+
+  const goal = {
+    id: uid(), type: 'activity', category, name, platform, format,
+    target: (progressSource !== 'routine' && targetEl) ? parseInt(targetEl.value, 10) || 1 : 1,
+    period: document.getElementById('ag-period') ? document.getElementById('ag-period').value : 'week',
+    progressSource,
+    manualCurrent: 0,
+    scheduleNote: document.getElementById('ag-note').value.trim(),
+    unitLabel: isPosting ? 'posted' : 'done',
+    status: 'active',
+    createdAt: now, updatedAt: now
+  };
+  goals.push(goal);
+  saveGoals();
+  closeModal();
+  renderAll();
+}
+
+function renderAddGoalStepOutcome(){
+  const root = document.getElementById('modal-root');
+  root.innerHTML = `
+    <div class="overlay" onclick="if(event.target===this) closeModal()">
+      <div class="modal">
+        <div class="modal-head"><h2>Add an outcome goal</h2></div>
+        <div class="modal-body">
+          <div class="field">
+            <label>Category</label>
+            <select id="og-category">
+              <option value="audience">Audience</option>
+              <option value="revenue">Revenue</option>
+              <option value="partnerships">Partnerships</option>
+              <option value="business">Business</option>
+              <option value="custom">Custom</option>
+            </select>
+          </div>
+          <div class="field"><label>Name</label><input type="text" id="og-name" placeholder="e.g. Grow Instagram to 50K"></div>
+          <div class="field-row">
+            <div class="field"><label>Current</label><input type="number" id="og-current" value="0"></div>
+            <div class="field"><label>Target</label><input type="number" id="og-target" value="0"></div>
+          </div>
+          <div class="field">
+            <label>Unit</label>
+            <select id="og-unit"><option value="count">Count</option><option value="currency">Currency ($)</option><option value="percent">Percent (%)</option></select>
+          </div>
+          <div class="field"><label>Target date (optional)</label><input type="date" id="og-date"></div>
+          <div class="checkbox-field"><input type="checkbox" id="og-focus"><label for="og-focus" style="margin:0;text-transform:none;font-size:13px;color:var(--espresso-soft);">Make this my Current Focus</label></div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-secondary" onclick="renderAddGoalStepType()">Back</button>
+          <button class="btn-primary" onclick="submitOutcomeGoal()">Add Goal</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+function submitOutcomeGoal(){
+  const name = document.getElementById('og-name').value.trim();
+  if(!name){ document.getElementById('og-name').focus(); return; }
+  const isFocus = document.getElementById('og-focus').checked;
+  const now = new Date().toISOString();
+  if(isFocus){
+    goals.forEach(g => { if(g.type === 'outcome') g.isCurrentFocus = false; });
+  }
+  goals.push({
+    id: uid(), type: 'outcome',
+    category: document.getElementById('og-category').value,
+    name,
+    currentValue: parseFloat(document.getElementById('og-current').value) || 0,
+    targetValue: parseFloat(document.getElementById('og-target').value) || 0,
+    unit: document.getElementById('og-unit').value,
+    targetDate: document.getElementById('og-date').value || null,
+    isCurrentFocus: isFocus,
+    linkedActivityGoalIds: [],
+    status: 'active',
+    createdAt: now, updatedAt: now
+  });
+  saveGoals();
+  closeModal();
+  renderAll();
+}
+
+/* ---------- Edit Goal ---------- */
+function openEditGoalModal(id){
+  const goal = goals.find(g => g.id === id);
+  if(!goal) return;
+  const root = document.getElementById('modal-root');
+  if(goal.type === 'activity'){
+    root.innerHTML = `
+      <div class="overlay" onclick="if(event.target===this) closeModal()">
+        <div class="modal">
+          <div class="modal-head"><h2>Edit goal</h2></div>
+          <div class="modal-body">
+            <div class="field"><label>Name</label><input type="text" id="eg-name" value="${escapeHtml(goal.name)}"></div>
+            ${goal.progressSource !== 'routine' ? `
+              <div class="field-row">
+                <div class="field"><label>Target</label><input type="number" id="eg-target" min="1" value="${goal.target}"></div>
+                <div class="field"><label>Period</label><select id="eg-period"><option value="week" ${goal.period==='week'?'selected':''}>Week</option><option value="month" ${goal.period==='month'?'selected':''}>Month</option></select></div>
+              </div>
+            ` : ''}
+            <div class="field"><label>Note</label><input type="text" id="eg-note" value="${escapeHtml(goal.scheduleNote||'')}"></div>
+          </div>
+          <div class="modal-actions">
+            <button class="btn-danger-text" onclick="archiveGoal('${goal.id}')">Archive</button>
+            <div class="modal-actions-right">
+              <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+              <button class="btn-primary" onclick="saveEditActivityGoal('${goal.id}')">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  } else {
+    const otherActivities = activeGoals('activity');
+    const linked = new Set(goal.linkedActivityGoalIds || []);
+    root.innerHTML = `
+      <div class="overlay" onclick="if(event.target===this) closeModal()">
+        <div class="modal">
+          <div class="modal-head"><h2>Edit goal</h2></div>
+          <div class="modal-body">
+            <div class="field"><label>Name</label><input type="text" id="eg-name" value="${escapeHtml(goal.name)}"></div>
+            <div class="field-row">
+              <div class="field"><label>Current</label><input type="number" id="eg-current" value="${goal.currentValue}"></div>
+              <div class="field"><label>Target</label><input type="number" id="eg-target" value="${goal.targetValue}"></div>
+            </div>
+            <div class="field"><label>Target date</label><input type="date" id="eg-date" value="${goal.targetDate||''}"></div>
+            <div class="checkbox-field"><input type="checkbox" id="eg-focus" ${goal.isCurrentFocus?'checked':''}><label for="eg-focus" style="margin:0;text-transform:none;font-size:13px;color:var(--espresso-soft);">Current Focus</label></div>
+            ${otherActivities.length ? `
+              <div class="field">
+                <label>Activity goals feeding this</label>
+                ${otherActivities.map(a => `
+                  <div class="checkbox-field">
+                    <input type="checkbox" class="eg-link" value="${a.id}" ${linked.has(a.id)?'checked':''}>
+                    <label style="margin:0;text-transform:none;font-size:13px;color:var(--espresso-soft);">${escapeHtml(goalDisplayName(a))}</label>
+                  </div>
+                `).join('')}
+              </div>
+            ` : ''}
+          </div>
+          <div class="modal-actions">
+            <button class="btn-danger-text" onclick="archiveGoal('${goal.id}')">Archive</button>
+            <div class="modal-actions-right">
+              <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+              <button class="btn-primary" onclick="saveEditOutcomeGoal('${goal.id}')">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+}
+function saveEditActivityGoal(id){
+  const goal = goals.find(g => g.id === id);
+  if(!goal) return;
+  const name = document.getElementById('eg-name').value.trim();
+  if(name) goal.name = name;
+  const targetEl = document.getElementById('eg-target');
+  if(targetEl) goal.target = parseInt(targetEl.value, 10) || goal.target;
+  const periodEl = document.getElementById('eg-period');
+  if(periodEl) goal.period = periodEl.value;
+  goal.scheduleNote = document.getElementById('eg-note').value.trim();
+  goal.updatedAt = new Date().toISOString();
+  saveGoals();
+  closeModal();
+  renderAll();
+}
+function saveEditOutcomeGoal(id){
+  const goal = goals.find(g => g.id === id);
+  if(!goal) return;
+  const name = document.getElementById('eg-name').value.trim();
+  if(name) goal.name = name;
+  goal.currentValue = parseFloat(document.getElementById('eg-current').value) || 0;
+  goal.targetValue = parseFloat(document.getElementById('eg-target').value) || 0;
+  goal.targetDate = document.getElementById('eg-date').value || null;
+  const isFocus = document.getElementById('eg-focus').checked;
+  if(isFocus){
+    goals.forEach(g => { if(g.type === 'outcome' && g.id !== id) g.isCurrentFocus = false; });
+  }
+  goal.isCurrentFocus = isFocus;
+  goal.linkedActivityGoalIds = Array.from(document.querySelectorAll('.eg-link:checked')).map(el => el.value);
+  goal.updatedAt = new Date().toISOString();
+  saveGoals();
+  closeModal();
+  renderAll();
+}
+
+function closeModal(){
+  document.getElementById('modal-root').innerHTML = '';
+}
+
+/* ============================================================
+   DEV SEED DATA — remove this block once Maison connects to
+   real persisted data. Content seed mirrors content.html/
+   planner.html exactly, since Goals reads that SAME storage
+   key rather than maintaining its own copy.
+   ============================================================ */
+function daysAgoISO(days, hours){
+  const d = new Date(); d.setDate(d.getDate() - (days||0)); d.setHours(d.getHours() - (hours||0));
+  return d.toISOString();
+}
+function seedContentIfEmpty(){
+  if(contentItems.length > 0) return;
+  const seeds = [
+    { title: 'Kylie Lip Liner Comparison', platform: 'TikTok', format: 'Video', pillar: 'Beauty', stage: STAGES.indexOf('Ready to Create'),
+      thought: 'Compare my favorite Kylie liners side-by-side on my lips.', updatedAt: daysAgoISO(0, 3) },
+    { title: 'Beach Day GRWM', platform: 'Instagram', format: 'Reel', pillar: 'Lifestyle', stage: STAGES.indexOf('Ideas'),
+      thought: 'Get ready with me for a beach day — breezy summer look.', updatedAt: daysAgoISO(1) },
+    { title: 'Cider Summer Outfits', platform: 'Instagram', format: 'Reel', pillar: 'Fashion', stage: STAGES.indexOf('Editing'),
+      thought: 'Styling three summer outfits from the new Cider drop.', campaign: 'Cider', dueDate: dateInDays(2), updatedAt: daysAgoISO(0, 6) },
+    { title: 'Morning Routine', platform: 'TikTok', format: 'Video', pillar: 'Lifestyle', stage: STAGES.indexOf('Scheduled'),
+      thought: 'A calm, realistic morning routine — no 5am wake-up nonsense.', dueDate: dateInDays(7), updatedAt: daysAgoISO(2) },
+    { title: 'Products I Regret Buying', platform: 'TikTok', format: 'Video', pillar: 'Beauty', stage: STAGES.indexOf('Posted'),
+      thought: 'Honest talk on the hyped products that didn\u2019t work for me.', updatedAt: daysAgoISO(3) },
+    { title: 'Sephora Favorites', platform: 'Instagram', format: 'Reel', pillar: 'Beauty', stage: STAGES.indexOf('Created'),
+      thought: 'Monthly Sephora haul and what I\u2019m actually repurchasing.', updatedAt: daysAgoISO(1, 4) },
+    { title: 'GRWM Storytime', platform: 'TikTok', format: 'Video', pillar: 'Lifestyle', stage: STAGES.indexOf('Posted'),
+      thought: 'GRWM while telling the story of how I started this account.', updatedAt: daysAgoISO(0, 1) },
+    { title: 'Summer Skincare Routine', platform: 'Instagram', format: 'Reel', pillar: 'Beauty', stage: STAGES.indexOf('Ready to Post'),
+      thought: 'My simplified 4-step summer skincare routine.', updatedAt: daysAgoISO(4) },
+    { title: 'Spring Try-On Haul', platform: 'Instagram', format: 'Reel', pillar: 'Fashion', stage: STAGES.indexOf('Posted'),
+      thought: 'Try-on haul from my last spring shopping trip.', updatedAt: daysAgoISO(6) },
+    { title: 'Summer Beauty Favorites', platform: 'Instagram', format: 'Carousel', pillar: 'Beauty', stage: STAGES.indexOf('Planning'),
+      thought: 'A round-up carousel of what I\u2019m loving in beauty this summer.', updatedAt: daysAgoISO(2, 2) },
+    { title: 'August Photo Dump', platform: 'Instagram', format: 'Photo Post', pillar: 'Lifestyle', stage: STAGES.indexOf('Ready to Post'),
+      thought: 'Casual photo dump from the last few weeks.', updatedAt: daysAgoISO(0, 8) },
+    { title: '5 Products Always in My Makeup Bag', platform: 'Instagram', format: 'Carousel', pillar: 'Beauty', stage: STAGES.indexOf('Created'),
+      thought: 'The five products I reach for every single day.', updatedAt: daysAgoISO(1, 1) },
+    { title: 'Vacation Favorites', platform: 'TikTok', format: 'Photo Carousel', pillar: 'Travel', stage: STAGES.indexOf('Planning'),
+      thought: 'Favorite shots and finds from my last trip.', updatedAt: daysAgoISO(5) },
+    { title: 'Current Skincare Rotation', platform: 'Instagram', format: 'Carousel', pillar: 'Beauty', stage: STAGES.indexOf('Posted'),
+      thought: 'Walking through my current AM/PM skincare rotation.', updatedAt: daysAgoISO(3, 3) }
+  ];
+  contentItems = seeds.map(s => {
+    const now = new Date().toISOString();
+    return Object.assign({
+      id: uid(), platform: 'Other', format: '', pillar: '', thought: '', stage: 0, dueDate: null,
+      campaign: '', hook: '', script: '', caption: '', notes: '',
+      inspirationLink: '', websiteLink: '', media: [], checklist: [], vaultRefs: [],
+      createdAt: now, updatedAt: now
+    }, s, { createdAt: s.updatedAt || now });
+  });
+  try{ localStorage.setItem(CONTENT_STORAGE_KEY, JSON.stringify(contentItems)); }catch(e){}
+}
+
+function seedGoalsIfEmpty(){
+  if(goals.length > 0) return;
+  const now = new Date().toISOString();
+  goals = [
+    { id: uid(), type: 'activity', category: 'posting', name: 'Post TikTok Video', platform: 'TikTok', format: 'Video', target: 5, period: 'week', progressSource: 'content', manualCurrent: 0, scheduleNote: '', unitLabel: 'posted', status: 'active', createdAt: now, updatedAt: now },
+    { id: uid(), type: 'activity', category: 'posting', name: 'Post Instagram Reel', platform: 'Instagram', format: 'Reel', target: 2, period: 'week', progressSource: 'content', manualCurrent: 0, scheduleNote: '', unitLabel: 'posted', status: 'active', createdAt: now, updatedAt: now },
+    { id: uid(), type: 'activity', category: 'posting', name: 'Post Instagram Carousel', platform: 'Instagram', format: 'Carousel', target: 1, period: 'week', progressSource: 'content', manualCurrent: 0, scheduleNote: '', unitLabel: 'posted', status: 'active', createdAt: now, updatedAt: now },
+    { id: uid(), type: 'activity', category: 'routine', name: 'Batch Film', platform: null, format: null, target: 1, period: 'week', progressSource: 'routine', manualCurrent: 0, scheduleNote: 'Every Sunday', unitLabel: 'done', status: 'active', createdAt: now, updatedAt: now },
+    { id: uid(), type: 'activity', category: 'business', name: 'Pitch Brands', platform: null, format: null, target: 5, period: 'week', progressSource: 'manual', manualCurrent: 3, scheduleNote: '', unitLabel: 'pitched', status: 'active', createdAt: now, updatedAt: now }
+  ];
+  const focusId = uid();
+  goals.push({
+    id: focusId, type: 'outcome', category: 'audience', name: 'Grow Instagram to 50K',
+    currentValue: 32800, targetValue: 50000, unit: 'count', targetDate: null,
+    isCurrentFocus: true, linkedActivityGoalIds: [goals[1].id, goals[2].id, goals[3].id],
+    status: 'active', createdAt: now, updatedAt: now
+  });
+  goals.push({
+    id: uid(), type: 'outcome', category: 'partnerships', name: 'Get 3 Paid Partnerships this month',
+    currentValue: 1, targetValue: 3, unit: 'count', targetDate: null,
+    isCurrentFocus: false, linkedActivityGoalIds: [],
+    status: 'active', createdAt: now, updatedAt: now
+  });
+  saveGoals();
+}
+/* ========================= END DEV SEED DATA ========================= */
+
+window.addEventListener('error', function(e){
+  setSavePill('Something went wrong: ' + (e.message || 'unknown error'), true);
+});
+
+loadContentItems();
+seedContentIfEmpty();
+loadGoals();
+seedGoalsIfEmpty();
+loadRoutineCompletions();
+renderAll();
+</script>
+
+</body>
+</html>
