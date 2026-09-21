@@ -658,6 +658,10 @@
 </style>
 </head>
 <body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="supabase-client.js"></script>
+<script src="auth-guard.js"></script>
+<script src="sync.js"></script>
 
 <div class="topbar">
   <div class="brand">
@@ -666,7 +670,7 @@
   </div>
   <div class="topbar-right">
     <div class="topbar-date" id="topbar-date"></div>
-    <div class="avatar">K</div>
+    <div class="avatar" onclick="if(window.MaisonAuth) MaisonAuth.signOut();" title="Sign out">K</div>
     <div style="position:relative;">
       <button class="add-btn" onclick="toggleAddMenu()">+ Add</button>
       <div class="add-menu" id="add-menu">
@@ -1350,7 +1354,9 @@ window.addEventListener('error', function(e){
   setSavePill('Something went wrong: ' + (e.message || 'unknown error'), true);
 });
 
-loadState();
+MaisonSync.ready().then(function(){
+  loadState();
+});
 </script>
 </body>
 </html>

@@ -144,6 +144,10 @@
 </style>
 </head>
 <body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="supabase-client.js"></script>
+<script src="auth-guard.js"></script>
+<script src="sync.js"></script>
 
 <div class="topbar">
   <div class="brand">
@@ -428,23 +432,25 @@ window.addEventListener('error', function(e){
 });
 
 window.addEventListener('load', () => {
-  loadStatusMap();
-  // google.accounts is loaded async via the GSI script tag; wait briefly if needed
-  if(window.google && google.accounts){
-    initGoogleAuth();
-  } else {
-    let tries = 0;
-    const wait = setInterval(() => {
-      tries++;
-      if(window.google && google.accounts){
-        clearInterval(wait);
-        initGoogleAuth();
-      } else if(tries > 40){
-        clearInterval(wait);
-        showError("Couldn't load Google's sign-in library. Check your connection and reload.");
-      }
-    }, 100);
-  }
+  MaisonSync.ready().then(function(){
+    loadStatusMap();
+    // google.accounts is loaded async via the GSI script tag; wait briefly if needed
+    if(window.google && google.accounts){
+      initGoogleAuth();
+    } else {
+      let tries = 0;
+      const wait = setInterval(() => {
+        tries++;
+        if(window.google && google.accounts){
+          clearInterval(wait);
+          initGoogleAuth();
+        } else if(tries > 40){
+          clearInterval(wait);
+          showError("Couldn't load Google's sign-in library. Check your connection and reload.");
+        }
+      }, 100);
+    }
+  });
 });
 </script>
 

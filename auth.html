@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>Maison — Sign In</title>
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Maison">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#F7F3EC">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --ivory: #F7F3EC;
+    --card: #FFFFFF;
+    --taupe: #EFE8DC;
+    --taupe-line: #E2D9C8;
+    --espresso: #2B2420;
+    --espresso-soft: #5B4F45;
+    --muted: #948A7C;
+    --rose: #B98498;
+    --rose-bg: #F3E7EA;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background:var(--ivory);
+    color:var(--espresso);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:100vh;
+    padding:24px;
+  }
+  .auth-card{
+    width:100%;
+    max-width:380px;
+    background:var(--card);
+    border:1px solid var(--taupe-line);
+    border-radius:16px;
+    padding:36px 30px;
+  }
+  .brand{
+    text-align:center;
+    margin-bottom:28px;
+  }
+  .brand-name{
+    font-family:'Marcellus',serif;
+    font-size:26px;
+    letter-spacing:0.3px;
+  }
+  .brand-tagline{
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;
+    font-size:15px;
+    color:var(--muted);
+    margin-top:4px;
+  }
+  .tabs{
+    display:flex;
+    background:var(--taupe);
+    border-radius:10px;
+    padding:4px;
+    margin-bottom:22px;
+  }
+  .tab{
+    flex:1;
+    text-align:center;
+    padding:9px 0;
+    font-size:13px;
+    font-weight:600;
+    border-radius:8px;
+    cursor:pointer;
+    color:var(--espresso-soft);
+    user-select:none;
+  }
+  .tab.active{background:var(--card);color:var(--espresso);}
+  .field{margin-bottom:16px;}
+  .field label{
+    display:block;
+    font-size:12px;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    color:var(--espresso-soft);
+    margin-bottom:6px;
+  }
+  .field input{
+    width:100%;
+    padding:11px 13px;
+    border:1px solid var(--taupe-line);
+    border-radius:8px;
+    font-family:'Inter',sans-serif;
+    font-size:14px;
+    background:var(--ivory);
+    color:var(--espresso);
+  }
+  .field input:focus{outline:2px solid var(--espresso);outline-offset:1px;}
+  .submit-btn{
+    width:100%;
+    background:var(--espresso);
+    color:var(--ivory);
+    border:none;
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:14px;
+    padding:13px 0;
+    border-radius:8px;
+    cursor:pointer;
+    margin-top:6px;
+  }
+  .submit-btn:disabled{opacity:0.6;cursor:default;}
+  .message{
+    margin-top:14px;
+    font-size:13px;
+    text-align:center;
+    min-height:18px;
+  }
+  .message.error{color:#A6363B;}
+  .message.success{color:var(--espresso-soft);}
+  .setup-notice{
+    background:var(--rose-bg);
+    border-radius:10px;
+    padding:14px 16px;
+    font-size:13px;
+    line-height:1.5;
+    color:var(--espresso-soft);
+  }
+</style>
+</head>
+<body>
+
+<div class="auth-card">
+  <div class="brand">
+    <div class="brand-name">Maison</div>
+    <div class="brand-tagline">Your creative world.</div>
+  </div>
+
+  <div id="setup-view" style="display:none;">
+    <div class="setup-notice">
+      This app isn't connected to a Supabase project yet. Paste your project URL and anon key into <code>supabase-client.js</code> to enable sign-in.
+    </div>
+  </div>
+
+  <div id="auth-view">
+    <div class="tabs">
+      <div class="tab active" id="tab-signin" onclick="switchTab('signin')">Sign In</div>
+      <div class="tab" id="tab-signup" onclick="switchTab('signup')">Create Account</div>
+    </div>
+
+    <form id="auth-form">
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" autocomplete="email" required>
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" autocomplete="current-password" required minlength="6">
+      </div>
+      <button type="submit" class="submit-btn" id="submit-btn">Sign In</button>
+    </form>
+    <div class="message" id="message"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="supabase-client.js"></script>
+<script>
+let mode = 'signin';
+
+function switchTab(next){
+  mode = next;
+  document.getElementById('tab-signin').classList.toggle('active', next === 'signin');
+  document.getElementById('tab-signup').classList.toggle('active', next === 'signup');
+  document.getElementById('submit-btn').textContent = next === 'signin' ? 'Sign In' : 'Create Account';
+  document.getElementById('password').setAttribute('autocomplete', next === 'signin' ? 'current-password' : 'new-password');
+  setMessage('');
+}
+
+function setMessage(text, kind){
+  const el = document.getElementById('message');
+  el.textContent = text || '';
+  el.className = 'message' + (kind ? ' ' + kind : '');
+}
+
+function nextUrl(){
+  const params = new URLSearchParams(window.location.search);
+  return params.get('next') || 'home.html';
+}
+
+if(!window.maisonSupabase){
+  document.getElementById('setup-view').style.display = 'block';
+  document.getElementById('auth-view').style.display = 'none';
+} else {
+  // Already signed in? Skip straight past this page.
+  window.maisonSupabase.auth.getSession().then(({ data }) => {
+    if(data && data.session){ window.location.href = nextUrl(); }
+  });
+}
+
+document.getElementById('auth-form').addEventListener('submit', async function(e){
+  e.preventDefault();
+  if(!window.maisonSupabase) return;
+
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  setMessage('');
+
+  try{
+    if(mode === 'signin'){
+      const { error } = await window.maisonSupabase.auth.signInWithPassword({ email, password });
+      if(error){ setMessage(error.message, 'error'); return; }
+      window.location.href = nextUrl();
+    } else {
+      const { error } = await window.maisonSupabase.auth.signUp({ email, password });
+      if(error){ setMessage(error.message, 'error'); return; }
+      setMessage('Account created. Check your email to confirm, then sign in.', 'success');
+      switchTab('signin');
+    }
+  } catch(err){
+    setMessage('Something went wrong: ' + (err.message || 'unknown error'), 'error');
+  } finally {
+    btn.disabled = false;
+  }
+});
+</script>
+
+</body>
+</html>
