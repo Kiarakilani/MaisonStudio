@@ -5,7 +5,7 @@
    The anon key is public/safe to have in client-side code — it's
    not a secret (unlike the service_role key, never used here).
    ============================================================ */
-const MAISON_SUPABASE_URL = 'fkoqajrfvgdprohucxlb';
+const MAISON_SUPABASE_URL = 'https://fkoqajrfvgdprohucxlb.supabase.co';
 const MAISON_SUPABASE_ANON_KEY = 'sb_publishable_T16yqREo4JxABRYDng5Qdw_e3ONNWW1';
 
 window.maisonSupabase =
